@@ -1,4 +1,4 @@
-from general.constants import *
+from src.general.constants import *
 
 __all__ = ["dt", "l", "t_max", "alpha_start", "datapath", "plot_lims", "text_y", "render_dt", "figsize", "pendulum_axis_x", "pendulum_axis_y"]
 
