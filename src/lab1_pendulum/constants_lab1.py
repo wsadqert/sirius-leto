@@ -1,6 +1,6 @@
 from general.constants import *
 
-__all__ = ["dt", "l", "t_max", "datapath", "plot_lims", "text_y", "render_dt", "figsize", "pendulum_axis_x", "pendulum_axis_y"]
+__all__ = ["dt", "l", "t_max", "alpha_start", "datapath", "plot_lims", "text_y", "render_dt", "figsize", "pendulum_axis_x", "pendulum_axis_y"]
 
 dt: Final[float] = 1e-5
 l: Final[float] = 1
