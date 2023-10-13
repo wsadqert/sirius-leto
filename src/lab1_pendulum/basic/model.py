@@ -1,7 +1,6 @@
-from scipy.signal import argrelextrema
 from math import sin, sqrt
 
-from src.lab1_pendulum.constants_lab1 import *
+from src.lab1_pendulum.basic.constants import *
 from src.general.constants import *
 
 
@@ -30,7 +29,7 @@ for frame in tqdm(range(n)):  # main loop
 
 	alpha_array.append(alpha_next)
 
-print((argrelextrema(np.array(alpha_array), np.greater)[0]*dt)[0])  # finding extremum
+# print((argrelextrema(np.array(alpha_array), np.greater)[0]*dt)[0])  # finding extremum
 
 with open(datapath, 'w') as f:  # exporting data to file
 	print(dt,           file=f, sep="\n")
