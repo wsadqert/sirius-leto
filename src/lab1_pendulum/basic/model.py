@@ -22,14 +22,12 @@ alpha_teor = np.cos(2*pi*time_array/period_teor)*alpha_last
 n: Final[int] = len(time_array)
 
 for frame in tqdm(range(n)):  # main loop
-	alpha_next = 2 * alpha_cur - alpha_last - k*sin(alpha_cur)
+	alpha_next = 2 * alpha_cur - alpha_last - k*sin(alpha_cur)  # see ../README.md
 
 	alpha_last = alpha_cur
 	alpha_cur = alpha_next
 
 	alpha_array.append(alpha_next)
-
-# print((argrelextrema(np.array(alpha_array), np.greater)[0]*dt)[0])  # finding extremum
 
 with open(datapath, 'w') as f:  # exporting data to file
 	print(dt,           file=f, sep="\n")

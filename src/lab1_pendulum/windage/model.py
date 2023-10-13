@@ -17,18 +17,17 @@ t = 0.
 time_array = np.arange(0, t_max, dt)
 alpha_array = []
 
+
 # TODO: remove `n`
 n: Final[int] = len(time_array)
 
 for frame in tqdm(range(n)):  # main loop
-	alpha_next = (4*alpha_cur - alpha_last*(2-k1) - k2*sin(alpha_cur))/(2+k1)
+	alpha_next = (4*alpha_cur - alpha_last*(2-k1) - k2*sin(alpha_cur))/(2+k1)  # see ../README.md
 
 	alpha_last = alpha_cur
 	alpha_cur = alpha_next
 
 	alpha_array.append(alpha_next)
-
-# print((argrelextrema(np.array(alpha_array), np.greater)[0]*dt)[0])  # finding extremum
 
 with open(datapath, 'w') as f:  # exporting data to file
 	print(dt,           file=f, sep="\n")
