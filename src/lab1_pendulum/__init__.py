@@ -2,14 +2,14 @@ from typing import Literal
 from .animate import animate
 
 
-def start(mode: Literal["basic", "windage"], plot_animation: bool = True, plot_alpha: bool = True):
+def start(mode: Literal["basic", "windage"], plot_animation: bool = True, plot_alpha: bool = True) -> None:
 	"""
-	Function-wrapper for
+	Function-wrapper for `src.lab1_pendulum.animate.animate(...)`.
 
-	:param mode: режим лаборатории: классический или с учётом сопротивления воздуха.
-	:param plot_animation: флаг, определяющий, будет ли рендериться анимация.
-	:param plot_alpha: флаг, определяющий, будет ли рендериться график угла отклонения от времени.
-	:return:
+	:param mode: Laboratory mode: classic (`basic`) or advanced (`windage`, taking into account air resistance).
+	:param plot_animation: Flag determines whether the animation will be rendered.
+	:param plot_alpha: Flag determines whether the graph of deviation angle versus time will be rendered.
+	:return: None.
 	"""
 
 	if mode not in ["basic", "windage"]:
