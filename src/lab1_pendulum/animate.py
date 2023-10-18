@@ -17,7 +17,7 @@ def __animation_step(frame: int, alpha_array) -> tuple:
 		t0 = real_time()
 	elif frame % frames_count == 0:
 		t1 = real_time()
-		print("\x1B[H\x1B[J")  # clearing console
+		clear_screen()
 		print(f'fps = {frames_count / (t1 - t0):2}')  # printing fps value
 		t0 = real_time()
 
@@ -78,7 +78,7 @@ def animate(plot_animation: bool = True, plot_alpha: bool = True, plot_theoretic
 		pendulum_axis, = plt.plot([pendulum_axis_x], [pendulum_axis_y], marker='o', markersize=5, color='red')  # noqa, required for animation
 		pendulum_point, = plt.plot([], [], marker='o', markersize=5, color='red')
 		time_text = plt.text(0, text_y * l, "", fontsize=20)
-		animation = FuncAnimation(fig,
+		animation = FuncAnimation(fig,  # noqa:F841
 		                          func=__animation_step,
 		                          fargs=(alpha_array,),
 		                          interval=0,
@@ -104,4 +104,5 @@ def animate(plot_animation: bool = True, plot_alpha: bool = True, plot_theoretic
 		plt.ylabel(r"$\alpha, rad$", fontsize=13)
 		plt.plot(time_array, theoretical_alpha_array, label="theory")
 
+	plt.legend(loc="upper right")
 	plt.show()

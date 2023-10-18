@@ -16,10 +16,11 @@ def model() -> None:
 	# initialization of datasets
 	time_array = np.arange(0, t_max, dt)
 	alpha_array = []
+	theoretical_alpha_array = []
 
 	n: Final[int] = len(time_array)
 
-	match mode:
+	match mode:  # noqa:typo, creating lambdas for calculating next alpha value based on previous value
 		case "basic":
 			get_alpha = lambda x: 2 * alpha_cur - alpha_last - k * sin(alpha_cur)  # noqa:E731 using lambda
 
@@ -27,17 +28,19 @@ def model() -> None:
 			k_windage = gamma * dt
 			get_alpha = lambda x: (4 * alpha_cur - alpha_last * (2 - k_windage) - k * sin(alpha_cur)) / (2 + k_windage)  # noqa:E731 using lambda
 
-		case "theoretical":
-			def __phi_beta_positive(t: float) -> float:
-				return (alpha_start / 2 * ((1 + gamma / csqrt(beta)) * cexp((-gamma + csqrt(beta)) * t) + (1 - gamma / csqrt(beta)) * cexp((-gamma - csqrt(beta)) * t))).real
+	if calculate_theoretical:
+		__phi_beta_positive = lambda t: (alpha_start / 2 * ((1 + gamma / csqrt(beta)) * cexp((-gamma + csqrt(beta)) * t) + (1 - gamma / csqrt(beta)) * cexp((-gamma - csqrt(beta)) * t))).real  # noqa:E731 using lambda
+		__phi_beta_negative_zero = lambda t: (alpha_start * cexp(-gamma * t) * (ccos(csqrt(-beta) * t) + gamma / csqrt(-beta) * csin(csqrt(-beta) * t))).real  # noqa:E731 using lambda
 
-			def __phi_beta_negative_zero(t: float):
-				return (alpha_start * cexp(-gamma * t) * (ccos(csqrt(-beta) * t) + gamma / csqrt(-beta) * csin(csqrt(-beta) * t))).real
-
-			get_alpha = __phi_beta_positive if beta > 0 else __phi_beta_negative_zero
+		get_theoretical_alpha = __phi_beta_positive if beta > 0 else __phi_beta_negative_zero
 
 	for t in tqdm(time_array):  # main loop
-		alpha_next = get_alpha(t)  # noqa - datapath is always defined
+		alpha_next = get_alpha(t)  # noqa:F823 - `get_alpha(...)` is always defined
+
+		if calculate_theoretical:
+			alpha_theoretical_next = get_theoretical_alpha(t)  # noqa:F823 - `get_theoretical_alpha(...)` is always defined
+			theoretical_alpha_array.append(alpha_theoretical_next)
+			# print(alpha_theoretical_next)
 
 		alpha_last = alpha_cur
 		alpha_cur = alpha_next
@@ -45,9 +48,10 @@ def model() -> None:
 		alpha_array.append(alpha_next)
 
 	with open(datapath, 'w') as f:  # noqa - datapath is always defined
-		print(dt,           file=f)  # exporting data to file
-		print(l,            file=f)
-		print(t_max,        file=f)
-		print(n,            file=f)
-		print(*time_array,  file=f)
-		print(*alpha_array, file=f)
+		print(dt,                       file=f)  # exporting data to file
+		print(l,                        file=f)
+		print(t_max,                    file=f)
+		print(n,                        file=f)
+		print(*time_array,              file=f)
+		print(*alpha_array,             file=f)
+		print(*theoretical_alpha_array, file=f)

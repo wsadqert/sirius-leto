@@ -3,7 +3,11 @@ from typing import Sequence
 import numpy as np
 from scipy.signal import argrelextrema
 
-__all__ = ["pol2cart", "find_extremum"]  # noqa:typo
+__all__ = ["clear_screen", "pol2cart", "find_extremum"]  # noqa:typo
+
+
+def clear_screen():
+	print("\x1B[H\x1B[J")
 
 
 def pol2cart(r: float, phi: float) -> tuple[float, float]:
