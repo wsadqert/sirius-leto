@@ -8,7 +8,7 @@ import numpy as np
 from tqdm import tqdm
 from typing import Final, Literal
 
-from scipy.constants import *
+from scipy.constants import g
 from numpy import pi
 
 PROJECT_ROOT = os.path.dirname(sys.argv[0])
