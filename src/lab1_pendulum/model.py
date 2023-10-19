@@ -20,13 +20,7 @@ def model() -> None:
 
 	n: Final[int] = len(time_array)
 
-	match mode:  # noqa:typo, creating lambdas for calculating next alpha value based on previous value
-		case "basic":
-			get_alpha = lambda x: 2 * alpha_cur - alpha_last - k * sin(alpha_cur)  # noqa:E731 using lambda
-
-		case "windage":
-			k_windage = gamma * dt
-			get_alpha = lambda x: (4 * alpha_cur - alpha_last * (2 - k_windage) - k * sin(alpha_cur)) / (2 + k_windage)  # noqa:E731 using lambda
+	get_alpha = lambda x: (2 * alpha_cur - alpha_last * (1 - c1) - c2 * sin(alpha_cur)) / (1 + c1)  # noqa:E731 using lambda
 
 	if calculate_theoretical:
 		__phi_beta_positive = lambda t: (alpha_start / 2 * ((1 + gamma / csqrt(beta)) * cexp((-gamma + csqrt(beta)) * t) + (1 - gamma / csqrt(beta)) * cexp((-gamma - csqrt(beta)) * t))).real  # noqa:E731 using lambda
@@ -40,7 +34,6 @@ def model() -> None:
 		if calculate_theoretical:
 			alpha_theoretical_next = get_theoretical_alpha(t)  # noqa:F823 - `get_theoretical_alpha(...)` is always defined
 			theoretical_alpha_array.append(alpha_theoretical_next)
-			# print(alpha_theoretical_next)
 
 		alpha_last = alpha_cur
 		alpha_cur = alpha_next

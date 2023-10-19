@@ -1,23 +1,24 @@
 from src.general.constants import *
 
-__all__ = ["l", "alpha_start", "gamma",  # physics settings
+__all__ = ["l", "alpha_start",  # physics settings
            "mode", "calculate_theoretical", "dt", "t_max",  # model settings
            "datapath_basic", "datapath_windage", "datapath_theoretical",  # output settings
            "plot_lims", "text_y", "render_dt", "figsize", "pendulum_axis_x", "pendulum_axis_y", "frames_count",  # noqa:typo, rendering settings
-           "k", "beta",  # optimizations
+           "c1", "c2", "beta", "gamma",  # optimizations
            "MODE", "datapath",  # misc
            ]
 
 # model settings
-mode = "windage"
-calculate_theoretical = True
+mode = "windage"  # noqa:typo, Literal["basic", "windage"]
+calculate_theoretical = False
 dt: Final[float] = 1e-5
-t_max: Final[float] = 7
+t_max: Final[float] = 10
 
 # physics settings
-l: Final[float] = 1  # length of pendulum
-alpha_start: Final[float] = -0.001  # * pi  # noqa:typo, initial angle of deviation of the pendulum from the equilibrium position
-gamma = 0.1     # air resistance coefficient
+l: Final[float] = g  # length of pendulum
+alpha_start: Final[float] = -1  # * pi  # noqa:typo, initial angle of deviation of the pendulum from the equilibrium position
+k = 0.7
+m = 1
 
 # output settings
 datapath_basic = os.path.join(DATASTORE_ROOT, "lab1_pendulum", "basic", "data.dat")
@@ -34,9 +35,14 @@ pendulum_axis_y = 0
 frames_count = int(1e3)  # number of frames to count fps
 
 # optimizations
+c1 = k * dt / (2 * m)
+c2 = g * dt ** 2 / l
+
 if mode == 'basic':
 	gamma = 0
-k: Final[float] = g * dt ** 2 / l
+else:
+	gamma = k / (2*m)  # air resistance coefficient
+
 beta = gamma**2 - g/l
 
 # misc
