@@ -13,10 +13,10 @@ def start(plot_animation: bool = True, plot_alpha: bool = True) -> None:
 	:return: None.
 	"""
 
-	if mode not in MODE.__args__:
-		raise ValueError(f"mode must be one of {MODE.__args__} but {mode = } is provided")
-
 	clear_screen()
+
+	if mode not in MODE.__args__:
+		raise ValueError(f"mode must be one of {MODE.__args__} but {mode=} is provided")
 
 	model()
 	animate(plot_animation, plot_alpha)  # drawing requested plots

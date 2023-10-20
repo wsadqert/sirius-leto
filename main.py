@@ -1,4 +1,5 @@
 from rich.traceback import install
+
 from src.general.constants import *
 from src.lab1_pendulum import start
 

@@ -11,18 +11,18 @@ from .constants import *
 def model() -> None:
 	# setting start values of time and angle
 	alpha_last = alpha_start
-	alpha_cur = alpha_last
+	alpha_cur = alpha_start
 
 	# initialization of datasets
 	time_array = np.arange(0, t_max, dt)
 	alpha_array = []
-	theoretical_alpha_array = []
 
 	n: Final[int] = len(time_array)
 
 	get_alpha = lambda x: (2 * alpha_cur - alpha_last * (1 - c1) - c2 * sin(alpha_cur)) / (1 + c1)  # noqa:E731 using lambda
 
 	if calculate_theoretical:
+		theoretical_alpha_array = []
 		__phi_beta_positive = lambda t: (alpha_start / 2 * ((1 + gamma / csqrt(beta)) * cexp((-gamma + csqrt(beta)) * t) + (1 - gamma / csqrt(beta)) * cexp((-gamma - csqrt(beta)) * t))).real  # noqa:E731 using lambda
 		__phi_beta_negative_zero = lambda t: (alpha_start * cexp(-gamma * t) * (ccos(csqrt(-beta) * t) + gamma / csqrt(-beta) * csin(csqrt(-beta) * t))).real  # noqa:E731 using lambda
 
@@ -32,8 +32,8 @@ def model() -> None:
 		alpha_next = get_alpha(t)  # noqa:F823 - `get_alpha(...)` is always defined
 
 		if calculate_theoretical:
-			alpha_theoretical_next = get_theoretical_alpha(t)  # noqa:F823 - `get_theoretical_alpha(...)` is always defined
-			theoretical_alpha_array.append(alpha_theoretical_next)
+			alpha_theoretical_next = get_theoretical_alpha(t)  # noqa - `get_theoretical_alpha(...)` is always defined
+			theoretical_alpha_array.append(alpha_theoretical_next)  # noqa - `theoretical_alpha_array` is always defined
 
 		alpha_last = alpha_cur
 		alpha_cur = alpha_next
@@ -47,4 +47,6 @@ def model() -> None:
 		print(n,                        file=f)
 		print(*time_array,              file=f)
 		print(*alpha_array,             file=f)
-		print(*theoretical_alpha_array, file=f)
+
+		if calculate_theoretical:
+			print(*theoretical_alpha_array, file=f)
