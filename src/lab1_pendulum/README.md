@@ -1,9 +1,11 @@
 <script
-  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript">
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript">
 </script>
 
 # Лаборатория №1. Физический маятник.
 ID: `lab1_pendulum`
+
+<span style="color:yellow">PyCharm не умеет корректно обрабатывать нотацию LaTex, даже с подключённым скриптом от [mathjax.org](https://mathjax.org), лучше просматривать этот файл с помощью VS Code или аналогичного редактора.</span>
 
 ## Описание лаборатории
 

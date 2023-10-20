@@ -5,6 +5,7 @@ from cmath import (sqrt as csqrt,  # noqa:typo
                    exp as cexp)  # noqa:typo
 
 from src.general.constants import *
+from src.general.calculations import *
 from .constants import *
 
 
@@ -40,6 +41,15 @@ def model() -> None:
 
 		alpha_array.append(alpha_next)
 
+	extremums_x = np.array(list(set(find_extremum(alpha_array)) | set(find_extremum(alpha_array, np.less))))
+	extremums_y = [alpha_array[i] for i in extremums_x]
+	extremums_x = extremums_x * dt  # noqa - dont refactor this pls, np cannot process `*=` operator
+
+	if calculate_theoretical:
+		extremums_theory_x = np.array(list(set(find_extremum(theoretical_alpha_array)) | set(find_extremum(theoretical_alpha_array, np.less))))
+		extremums_theory_y = [theoretical_alpha_array[i] for i in extremums_theory_x]
+		extremums_theory_x = extremums_theory_x * dt  # noqa - dont refactor this pls, np cannot process `*=` operator
+
 	with open(datapath, 'w') as f:  # noqa - datapath is always defined
 		print(dt,                       file=f)  # exporting data to file
 		print(l,                        file=f)
@@ -47,6 +57,10 @@ def model() -> None:
 		print(n,                        file=f)
 		print(*time_array,              file=f)
 		print(*alpha_array,             file=f)
+		print(*extremums_x,             file=f)
+		print(*extremums_y,             file=f)
 
 		if calculate_theoretical:
-			print(*theoretical_alpha_array, file=f)
+			print(*theoretical_alpha_array,        file=f)
+			print(*extremums_theory_x,             file=f)  # noqa - datapath is always defined
+			print(*extremums_theory_y,             file=f)  # noqa - datapath is always defined
