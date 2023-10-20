@@ -15,10 +15,10 @@ def __animation_step(frame: int, alpha_array) -> tuple:
 	# fps counting
 	if frame == 0:
 		t0 = real_time()
-	elif frame % frames_count == 0:
+	elif frame % frames_count_fps == 0:
 		t1 = real_time()
 		clear_screen()
-		print(f'fps = {frames_count / (t1 - t0):2}')  # printing fps value
+		print(f'fps = {frames_count_fps / (t1 - t0):2}')  # printing fps value
 		t0 = real_time()
 
 	# if animation was ended, but was not closed

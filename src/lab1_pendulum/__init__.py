@@ -6,11 +6,10 @@ from .constants import *
 
 def start(plot_animation: bool = True, plot_alpha: bool = True) -> None:
 	"""
-	Wrapper for `src.lab1_pendulum.animate.animate(...)`.
+	Wrapper for `src.lab1_pendulum.animate.animate(…)`.
 
 	:param plot_animation: Flag determines whether the animation will be rendered.
 	:param plot_alpha: Flag determines whether the graph of deviation angle versus time will be rendered.
-	:param plot_theoretical: Flag determines whether the theoretical dependence will be plotted.
 	:return: None.
 	"""
 

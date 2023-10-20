@@ -3,13 +3,13 @@ from src.general.constants import *
 __all__ = ["l", "alpha_start",  # physics settings
            "mode", "calculate_theoretical", "dt", "t_max",  # model settings
            "datapath_basic", "datapath_windage", "datapath_theoretical",  # output settings
-           "plot_lims", "text_y", "render_dt", "figsize", "pendulum_axis_x", "pendulum_axis_y", "frames_count",  # noqa:typo, rendering settings
+           "plot_lims", "text_y", "render_dt", "figsize", "pendulum_axis_x", "pendulum_axis_y", "frames_count_fps",  # noqa:typo, rendering settings
            "c1", "c2", "beta", "gamma",  # optimizations
            "MODE", "datapath",  # misc
            ]
 
 # model settings
-mode = "windage"  # noqa:typo, Literal["basic", "windage"]
+mode = "basic"  # Literal["basic", "windage"]
 calculate_theoretical = False
 dt: Final[float] = 1e-5
 t_max: Final[float] = 10
@@ -32,25 +32,25 @@ render_dt = 500
 figsize = 7  # noqa:typo, size of the figure in inches
 pendulum_axis_x = 0
 pendulum_axis_y = 0
-frames_count = int(1e3)  # number of frames to count fps
+frames_count_fps = int(1e3)  # number of frames to count fps
 
 # optimizations
-c1 = k * dt / (2 * m)
+
+gamma = k / (2*m)  # air resistance coefficient
+beta = gamma**2 - g/l
+
+c1 = gamma * dt
 c2 = g * dt ** 2 / l
 
 if mode == 'basic':
-	gamma = 0
-else:
-	gamma = k / (2*m)  # air resistance coefficient
-
-beta = gamma**2 - g/l
+	k = 0
 
 # misc
-MODE = Literal["basic", "windage", "theoretical"]
+MODE = Literal["basic", "windage"]
 match mode:
 	case "basic":
 		datapath = datapath_basic
 	case "windage":
 		datapath = datapath_windage
-	case "theoretical":
-		datapath = datapath_theoretical
+	case _:
+		datapath = ""
