@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 from .constants import *
@@ -54,13 +55,16 @@ def animate(plot_animation: bool = True, plot_alpha: bool = True) -> None:
 
 		time_array  = [float(i) for i in f.readline().strip().split()]  # noqa double space
 		alpha_array = [float(i) for i in f.readline().strip().split()]
-		extremums_x = [float(i) for i in f.readline().strip().split()]
-		extremums_y = [float(i) for i in f.readline().strip().split()]
+
+		if calculate_extremums:
+			extremums_x = [float(i) for i in f.readline().strip().split()]
+			extremums_y = [float(i) for i in f.readline().strip().split()]
 
 		if calculate_theoretical:
 			theoretical_alpha_array = [float(i) for i in f.readline().strip().split()]
-			extremums_theory_x = [float(i) for i in f.readline().strip().split()]
-			extremums_theory_y = [float(i) for i in f.readline().strip().split()]
+			if calculate_extremums:
+				extremums_theory_x = [float(i) for i in f.readline().strip().split()]
+				extremums_theory_y = [float(i) for i in f.readline().strip().split()]
 
 	n = int(n)
 
@@ -98,11 +102,17 @@ def animate(plot_animation: bool = True, plot_alpha: bool = True) -> None:
 		plt.ylabel(r"$\alpha, rad$", fontsize=13)
 
 		color = plt.plot(time_array, alpha_array, label="simulation")[0].get_color()
-		plt.plot(extremums_x, extremums_y, 'o', color=color)
+		if calculate_extremums:
+			plt.plot(extremums_x, extremums_y, 'o', color=color)
+			for i in range(len(extremums_x)):
+				plt.axvline(extremums_x[i], ymin=-plot_lims, ymax=plot_lims, color=color, linewidth=1, ls='--')
 
 		if calculate_theoretical:
 			color = plt.plot(time_array, theoretical_alpha_array, label="theory")[0].get_color()
-			plt.plot(extremums_theory_x, extremums_theory_y, 'o', color=color)
+			if calculate_extremums:
+				plt.plot(extremums_theory_x, extremums_theory_y, 'o', color=color)
+				for i in range(len(extremums_x)):
+					plt.axvline(extremums_theory_x[i], ymin=-plot_lims, ymax=plot_lims, color=color, linewidth=1, ls='--')
 
 	elif calculate_theoretical:
 		fig, _ = plt.subplots()
@@ -111,7 +121,8 @@ def animate(plot_animation: bool = True, plot_alpha: bool = True) -> None:
 		plt.ylabel(r"$\alpha, rad$", fontsize=13)
 
 		color = plt.plot(time_array, theoretical_alpha_array, label="theory")
-		plt.plot(extremums_theory_x, extremums_theory_y, 'o', color=color)
+		if calculate_extremums:
+			plt.plot(extremums_theory_x, extremums_theory_y, 'o', color=color)
 
 	plt.legend(loc="upper right")
 	plt.show()

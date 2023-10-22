@@ -15,15 +15,11 @@
 ![Matplotlib](https://img.shields.io/badge/Matplotlib-%23ffffff.svg?style=for-the-badge&logo=Matplotlib&logoColor=black)
 ![Markdown](https://img.shields.io/badge/markdown-%23000000.svg?style=for-the-badge&logo=markdown&logoColor=white)
 
-## TODO
-
-
-
-1. Избавиться от экспорта переменной `n` в датасет.
-
 ## Issues
 
-Пока нету известных багов.
+Все известные баги вы можете отслеживать на [соответствующей странице проекта](https://github.com/wsadqert/sirius-leto/issues) на GitHub.
+
+[![GitHub](https://img.shields.io/badge/Issues-100000?style=for-the-badge&logo=GitHub&logoColor=white&labelColor=black&color=black)](https://github.com/wsadqert/sirius-leto/issues)
 
 ## Файловая структура:
 
