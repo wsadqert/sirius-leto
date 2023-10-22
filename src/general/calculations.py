@@ -3,7 +3,11 @@ from typing import Sequence
 import numpy as np
 from scipy.signal import argrelextrema
 
-__all__ = ["pol2cart", "find_extremum"]
+__all__ = ["clear_screen", "pol2cart", "find_extremum"]  # noqa:typo
+
+
+def clear_screen():
+	print("\x1B[H\x1B[J")
 
 
 def pol2cart(r: float, phi: float) -> tuple[float, float]:
@@ -17,12 +21,12 @@ def pol2cart(r: float, phi: float) -> tuple[float, float]:
 	return x, y
 
 
-def find_extremum(data: Sequence, comparator) -> tuple | np.ndarray:
+def find_extremum(data: Sequence, comparator=np.greater) -> tuple | np.ndarray:  # noqa:typo
 	"""
 	Finds the first local extremum id 1d-array `data`.
 
-	:param comparator: Function to use to compare two data points. Should take two arrays as arguments.
+	:param comparator: Function to use to compare two data points. Should take two arrays as arguments. By default, `np.greater`.
 	:param data: Array in which to find the relative extrema.
 	:return: Indices of the maxima in `data`.
 	"""
-	return argrelextrema(np.array(data), np.greater)[0]
+	return argrelextrema(np.array(data), comparator)[0]
