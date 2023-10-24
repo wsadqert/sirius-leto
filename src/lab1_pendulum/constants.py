@@ -33,7 +33,7 @@ render_dt = 500
 figsize = 7  # noqa:typo, size of the figure in inches
 pendulum_axis_x = 0
 pendulum_axis_y = 0
-frames_count_fps = int(1e3)  # number of frames to count fps\
+frames_count_fps = int(1e3)  # number of frames to count fps
 
 # optimizations
 
