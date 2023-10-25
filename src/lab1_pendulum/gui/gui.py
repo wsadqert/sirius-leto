@@ -1,80 +1,13 @@
 import tkinter as tk
 import tkinter.font as tkFont
+from tkinter.messagebox import showerror
 from rich.traceback import install
-from ToolTip import CreateToolTip
+
+from .ToolTip import CreateToolTip
+from .custom_wingets import *
+from src.general.checks import is_non_negative
 
 install(show_locals=True, width=300)
-
-
-def CustomLabel(text, font, align, place, size):
-	label = tk.Label(root)
-
-	match align:
-		case 'left':
-			anchor = 'w'
-		case 'center':
-			anchor = 'n'
-		case 'right':
-			anchor = 'e'
-		case _:
-			raise ValueError
-
-	label["anchor"] = anchor
-	label["font"] = font
-	label["fg"] = "black"
-	label["justify"] = align
-	label["text"] = text
-	label.place(x=place[0], y=place[1], width=size[0], height=size[1])
-
-
-def CustomCheckBox(text, font, place, size, command, variable):
-	CheckBox = tk.Checkbutton(root)
-
-	CheckBox["anchor"] = "w"
-	CheckBox["font"] = font
-	CheckBox["fg"] = "black"
-	CheckBox["justify"] = "left"
-	CheckBox["text"] = text
-
-	CheckBox["command"] = command
-	CheckBox["variable"] = variable
-	CheckBox["onvalue"] = True
-	CheckBox["offvalue"] = False
-	CheckBox.select()
-
-	CheckBox.place(x=place[0], y=place[1], width=size[0], height=size[1])
-
-	return CheckBox
-
-
-def CustomRadiobutton(text, font, place, size, variable):
-	RadioButton = tk.Radiobutton(root)
-	RadioButton["anchor"] = "w"
-	RadioButton["font"] = font
-	RadioButton["fg"] = "black"
-	RadioButton["justify"] = "left"
-	RadioButton["text"] = text
-
-	RadioButton["variable"] = variable
-	RadioButton["value"] = text
-
-	RadioButton.place(x=place[0], y=place[1], width=size[0], height=size[1])
-
-	return RadioButton
-
-
-def CustomLineEdit(font, align, place, size, variable):
-	LineEdit = tk.Entry(root)
-
-	LineEdit["borderwidth"] = "1px"
-	LineEdit["font"] = font
-	LineEdit["fg"] = "black"
-	LineEdit["justify"] = align
-	LineEdit["textvariable"] = variable
-
-	LineEdit.place(x=place[0], y=place[1], width=size[0], height=size[1])
-
-	return LineEdit
 
 
 class App:
@@ -88,9 +21,9 @@ class App:
 		root.geometry(alignstr)
 		root.resizable(False, False)
 
-		font_10 = tkFont.Font(family='Times', size=10)
-		font_18 = tkFont.Font(family='Times', size=18)
-		font_33 = tkFont.Font(family='Times', size=33)
+		self.__font_10 = tkFont.Font(family='Times', size=10)
+		self.__font_18 = tkFont.Font(family='Times', size=18)
+		self.__font_33 = tkFont.Font(family='Times', size=33)
 
 		self.__labels_h2_info = {
 			"Настройки модели": (40, 80),
@@ -122,17 +55,18 @@ class App:
 		self.__labels_units_size = (30, 25)
 
 		self.__lineedits_info = {
-			"dt":               (120, 120),
-			"t_max":            (120, 150),
-			"l":                (380, 120),
-			"alpha_start":      (380, 150),
-			"k":                (380, 180),
-			"m":                (380, 210),
-			"render_dt":        (380, 290),
+			"dt": (120, 120),
+			"t_max": (120, 150),
+			"l": (380, 120),
+			"alpha_start": (380, 150),
+			"k": (380, 180),
+			"m": (380, 210),
+			"render_dt": (380, 290),
 			"frames_count_fps": (380, 320),
 		}
 		self.__lineedits_size = (75, 25)
-		self.__lineedits_variables = dict()
+		self.__lineedit_variables = dict()
+		self.lineedits = {}
 
 		self.__checkboxes_info = {
 			"theory": ("Расчитывать аналитическое решение", (40, 190)),
@@ -148,12 +82,16 @@ class App:
 			"реалистично": (40, 320)
 		}
 		self.__radios_size = (100, 25)
-		self.radios = []
-		self.__radio_variable = tk.StringVar(value="string")
+		self.__radio_variable = tk.StringVar(value="kv")
+		self.radios = {}
 
+		self.create_widgets()
+
+	def create_widgets(self):
 		Label_title = CustomLabel(
+			root,
 			text="Настройки лаборатории",
-			font=font_33,
+			font=self.__font_33,
 			align="center",
 			place=(0, 10),
 			size=(527, 60)
@@ -161,8 +99,9 @@ class App:
 
 		for name, places in self.__labels_h2_info.items():  # create h2's
 			Label_h2 = CustomLabel(
+				root,
 				text=name,
-				font=font_18,
+				font=self.__font_18,
 				align="left",
 				place=places,
 				size=self.__labels_h2_size
@@ -170,29 +109,34 @@ class App:
 		for name, places in self.__labels_info.items():  # create labels
 			width = (120 if name == "frames_count_fps" else self.__labels_size[0])
 
-			Label = CustomLabel(
+			CustomLabel(
+				root,
 				text=name + ' = ',
-				font=font_10,
+				font=self.__font_10,
 				align="right",
 				place=places,
 				size=(width,
 				      self.__labels_size[1])
 			)
 		for name, places in self.__labels_units_info.items():  # create labels
-			Label = CustomLabel(
+			CustomLabel(
+				root,
 				text=name,
-				font=font_10,
+				font=self.__font_10,
 				align="left",
 				place=places,
 				size=self.__labels_units_size,
 			)
 		for name, places in self.__radios_info.items():
-			radio = CustomRadiobutton(text=name,
-			                          font=font_10,
-			                          place=places,
-			                          size=self.__radios_size,
-			                          variable=self.__radio_variable)
-			self.radios.append(radio)
+			radio = CustomRadiobutton(
+				root,
+				text=name,
+				font=self.__font_10,
+				place=places,
+				size=self.__radios_size,
+				variable=self.__radio_variable
+			)
+			self.radios[name] = radio
 		for name, (text, place) in self.__checkboxes_info.items():
 			current = tk.BooleanVar()
 
@@ -202,8 +146,9 @@ class App:
 				command = lambda: None
 
 			CustomCheckBox(
+				root,
 				text=text,
-				font=font_10,
+				font=self.__font_10,
 				place=place,
 				command=command,
 				variable=current,
@@ -214,51 +159,70 @@ class App:
 		for name, places in self.__lineedits_info.items():
 			current = tk.StringVar()
 
-			LineEdit = CustomLineEdit(
-				font=font_10,
+			lineedit = CustomLineEdit(
+				root,
+				font=self.__font_10,
 				align="right",
 				place=places,
 				size=self.__lineedits_size,
 				variable=current
 			)
 
-		self.GLabel_329 = tk.Label(root)
-		self.GLabel_329["anchor"] = "w"
-		self.GLabel_329["font"] = font_10
-		self.GLabel_329["fg"] = "black"
-		self.GLabel_329["justify"] = "left"
-		self.GLabel_329["text"] = "Зависимость сопротивления\nвоздуха от скорости"
-		self.GLabel_329.place(x=30, y=260, width=247, height=40)
+			self.lineedits[name] = lineedit
+			self.__lineedit_variables[name] = current
+
+		self.Label_windage_mode = CustomLabel(
+			root,
+			text="Зависимость сопротивления\nвоздуха от скорости",
+			font=self.__font_10,
+			align="left",
+			place=(30, 260),
+			size=(240, 40)
+		)
 
 		Button_start = tk.Button(root)
 		Button_start["anchor"] = "center"
 		Button_start["bg"] = "#00b800"
-		Button_start["font"] = font_18
+		Button_start["font"] = self.__font_18
 		Button_start["fg"] = "#ffffff"
 		Button_start["justify"] = "center"
 		Button_start["text"] = "Запуск!"
 		Button_start["relief"] = "flat"
 		Button_start.place(x=30, y=370, width=192, height=50)
-		Button_start["command"] = self.GButton_912_command
+		Button_start["command"] = self.start_command
 
 	def disable_windage_mode_selection(self):
 		variable = self.__checkbox_variables["windage"]
 
 		if not variable.get():
-			self.GLabel_329["fg"] = 'gray'
-			for entry in self.radios:
-				entry.configure(state='disabled')
+			self.Label_windage_mode["fg"] = 'gray'
+			new_state = 'disabled'
 		else:
-			self.GLabel_329["fg"] = 'black'
-			for entry in self.radios:
-				entry.configure(state='normal')
+			self.Label_windage_mode["fg"] = 'black'
+			new_state = 'normal'
 
-	def GButton_912_command(self):
-		print("command")
-		root.destroy()
+		for entry in self.radios.values():
+			entry.configure(state=new_state)
+
+	def start_command(self):
+		if self.__check_lineedits():
+			root.destroy()
+
+	def __check_lineedits(self) -> bool:
+		res = True
+		for name, var in self.__lineedit_variables.items():
+			value = var.get()
+			if not is_non_negative(value):
+				self.lineedits[name].config(highlightthickness=2, highlightbackground='red')
+				showerror("Некорректный ввод",
+				          f"Поле {name} заполнено некорректно. ({name}=\"{value}\")\n\n"
+				          f"Для справки: все поля должны содержать конечные вещественные числа")
+				res = False
+			else:
+				self.lineedits[name].config(highlightthickness=0)
+		return res
 
 
-if __name__ == "__main__":
-	root = tk.Tk()
-	app = App(root)
-	root.mainloop()
+root = tk.Tk()
+app = App(root)
+root.mainloop()
