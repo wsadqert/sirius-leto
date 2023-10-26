@@ -42,6 +42,16 @@ class App:
 			"render_dt": (280, 290),
 			"frames_count_fps": (260, 320)
 		}
+		self.__labels_hints = {
+			"dt": "Шаг симуляции. Должен быть как \nминимум на 3 порядка меньше `t_max`",
+			"t_max": "Время ",
+			"l": "Длина маятника",
+			"alpha_start": "Начальный угол отклонения маятника \nот положения равновесия",
+			"k": "Коэффициент сопротивления воздуха",
+			"m": "Масса груза на конце маятника",
+			"render_dt": "Количество тактов, через которые \nбудет обновляться изображение на экране",
+			"frames_count_fps": "Количество кадров, которые \nиспользуются для расчёта FPS"
+		}
 		self.__labels_size = (100, 25)
 
 		self.__labels_units_info = {
@@ -81,6 +91,11 @@ class App:
 			"kv^2": (130, 300),
 			"реалистично": (40, 320)
 		}
+		self.__radio_hints = {
+			"kv": "Линейная зависимость силы \nсопротивления от скорости",
+			"kv^2": "Квадратичная зависимость силы \nсопротивления от скорости",
+			"реалистично": "Наиболее реалистичная зависимость, \nполученная с помощью численного моделирования \nв профессиональных пакетах"
+		}
 		self.__radios_size = (100, 25)
 		self.__radio_variable = tk.StringVar(value="kv")
 		self.radios = {}
@@ -109,7 +124,7 @@ class App:
 		for name, places in self.__labels_info.items():  # create labels
 			width = (120 if name == "frames_count_fps" else self.__labels_size[0])
 
-			CustomLabel(
+			label = CustomLabel(
 				root,
 				text=name + ' = ',
 				font=self.__font_10,
@@ -118,6 +133,7 @@ class App:
 				size=(width,
 				      self.__labels_size[1])
 			)
+			CreateToolTip(label, self.__labels_hints[name])
 		for name, places in self.__labels_units_info.items():  # create labels
 			CustomLabel(
 				root,
@@ -136,6 +152,7 @@ class App:
 				size=self.__radios_size,
 				variable=self.__radio_variable
 			)
+			CreateToolTip(radio, self.__radio_hints[name])
 			self.radios[name] = radio
 		for name, (text, place) in self.__checkboxes_info.items():
 			current = tk.BooleanVar()
