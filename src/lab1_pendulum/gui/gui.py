@@ -1,11 +1,12 @@
 import tkinter as tk
 import tkinter.font as tkFont
 from tkinter.messagebox import showerror
+import configparser
 from rich.traceback import install
 
 from .ToolTip import CreateToolTip
 from .custom_wingets import *
-from src.general.checks import is_non_negative
+from src.general.checks import is_positive
 
 install(show_locals=True, width=300)
 
@@ -44,7 +45,7 @@ class App:
 		}
 		self.__labels_hints = {
 			"dt": "Шаг симуляции. Должен быть как \nминимум на 3 порядка меньше `t_max`",
-			"t_max": "Время ",
+			"t_max": "Максимальное время симуляции",
 			"l": "Длина маятника",
 			"alpha_start": "Начальный угол отклонения маятника \nот положения равновесия",
 			"k": "Коэффициент сопротивления воздуха",
@@ -87,17 +88,17 @@ class App:
 		self.__checkbox_variables = dict()
 
 		self.__radios_info = {
-			"kv": (40, 300),
-			"kv^2": (130, 300),
-			"реалистично": (40, 320)
+			"linear": ("kv", (40, 300)),
+			"quadratic": ("kv^2", (130, 300)),
+			"realistic": ("реалистично", (40, 320))
 		}
 		self.__radio_hints = {
-			"kv": "Линейная зависимость силы \nсопротивления от скорости",
-			"kv^2": "Квадратичная зависимость силы \nсопротивления от скорости",
-			"реалистично": "Наиболее реалистичная зависимость, \nполученная с помощью численного моделирования \nв профессиональных пакетах"
+			"linear": "Линейная зависимость силы \nсопротивления от скорости",
+			"quadratic": "Квадратичная зависимость силы \nсопротивления от скорости",
+			"realistic": "Наиболее реалистичная зависимость, \nполученная с помощью численного моделирования \nв профессиональных пакетах"
 		}
 		self.__radios_size = (100, 25)
-		self.__radio_variable = tk.StringVar(value="kv")
+		self.__radio_variable = tk.StringVar(value="linear")
 		self.radios = {}
 
 		self.create_widgets()
@@ -143,18 +144,19 @@ class App:
 				place=places,
 				size=self.__labels_units_size,
 			)
-		for name, places in self.__radios_info.items():
+		for name, (text, places) in self.__radios_info.items():
 			radio = CustomRadiobutton(
 				root,
-				text=name,
+				text=text,
 				font=self.__font_10,
 				place=places,
 				size=self.__radios_size,
-				variable=self.__radio_variable
+				variable=self.__radio_variable,
+				value=name
 			)
 			CreateToolTip(radio, self.__radio_hints[name])
 			self.radios[name] = radio
-		for name, (text, place) in self.__checkboxes_info.items():
+		for name, (text, places) in self.__checkboxes_info.items():
 			current = tk.BooleanVar()
 
 			if name == "windage":
@@ -166,7 +168,7 @@ class App:
 				root,
 				text=text,
 				font=self.__font_10,
-				place=place,
+				place=places,
 				command=command,
 				variable=current,
 				size=self.__checkboxes_size
@@ -222,18 +224,54 @@ class App:
 			entry.configure(state=new_state)
 
 	def start_command(self):
-		if self.__check_lineedits():
-			root.destroy()
+		if not self.__check_lineedits():
+			return
+
+		config = configparser.ConfigParser()
+		for section in ['model', 'physics', 'render']:
+			config.add_section(section)
+
+		is_windage = self.__checkbox_variables['windage'].get()
+
+		config['model']['mode'] = ('basic', 'windage')[is_windage]
+		if is_windage:
+			config['model']['windage_method'] = self.__radio_variable.get()
+
+		config['model']['calculate_theoretical'] = str(int(self.__checkbox_variables['theory'].get()))
+		config['model']['calculate_extremums'] = str(int(self.__checkbox_variables['extremums'].get()))
+		config['model']['dt'] = self.__lineedit_variables['dt'].get()
+		config['model']['t_max'] = self.__lineedit_variables['t_max'].get()
+
+		config['physics']['l'] = self.__lineedit_variables['l'].get()
+		config['physics']['alpha_start'] = self.__lineedit_variables['alpha_start'].get()
+		config['physics']['k'] = self.__lineedit_variables['k'].get()
+		config['physics']['m'] = self.__lineedit_variables['m'].get()
+
+		config['render']['render_dt'] = self.__lineedit_variables['render_dt'].get()
+		config['render']['frames_count_fps'] = self.__lineedit_variables['frames_count_fps'].get()
+
+		with open('example.ini', 'w') as f:
+			config.write(f)
+
+		root.destroy()
 
 	def __check_lineedits(self) -> bool:
 		res = True
 		for name, var in self.__lineedit_variables.items():
 			value = var.get()
-			if not is_non_negative(value):
+
+			print(name)
+
+			if name in tuple(self.__lineedit_variables.keys())[-2:]:
+				required_type = int
+			else:
+				required_type = float
+
+			if not is_positive(value, required_type):
 				self.lineedits[name].config(highlightthickness=2, highlightbackground='red')
 				showerror("Некорректный ввод",
 				          f"Поле {name} заполнено некорректно. ({name}=\"{value}\")\n\n"
-				          f"Для справки: все поля должны содержать конечные вещественные числа")
+				          f"Для справки: все поля должны содержать неотрицательные конечные вещественные числа, а последние 2 поля - только положительные целые числа")
 				res = False
 			else:
 				self.lineedits[name].config(highlightthickness=0)
