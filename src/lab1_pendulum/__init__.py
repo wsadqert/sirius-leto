@@ -1,22 +1,31 @@
+from pprint import pprint
+
 from src.general.calculations import *
-from .animate import animate
+from .gui import start_gui
+from .parse_config import parse_config
 from .model import model
-from .constants import *
+from .animate import animate
+# from .constants import *
+
+__all__ = ["start"]
 
 
-def start(plot_animation: bool = True, plot_alpha: bool = True) -> None:
+def start() -> None:
 	"""
 	Wrapper for `src.lab1_pendulum.animate.animate(…)`.
 
-	:param plot_animation: Flag determines whether the animation will be rendered.
-	:param plot_alpha: Flag determines whether the graph of deviation angle versus time will be rendered.
 	:return: None.
 	"""
 
 	clear_screen()
 
-	if mode not in MODE.__args__:
-		raise ValueError(f"mode must be one of {MODE.__args__} but {mode=} is provided")
+	start_gui()
+	config = parse_config()
 
-	model()
-	animate(plot_animation, plot_alpha)  # drawing requested plots
+	# REMOVE AFTER TESTING
+	print(config)
+	pprint(config, sort_dicts=False)
+	# --------------------
+
+	model(config)
+	animate(config)  # drawing requested plots

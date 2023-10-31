@@ -9,7 +9,12 @@ from src.general.calculations import *
 from .constants import *
 
 
-def model() -> None:
+def model(config: dict[str, ...]) -> None:
+	"""Warning: pls ignore "Unresolved reference" errors, dont try to fix them"""
+
+	for i in config.keys():
+		globals()[i] = config[i]
+
 	# setting start values of time and angle
 	alpha_last = alpha_start
 	alpha_cur = alpha_start
@@ -51,7 +56,7 @@ def model() -> None:
 		extremums_theory_y = [theoretical_alpha_array[i] for i in extremums_theory_x]
 		extremums_theory_x = extremums_theory_x * dt  # noqa - dont refactor this pls, np cannot process `*=` operator
 
-	with open(datapath, 'w') as f:  # noqa - datapath is always defined
+	with open(datapath_model, 'w') as f:  # noqa - datapath is always defined
 		print(dt,                       file=f)  # exporting data to file
 		print(l,                        file=f)
 		print(t_max,                    file=f)

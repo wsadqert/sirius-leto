@@ -4,9 +4,10 @@ from tkinter.messagebox import showerror
 import configparser
 from rich.traceback import install
 
-from .ToolTip import CreateToolTip
+from .tooltip import CreateToolTip
 from .custom_wingets import *
 from src.general.checks import is_positive
+from src.lab1_pendulum.constants import *
 
 install(show_locals=True, width=300)
 
@@ -83,6 +84,8 @@ class App:
 			"theory": ("Расчитывать аналитическое решение", (40, 190)),
 			"windage": ("Учитывать сопротивление воздуха", (40, 220)),
 			"extremums": ("Отображать пики на графике", (280, 350)),
+			"plot_animation": ("Показать анимацию движения", (280, 380)),
+			"plot_alpha": ("Показать график угла от времени", (280, 410)),
 		}
 		self.__checkboxes_size = (230, 30)
 		self.__checkbox_variables = dict()
@@ -103,7 +106,7 @@ class App:
 
 		self.create_widgets()
 
-	def create_widgets(self):
+	def create_widgets(self) -> None:
 		Label_title = CustomLabel(
 			root,
 			text="Настройки лаборатории",
@@ -210,7 +213,7 @@ class App:
 		Button_start.place(x=30, y=370, width=192, height=50)
 		Button_start["command"] = self.start_command
 
-	def disable_windage_mode_selection(self):
+	def disable_windage_mode_selection(self) -> None:
 		variable = self.__checkbox_variables["windage"]
 
 		if not variable.get():
@@ -223,7 +226,7 @@ class App:
 		for entry in self.radios.values():
 			entry.configure(state=new_state)
 
-	def start_command(self):
+	def start_command(self) -> None:
 		if not self.__check_lineedits():
 			return
 
@@ -249,8 +252,10 @@ class App:
 
 		config['render']['render_dt'] = self.__lineedit_variables['render_dt'].get()
 		config['render']['frames_count_fps'] = self.__lineedit_variables['frames_count_fps'].get()
+		config['render']['plot_animation'] = str(int(self.__checkbox_variables['plot_animation'].get()))
+		config['render']['plot_alpha'] = str(int(self.__checkbox_variables['plot_alpha'].get()))
 
-		with open('example.ini', 'w') as f:
+		with open(datapath_input, 'w') as f:
 			config.write(f)
 
 		root.destroy()
@@ -259,8 +264,6 @@ class App:
 		res = True
 		for name, var in self.__lineedit_variables.items():
 			value = var.get()
-
-			print(name)
 
 			if name in tuple(self.__lineedit_variables.keys())[-2:]:
 				required_type = int
@@ -280,4 +283,7 @@ class App:
 
 root = tk.Tk()
 app = App(root)
-root.mainloop()
+
+
+def start_gui() -> None:
+	root.mainloop()
