@@ -6,7 +6,7 @@ __all__ = ["datapath_model", "datapath_theoretical", "datapath_input",  # output
            ]
 
 # output settings
-datapath_model = os.path.join(DATASTORE_ROOT, "lab1_pendulum", "basic", "data.dat")
+datapath_model = os.path.join(DATASTORE_ROOT, "lab1_pendulum", "data.dat")
 datapath_theoretical = os.path.join(DATASTORE_ROOT, "lab1_pendulum", "theoretical", "data.dat")
 datapath_input = os.path.join(DATASTORE_ROOT, "lab1_pendulum", "input", "data.ini")
 

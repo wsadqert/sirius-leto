@@ -5,7 +5,6 @@ from .gui import start_gui
 from .parse_config import parse_config
 from .model import model
 from .animate import animate
-# from .constants import *
 
 __all__ = ["start"]
 
@@ -23,7 +22,6 @@ def start() -> None:
 	config = parse_config()
 
 	# REMOVE AFTER TESTING
-	print(config)
 	pprint(config, sort_dicts=False)
 	# --------------------
 

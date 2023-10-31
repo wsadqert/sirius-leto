@@ -57,18 +57,15 @@ def model(config: dict[str, ...]) -> None:
 		extremums_theory_x = extremums_theory_x * dt  # noqa - dont refactor this pls, np cannot process `*=` operator
 
 	with open(datapath_model, 'w') as f:  # noqa - datapath is always defined
-		print(dt,                       file=f)  # exporting data to file
-		print(l,                        file=f)
-		print(t_max,                    file=f)
-		print(n,                        file=f)
-		print(*time_array,              file=f)
-		print(*alpha_array,             file=f)
+		print(n,                            file=f)  # exporting data to file
+		print(*time_array,                  file=f)
+		print(*alpha_array,                 file=f)
 		if calculate_extremums:
 			print(*extremums_x,             file=f)  # noqa - extremums_x is always defined
 			print(*extremums_y,             file=f)  # noqa - extremums_y is always defined
 
 		if calculate_theoretical:
-			print(*theoretical_alpha_array,        file=f)
+			print(*theoretical_alpha_array, file=f)
 			if calculate_extremums:
-				print(*extremums_theory_x,             file=f)  # noqa - extremums_theory_x is always defined
-				print(*extremums_theory_y,             file=f)  # noqa - extremums_theory_y is always defined
+				print(*extremums_theory_x,  file=f)  # noqa - extremums_theory_x is always defined
+				print(*extremums_theory_y,  file=f)  # noqa - extremums_theory_y is always defined

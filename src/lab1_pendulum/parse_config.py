@@ -1,6 +1,7 @@
+from configparser import ConfigParser
+
 from src.lab1_pendulum.constants import *
 from src.general.constants import *
-from configparser import ConfigParser
 
 __all__ = ["parse_config"]
 
