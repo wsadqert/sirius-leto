@@ -62,7 +62,7 @@ def CustomRadiobutton(root, text, font, place, size, variable, value):
 	return radiobutton
 
 
-def CustomLineEdit(root, font, align, place, size, variable):
+def CustomLineEdit(root, font, align, place, size, variable, default_value: str = ''):
 	lineedit = tk.Entry(root)
 
 	lineedit["borderwidth"] = "1px"
@@ -70,6 +70,8 @@ def CustomLineEdit(root, font, align, place, size, variable):
 	lineedit["fg"] = "black"
 	lineedit["justify"] = align
 	lineedit["textvariable"] = variable
+
+	lineedit.insert(0, default_value)
 
 	lineedit.place(x=place[0], y=place[1], width=size[0], height=size[1])
 

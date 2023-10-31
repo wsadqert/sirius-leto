@@ -13,13 +13,16 @@ install(show_locals=True, width=300)
 
 
 class App:
+	width = 527
+	height = 446
+
 	def __init__(self, root):
 		root.title("Settings")
-		width = 527
-		height = 446
+
 		screenwidth = root.winfo_screenwidth()
 		screenheight = root.winfo_screenheight()
-		alignstr = f"{width}x{height}+{(screenwidth - width) // 2}+{(screenheight - height) // 2}"
+		alignstr = f"{self.width}x{self.height}+{(screenwidth - self.width) // 2}+{(screenheight - self.height) // 2}"
+
 		root.geometry(alignstr)
 		root.resizable(False, False)
 
@@ -27,21 +30,21 @@ class App:
 		self.__font_18 = tkFont.Font(family='Times', size=18)
 		self.__font_33 = tkFont.Font(family='Times', size=33)
 
-		self.__labels_h2_info = {
+		self.__labels_h2_places = {
 			"Настройки модели": (40, 80),
-			"Рендер": (290, 250),
-			"Физика": (290, 80)
+			"Рендер":           (290, 250),
+			"Физика":           (290, 80)
 		}
 		self.__labels_h2_size = (200, 35)
 
-		self.__labels_info = {
-			"dt": (20, 120),
-			"t_max": (20, 150),
-			"l": (280, 120),
-			"alpha_start": (280, 150),
-			"k": (280, 180),
-			"m": (280, 210),
-			"render_dt": (280, 290),
+		self.__labels_places = {
+			"dt":               (20, 120),
+			"t_max":            (20, 150),
+			"l":                (280, 120),
+			"alpha_start":       (280, 150),
+			"k":                (280, 180),
+			"m":                (280, 210),
+			"render_dt":        (280, 290),
 			"frames_count_fps": (260, 320)
 		}
 		self.__labels_hints = {
@@ -56,25 +59,35 @@ class App:
 		}
 		self.__labels_size = (100, 25)
 
-		self.__labels_units_info = {
-			"с ": (200, 120),
-			"с": (200, 150),
-			"м": (460, 120),
-			"рад": (460, 150),
+		self.__labels_units_places = {
+			"с ":   (200, 120),
+			"с":    (200, 150),
+			"м":    (460, 120),
+			"рад":  (460, 150),
 			"кг/с": (460, 180),
-			"кг": (460, 210),
+			"кг":   (460, 210),
 		}
 		self.__labels_units_size = (30, 25)
 
-		self.__lineedits_info = {
-			"dt": (120, 120),
-			"t_max": (120, 150),
-			"l": (380, 120),
-			"alpha_start": (380, 150),
-			"k": (380, 180),
-			"m": (380, 210),
-			"render_dt": (380, 290),
+		self.__lineedits_places = {
+			"dt":               (120, 120),
+			"t_max":            (120, 150),
+			"l":                (380, 120),
+			"alpha_start":      (380, 150),
+			"k":                (380, 180),
+			"m":                (380, 210),
+			"render_dt":        (380, 290),
 			"frames_count_fps": (380, 320),
+		}
+		self.__lineedits_defaults = {
+			"dt":               '1e-5',
+			"t_max":            '15',
+			"l":                '9.8',
+			"alpha_start":      '1',
+			"k":                '0.6',
+			"m":                '1',
+			"render_dt":        '500',
+			"frames_count_fps": '1000',
 		}
 		self.__lineedits_size = (75, 25)
 		self.__lineedit_variables = dict()
@@ -116,7 +129,7 @@ class App:
 			size=(527, 60)
 		)
 
-		for name, places in self.__labels_h2_info.items():  # create h2's
+		for name, places in self.__labels_h2_places.items():  # create h2's
 			Label_h2 = CustomLabel(
 				root,
 				text=name,
@@ -125,7 +138,7 @@ class App:
 				place=places,
 				size=self.__labels_h2_size
 			)
-		for name, places in self.__labels_info.items():  # create labels
+		for name, places in self.__labels_places.items():  # create labels
 			width = (120 if name == "frames_count_fps" else self.__labels_size[0])
 
 			label = CustomLabel(
@@ -138,7 +151,7 @@ class App:
 				      self.__labels_size[1])
 			)
 			CreateToolTip(label, self.__labels_hints[name])
-		for name, places in self.__labels_units_info.items():  # create labels
+		for name, places in self.__labels_units_places.items():  # create labels
 			CustomLabel(
 				root,
 				text=name,
@@ -147,7 +160,7 @@ class App:
 				place=places,
 				size=self.__labels_units_size,
 			)
-		for name, (text, places) in self.__radios_info.items():
+		for name, (text, places) in self.__radios_info.items():  # create radiobuttons
 			radio = CustomRadiobutton(
 				root,
 				text=text,
@@ -159,7 +172,7 @@ class App:
 			)
 			CreateToolTip(radio, self.__radio_hints[name])
 			self.radios[name] = radio
-		for name, (text, places) in self.__checkboxes_info.items():
+		for name, (text, places) in self.__checkboxes_info.items():  # creating checkboxes
 			current = tk.BooleanVar()
 
 			if name == "windage":
@@ -178,7 +191,7 @@ class App:
 			)
 
 			self.__checkbox_variables[name] = current
-		for name, places in self.__lineedits_info.items():
+		for name, places in self.__lineedits_places.items():  # creating lineedits
 			current = tk.StringVar()
 
 			lineedit = CustomLineEdit(
@@ -187,7 +200,8 @@ class App:
 				align="right",
 				place=places,
 				size=self.__lineedits_size,
-				variable=current
+				variable=current,
+				default_value=self.__lineedits_defaults[name]
 			)
 
 			self.lineedits[name] = lineedit
