@@ -1,13 +1,12 @@
 from src.general.constants import *
 
-__all__ = ["datapath_model", "datapath_theoretical", "datapath_input",  # output settings
+__all__ = ["datapath_model", "datapath_input",  # output settings
            "plot_lims", "text_y", "figsize", "pendulum_axis_x", "pendulum_axis_y",  # noqa:typo, rendering settings
            "MODE",  # misc
            ]
 
 # output settings
 datapath_model = os.path.join(DATASTORE_ROOT, "lab1_pendulum", "data.dat")
-datapath_theoretical = os.path.join(DATASTORE_ROOT, "lab1_pendulum", "theoretical", "data.dat")
 datapath_input = os.path.join(DATASTORE_ROOT, "lab1_pendulum", "input", "data.ini")
 
 
