@@ -6,8 +6,11 @@ from src.general.constants import *
 from src.general.calculations import *
 
 
-def __animation_step(frame: int, alpha_array) -> tuple:
+def __animation_step(frame: int, alpha_array, config) -> tuple:
 	global t0, pendulum_line, pendulum_point, time_text, n  # noqa - variables are defined in `animate()`
+
+	for i in config.keys():
+		globals()[i] = config[i]
 
 	# calculating current in-model time
 	data_item_index = render_dt * frame
@@ -91,7 +94,7 @@ def animate(config: dict[str, ...]) -> None:
 		time_text = plt.text(0, text_y * l, "", fontsize=20)
 		animation = FuncAnimation(fig,  # noqa:F841
 		                          func=__animation_step,
-		                          fargs=(alpha_array,),
+		                          fargs=(alpha_array, config,),
 		                          interval=0,
 		                          frames=n,
 		                          blit=True,
@@ -114,7 +117,7 @@ def animate(config: dict[str, ...]) -> None:
 			color = plt.plot(time_array, theoretical_alpha_array, label="theory")[0].get_color()
 			if calculate_extremums:
 				plt.plot(extremums_theory_x, extremums_theory_y, 'o', color=color)
-				for i in range(len(extremums_x)):
+				for i in range(len(extremums_theory_x)):
 					plt.axvline(extremums_theory_x[i], ymin=-plot_lims, ymax=plot_lims, color=color, linewidth=1, ls='--')
 
 	elif calculate_theoretical:
