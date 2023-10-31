@@ -30,7 +30,7 @@ def parse_config() -> dict[str, ...]:
 		ans['k'] = 0
 
 	ans['gamma'] = ans['k'] / (2*ans['m'])
-	ans['beta'] = ans['gamma'] - g * ans['l']
+	ans['beta'] = ans['gamma']**2 - g / ans['l']
 	ans['c1'] = ans['gamma'] * ans['dt']
 	ans['c2'] = g * ans['dt'] ** 2 / ans['l']
 
