@@ -2,6 +2,8 @@
 
 import tkinter as tk
 
+__all__ = ["create_tooltip"]
+
 
 class ToolTip(object):
 
@@ -34,7 +36,7 @@ class ToolTip(object):
 			tw.destroy()
 
 
-def CreateToolTip(widget, text):
+def create_tooltip(widget, text):
 	toolTip = ToolTip(widget)
 
 	def enter(event):

@@ -46,7 +46,7 @@ def CustomCheckBox(root, text, font, place, size, command, variable):
 	return checkbox
 
 
-def CustomRadiobutton(root, text, font, place, size, variable, value):
+def CustomRadiobutton(root, text, font, place, size, variable, value, command=lambda: None):
 	radiobutton = tk.Radiobutton(root)
 	radiobutton["anchor"] = "w"
 	radiobutton["font"] = font
@@ -56,6 +56,7 @@ def CustomRadiobutton(root, text, font, place, size, variable, value):
 
 	radiobutton["variable"] = variable
 	radiobutton["value"] = value
+	radiobutton["command"] = command
 
 	radiobutton.place(x=place[0], y=place[1], width=size[0], height=size[1])
 
