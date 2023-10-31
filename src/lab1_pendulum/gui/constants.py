@@ -7,6 +7,7 @@ labels_h2_places = {
 	"Физика": (290, 80)
 }
 labels_h2_size = (200, 35)
+labels_h2 = dict()
 
 labels_places = {
 	"dt": (20, 120),
@@ -29,6 +30,7 @@ labels_hints = {
 	"frames_count_fps": "Количество кадров, которые \nиспользуются для расчёта FPS"
 }
 labels_size = (100, 25)
+labels = dict()
 
 labels_units_places = {
 	"с ": (200, 120),
@@ -39,6 +41,7 @@ labels_units_places = {
 	"кг": (460, 210),
 }
 labels_units_size = (30, 25)
+labels_units = dict()
 
 lineedits_places = {
 	"dt": (120, 120),
@@ -62,7 +65,7 @@ lineedits_defaults = {
 }
 lineedits_size = (75, 25)
 lineedit_variables = dict()
-lineedits = {}
+lineedits = dict()
 
 checkboxes_info = {
 	"theory": ("Расчитывать аналитическое решение", (40, 190)),
@@ -73,6 +76,7 @@ checkboxes_info = {
 }
 checkboxes_size = (230, 30)
 checkbox_variables = dict()
+checkboxes = dict()
 
 radios_info = {
 	"linear": ("kv", (40, 300)),
@@ -85,7 +89,7 @@ radio_hints = {
 	"realistic": "Наиболее реалистичная зависимость, \nполученная с помощью численного моделирования \nв профессиональных пакетах"
 }
 radios_size = (100, 25)
-radios = {}
+radios = dict()
 
 button_place = (30, 360)
 button_size = (192, 80)

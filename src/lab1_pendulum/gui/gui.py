@@ -14,6 +14,8 @@ from .constants import *
 
 install(show_locals=True, width=300)
 
+__all__ = ["app", "start_gui"]
+
 
 class App(tk.Tk):
 	def __init__(self):
@@ -43,7 +45,7 @@ class App(tk.Tk):
 			sys.exit(0)
 
 	def create_widgets(self) -> None:
-		Label_title = CustomLabel(
+		self.Label_title = CustomLabel(
 			self,
 			text="Настройки лаборатории",
 			font=self.font_33,
@@ -53,7 +55,7 @@ class App(tk.Tk):
 		)
 
 		for name, places in labels_h2_places.items():  # create h2's
-			Label_h2 = CustomLabel(
+			label_h2 = CustomLabel(
 				self,
 				text=name,
 				font=self.font_18,
@@ -61,6 +63,7 @@ class App(tk.Tk):
 				place=places,
 				size=labels_h2_size
 			)
+			labels_h2[name] = label_h2
 		for name, places in labels_places.items():  # create labels
 			width = (120 if name == "frames_count_fps" else labels_size[0])
 
@@ -74,8 +77,9 @@ class App(tk.Tk):
 				      labels_size[1])
 			)
 			CreateToolTip(label, labels_hints[name])
+			labels[name] = label
 		for name, places in labels_units_places.items():  # create labels
-			CustomLabel(
+			label_unit = CustomLabel(
 				self,
 				text=name,
 				font=self.font_10,
@@ -83,6 +87,7 @@ class App(tk.Tk):
 				place=places,
 				size=labels_units_size,
 			)
+			labels_units[name] = label_unit
 		for name, (text, places) in radios_info.items():  # create radiobuttons
 			radio = CustomRadiobutton(
 				self,
@@ -91,7 +96,8 @@ class App(tk.Tk):
 				place=places,
 				size=radios_size,
 				variable=self.radio_variable,
-				value=name
+				value=name,
+				command=self.__disable_k_on_realistic
 			)
 			CreateToolTip(radio, radio_hints[name])
 			radios[name] = radio
@@ -103,7 +109,7 @@ class App(tk.Tk):
 			else:
 				command = lambda: None
 
-			CustomCheckBox(
+			checkbox = CustomCheckBox(
 				self,
 				text=text,
 				font=self.font_10,
@@ -113,6 +119,7 @@ class App(tk.Tk):
 				size=checkboxes_size
 			)
 
+			checkboxes[name] = checkbox
 			checkbox_variables[name] = current
 		for name, places in lineedits_places.items():  # creating lineedits
 			current = tk.StringVar()
@@ -155,18 +162,41 @@ class App(tk.Tk):
 		)
 		Button_start["command"] = self.start_command
 
+	def __disable_k_on_realistic(self) -> None:
+		if not checkbox_variables["windage"].get():
+			return
+
+		if self.radio_variable.get() == 'realistic':
+			new_state = "disabled"
+			new_color = "gray"
+		else:
+			new_state = "normal"
+			new_color = "black"
+
+		self.__config_k(new_state, new_color)
+
+	def __config_k(self, new_state, new_color) -> None:
+		lineedits['k'].configure(state=new_state)
+		labels['k'].configure(fg=new_color)
+		labels_units['кг/с'].configure(fg=new_color)
+
 	def disable_windage_mode_selection(self) -> None:
 		variable = checkbox_variables["windage"]
 
 		if not variable.get():
-			self.Label_windage_mode["fg"] = 'gray'
+			new_color = 'gray'
 			new_state = 'disabled'
 		else:
-			self.Label_windage_mode["fg"] = 'black'
+			new_color = 'black'
 			new_state = 'normal'
 
 		for entry in radios.values():
 			entry.configure(state=new_state)
+
+		if self.radio_variable.get() != 'realistic':
+			self.__config_k(new_state, new_color)
+
+		self.Label_windage_mode["fg"] = new_color
 
 	def start_command(self) -> None:
 		if not self.__check_lineedits():
