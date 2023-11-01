@@ -1,6 +1,6 @@
 desktop.ini
 .editorconfig
-datastore/**/data.???
+data_*.???
 
 .idea/**/**
 .idea/**

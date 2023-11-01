@@ -106,6 +106,7 @@ def animate(config: dict[str, ...]) -> None:
 		plt.grid(True, linestyle='--')
 		plt.xlabel(r"$t, s$", fontsize=13)
 		plt.ylabel(r"$\alpha, rad$", fontsize=13)
+		plt.axhline(y=0, color='black', ls='--')
 
 		color = plt.plot(time_array, alpha_array, label="simulation")[0].get_color()
 		if calculate_extremums:

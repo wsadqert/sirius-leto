@@ -25,7 +25,10 @@ def model(config: dict[str, ...]) -> None:
 
 	n: Final[int] = len(time_array)
 
-	get_alpha = lambda x: (2 * alpha_cur - alpha_last * (1 - c1) - c2 * sin(alpha_cur)) / (1 + c1)  # noqa:E731 using lambda
+	if config["windage_method"] == 'quadratic':
+		get_alpha = lambda x: 2 * alpha_cur - alpha_last - 2 * c1 * (alpha_cur-alpha_last) - c2 * sin(alpha_cur)  # noqa:E731 using lambda
+	else:
+		get_alpha = lambda x: (2 * alpha_cur - alpha_last * (1 - c1) - c2 * sin(alpha_cur)) / (1 + c1)  # noqa:E731 using lambda
 
 	if calculate_theoretical:
 		theoretical_alpha_array = []

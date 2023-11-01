@@ -37,6 +37,8 @@ class App(tk.Tk):
 
 		self.create_widgets()
 
+		self.bind('<Return>', self.start)
+
 	def create_widgets(self) -> None:
 		self.Label_title = CustomLabel(
 			self,
@@ -168,6 +170,8 @@ class App(tk.Tk):
 		new_color = ('gray', 'black')[new_state == 'normal']
 
 		checkboxes["theory"].config(state=new_state, fg=new_color)
+		if new_state == 'disabled':
+			checkbox_variables["theory"].set(False)
 
 		return new_color
 
@@ -244,7 +248,7 @@ class App(tk.Tk):
 
 		self.Label_windage_mode["fg"] = new_color
 
-	def start(self) -> None:
+	def start(self, event=...) -> None:
 		if not self.__check_lineedits():
 			return
 
