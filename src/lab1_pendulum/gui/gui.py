@@ -3,7 +3,6 @@ import tkinter as tk
 import tkinter.font as tkFont
 from tkinter import messagebox
 import configparser
-from rich.traceback import install
 
 from src.general.checks import *
 from src.lab1_pendulum.constants import *
@@ -12,7 +11,6 @@ from .tooltip import create_tooltip
 from .custom_wingets import *
 from .constants import *
 
-install(show_locals=True, width=300)
 
 __all__ = ["app", "start_gui"]
 
@@ -38,11 +36,6 @@ class App(tk.Tk):
 		self.radio_variable = tk.StringVar(value="linear")
 
 		self.create_widgets()
-
-	def on_exit(self):
-		if messagebox.askyesno("Выход", "Вы уверены, что хотите выйти?"):
-			self.destroy()
-			sys.exit(0)
 
 	def create_widgets(self) -> None:
 		self.Label_title = CustomLabel(
@@ -97,7 +90,7 @@ class App(tk.Tk):
 				size=radios_size,
 				variable=self.radio_variable,
 				value=name,
-				command=self.__disable_k_on_realistic
+				command=self.__radio_handler
 			)
 			create_tooltip(radio, radio_hints[name])
 			radios[name] = radio
@@ -105,7 +98,7 @@ class App(tk.Tk):
 			current = tk.BooleanVar()
 
 			if name == "windage":
-				command = self.disable_windage_mode_selection
+				command = self.__checkbox_windage_handler
 			else:
 				command = lambda: None
 
@@ -160,45 +153,98 @@ class App(tk.Tk):
 			width=button_size[0],
 			height=button_size[1]
 		)
-		Button_start["command"] = self.start_command
+		Button_start["command"] = self.start
 
-	def __disable_k_on_realistic(self) -> None:
-		if not checkbox_variables["windage"].get():
-			return
+	def __config_k(self, new_state) -> str:
+		new_color = ('gray', 'black')[new_state == 'normal']
 
-		if self.radio_variable.get() == 'realistic':
-			new_state = "disabled"
-			new_color = "gray"
-		else:
-			new_state = "normal"
-			new_color = "black"
-
-		self.__config_k(new_state, new_color)
-
-	def __config_k(self, new_state, new_color) -> None:
 		lineedits['k'].configure(state=new_state)
 		labels['k'].configure(fg=new_color)
 		labels_units['кг/с'].configure(fg=new_color)
 
-	def disable_windage_mode_selection(self) -> None:
-		variable = checkbox_variables["windage"]
+		return new_color
 
-		if not variable.get():
-			new_color = 'gray'
-			new_state = 'disabled'
+	def __config_theory(self, new_state) -> str:
+		new_color = ('gray', 'black')[new_state == 'normal']
+
+		checkboxes["theory"].config(state=new_state, fg=new_color)
+
+		return new_color
+
+	def __check_lineedits(self) -> bool:
+		res = True
+		for name, var in lineedit_variables.items():
+			value = var.get()
+
+			if name in tuple(lineedit_variables.keys())[-2:]:
+				required_type = int
+			else:
+				required_type = float
+
+			if name in ("alpha_start", "k"):
+				checker_function = is_not_nan_inf
+			else:
+				checker_function = lambda value: is_positive(value, required_type)
+
+			if not checker_function(value):
+				lineedits[name].config(highlightthickness=2, highlightbackground='red')
+				messagebox.showerror("Некорректный ввод",
+				                     f"Поле {name} заполнено некорректно. ({name}=\"{value}\")\n\n"
+				                     "Для справки: все поля должны содержать неотрицательные конечные вещественные числа, а последние 2 поля - только положительные целые числа")
+				res = False
+			else:
+				lineedits[name].config(highlightthickness=0)
+		return res
+
+	# EVENT HANDLERS
+
+	def __radio_handler(self) -> None:
+		if not checkbox_variables["windage"].get():
+			return
+
+		selection = self.radio_variable.get()
+
+		if selection == 'realistic':
+			k_new_state = "disabled"
 		else:
-			new_color = 'black'
+			k_new_state = "normal"
+
+		if selection in ("realistic", "quadratic"):
+			theory_new_state = "disabled"
+		else:
+			theory_new_state = "normal"
+
+		self.__config_k(k_new_state)
+		self.__config_theory(theory_new_state)
+
+	def on_exit(self):
+		if messagebox.askyesno("Выход", "Вы уверены, что хотите выйти?"):
+			self.destroy()
+			sys.exit(0)
+
+	def __checkbox_windage_handler(self) -> None:
+		variable = checkbox_variables["windage"].get()
+
+		if not variable:
+			self.__config_theory("normal")
+		self.__radio_handler()
+
+		if not variable:
+			new_state = 'disabled'
+			new_color = 'gray'
+		else:
 			new_state = 'normal'
+			new_color = 'black'
 
 		for entry in radios.values():
 			entry.configure(state=new_state)
 
 		if self.radio_variable.get() != 'realistic':
-			self.__config_k(new_state, new_color)
+			self.__config_k(new_state)
 
 		self.Label_windage_mode["fg"] = new_color
 
-	def start_command(self) -> None:
+	def start(self) -> None:
 		if not self.__check_lineedits():
 			return
 
@@ -231,31 +277,6 @@ class App(tk.Tk):
 			config.write(f)
 
 		self.destroy()
-
-	def __check_lineedits(self) -> bool:
-		res = True
-		for name, var in lineedit_variables.items():
-			value = var.get()
-
-			if name in tuple(lineedit_variables.keys())[-2:]:
-				required_type = int
-			else:
-				required_type = float
-
-			if name in ("alpha_start", "k"):
-				checker_function = is_not_nan_inf
-			else:
-				checker_function = lambda value: is_positive(value, required_type)
-
-			if not checker_function(value):
-				lineedits[name].config(highlightthickness=2, highlightbackground='red')
-				messagebox.showerror("Некорректный ввод",
-				                     f"Поле {name} заполнено некорректно. ({name}=\"{value}\")\n\n"
-				                     "Для справки: все поля должны содержать неотрицательные конечные вещественные числа, а последние 2 поля - только положительные целые числа")
-				res = False
-			else:
-				lineedits[name].config(highlightthickness=0)
-		return res
 
 
 app = App()
