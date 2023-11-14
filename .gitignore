@@ -1,6 +1,8 @@
 desktop.ini
 .editorconfig
-data_*.???
+data*.???
+input.???
+datastore/**/comparing
 
 .idea/**/**
 .idea/**

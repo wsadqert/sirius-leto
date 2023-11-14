@@ -1,4 +1,5 @@
 from pprint import pprint
+import logging
 
 from src.general.calculations import *
 from .constants import *
@@ -29,12 +30,16 @@ def start() -> None:
 
 	clear_screen()
 
+	logging.info("Starting `Settings` window GUI...")
 	start_gui()
+	logging.info(f"Parsing config file {datapath_input}...")
 	config = parse_config()
 
 	# REMOVE AFTER TESTING
 	pprint(config, sort_dicts=False)
 	# --------------------
 
+	logging.info("Calculating model...")
 	model(config)
+	logging.info("Rendering animation...")
 	animate(config)  # drawing requested plots

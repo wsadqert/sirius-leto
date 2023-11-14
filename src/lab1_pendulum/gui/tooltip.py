@@ -6,7 +6,6 @@ __all__ = ["create_tooltip"]
 
 
 class ToolTip(object):
-
 	def __init__(self, widget):
 		self.widget = widget
 		self.tipwindow = None
@@ -22,7 +21,7 @@ class ToolTip(object):
 		x = x + self.widget.winfo_rootx() + 57
 		y = y + cy + self.widget.winfo_rooty() + 27
 		self.tipwindow = tw = tk.Toplevel(self.widget)
-		tw.wm_overrideredirect(1)
+		tw.wm_overrideredirect(True)
 		tw.wm_geometry("+%d+%d" % (x, y))
 		label = tk.Label(tw, text=self.text, justify=tk.LEFT,
 		                 background="#ffffe0", relief=tk.SOLID, borderwidth=1,

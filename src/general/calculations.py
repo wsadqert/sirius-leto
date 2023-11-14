@@ -3,7 +3,7 @@ from typing import Sequence
 import numpy as np
 from scipy.signal import argrelextrema
 
-__all__ = ["clear_screen", "pol2cart", "find_extremum"]  # noqa:typo
+__all__ = ["clear_screen", "pol2cart", "find_extremums"]  # noqa:typo
 
 
 def clear_screen():
@@ -20,13 +20,30 @@ def pol2cart(r: float, phi: float) -> tuple[float, float]:
 	y = r * sin(phi)
 	return x, y
 
-
-def find_extremum(data: Sequence, comparator=np.greater) -> tuple | np.ndarray:  # noqa:typo
+def find_minimums(data: Sequence) -> tuple | np.ndarray:
 	"""
-	Finds the first local extremum id 1d-array `data`.
+	Finds all local minimums in 1d-array `data`.
 
-	:param comparator: Function to use to compare two data points. Should take two arrays as arguments. By default, `np.greater`.
+	:param data: Array in which to find the relative minimums.
+	:return: Indices of the minimums in `data`.
+	"""
+	return argrelextrema(np.array(data), np.less)[0]
+
+
+def find_maximums(data: Sequence) -> tuple | np.ndarray:
+	"""
+	Finds all local maximums in 1d-array `data`.
+
+	:param data: Array in which to find the relative maximums.
+	:return: Indices of the maximums in `data`.
+	"""
+	return argrelextrema(np.array(data), np.greater)[0]
+
+def find_extremums(data: Sequence) -> np.ndarray:  # noqa:typo
+	"""
+	Finds all local extremums in 1d-array `data`.
+
 	:param data: Array in which to find the relative extrema.
-	:return: Indices of the maxima in `data`.
+	:return: Indices of the extremums in `data`.
 	"""
-	return argrelextrema(np.array(data), comparator)[0]
+	return np.array([*set(find_minimums(data)) | set(find_maximums(data))])

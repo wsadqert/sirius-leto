@@ -1,9 +1,11 @@
-import sys
+import logging
 import tkinter as tk
 import tkinter.font as tkFont
 from tkinter import messagebox
 import configparser
+import sys
 
+from src.general.constants import *
 from src.general.checks import *
 from src.lab1_pendulum.constants import *
 
@@ -13,6 +15,9 @@ from .constants import *
 
 
 __all__ = ["app", "start_gui"]
+
+STATE_TYPE = Literal["normal", "disable"]
+COLOR_TYPE = Literal["black", "gray"]
 
 
 class App(tk.Tk):
@@ -170,14 +175,31 @@ class App(tk.Tk):
 		labels['k'].configure(fg=new_color)
 		labels_units['кг/с'].configure(fg=new_color)
 
+		logging.info(f"Changed `k` state from {old_state} to {new_state}.")
+
 		return new_color
 
-	def __config_theory(self, new_state) -> str:
+	def __config_theory(self, new_state: STATE_TYPE) -> COLOR_TYPE:
+		"""
+		Sets the new state of lineedit and label `theory`.
+
+		:param new_state: The new state of elements. If `bool`, 0 corresponds to `disabled`, 1 - to `normal`. Else, must be `normal` or `disabled`, other value will be rejected.
+		:return: String representation of new color of text. Can take only 2 values: `gray` or `black`.
+		"""
+		assert (new_state in STATE_TYPE.__args__) or isinstance(new_state, bool)
+
+		old_state = new_state
+
+		if isinstance(new_state, bool):
+			new_state = STATE_TYPE.__args__[1-new_state]
+
 		new_color = ('gray', 'black')[new_state == 'normal']
 
 		checkboxes["theory"].config(state=new_state, fg=new_color)
 		if new_state == 'disabled':
 			checkbox_variables["theory"].set(False)
+
+		logging.info(f"Changed `k` state from {old_state} to {new_state}.")
 
 		return new_color
 
@@ -192,25 +214,25 @@ class App(tk.Tk):
 		for name, var in lineedit_variables.items():
 			value = var.get()
 
-			if name in tuple(lineedit_variables.keys())[-2:]:
-				required_type = int
+			if name == "alpha_start":  # `alpha_start` may be negative
+				checker_function = lambda x: is_convertible(x, float)
+			elif name in ("render_dt", "frames_count_fps"):  # there are counters, then they cannot be negative or float, only positive integers
+				checker_function = lambda x: is_convertible(x, int)
 			else:
-				required_type = float
-
-			if name in ("alpha_start", "k"):
-				checker_function = is_not_nan_inf
-			else:
-				checker_function = lambda value: is_positive(value, required_type)
+				checker_function = is_positive
 
 			if not checker_function(value):
-				lineedits[name].config(highlightthickness=2, highlightbackground='red')
+				lineedits[name].config(highlightthickness=2, highlightbackground='red')  # add entry highlighting
 				messagebox.showerror("Некорректный ввод",
 				                     f"Поле {name} заполнено некорректно. ({name}=\"{value}\")\n\n"
-				                     "Для справки: все поля должны содержать неотрицательные конечные вещественные числа, а последние 2 поля - только положительные целые числа")
-				res = False
+				                     "Для справки: все поля должны содержать неотрицательные конечные вещественные числа, `k` - только положительные действительные числа, `render_dt` и `frames_count_fps` - только положительные целые числа.")
+				ans = False
+				logging.warning(f"Check lineedits failed: {name}")
 			else:
-				lineedits[name].config(highlightthickness=0)
-		return res
+				lineedits[name].config(highlightthickness=0)  # remove border
+		else:
+			pass
+		return ans
 
 	# EVENT HANDLERS
 
@@ -234,8 +256,11 @@ class App(tk.Tk):
 		self.__config_theory(theory_new_state)
 
 	def on_exit(self):
+		logging.info("User attempted to leave")
+
 		if messagebox.askyesno("Выход", "Вы уверены, что хотите выйти?"):
 			self.destroy()
+			logging.info("User confirmed, leaving...")
 			sys.exit(0)
 
 	def __checkbox_windage_handler(self) -> None:

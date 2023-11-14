@@ -1,3 +1,5 @@
+import numpy as np
+from tqdm import tqdm
 from math import sin
 from cmath import (sqrt as csqrt,  # noqa:typo
                    sin as csin,  # noqa:typo
@@ -31,10 +33,15 @@ def model(config: dict[str, ...]) -> None:
 
 	n: Final[int] = len(time_array)
 
-	if config["windage_method"] == 'quadratic':
-		get_alpha = lambda x: 2 * alpha_cur - alpha_last - 2 * c1 * (alpha_cur-alpha_last) - c2 * sin(alpha_cur)  # noqa:E731 using lambda
-	else:
-		get_alpha = lambda x: (2 * alpha_cur - alpha_last * (1 - c1) - c2 * sin(alpha_cur)) / (1 + c1)  # noqa:E731 using lambda
+	match config["windage_method"]:
+		case 'linear':
+			get_alpha = lambda x: (2 * alpha_cur - alpha_last * (1 - c1) - c2 * sin(alpha_cur)) / (1 + c1)  # noqa:E731 using lambda
+		case 'quadratic':
+			get_alpha = lambda x: 2 * alpha_cur - alpha_last - 2 * c1 * (alpha_cur-alpha_last) - c2 * sin(alpha_cur)  # noqa:E731 using lambda
+		case 'realistic':  # not implemented yet
+			get_alpha = ...
+		case _:  # never executed, but necessary to avoid a "May be refenced before assignment" warning at line 23 inside main loop
+			raise ValueError
 
 	if calculate_theoretical:
 		theoretical_alpha_array = []
@@ -56,12 +63,12 @@ def model(config: dict[str, ...]) -> None:
 		alpha_array.append(alpha_next)
 
 	if calculate_extremums:
-		extremums_x = np.array(list(set(find_extremum(alpha_array)) | set(find_extremum(alpha_array, np.less))))
+		extremums_x = find_extremums(alpha_array)
 		extremums_y = [alpha_array[i] for i in extremums_x]
 		extremums_x = extremums_x * dt  # noqa - dont refactor this pls, np cannot process `*=` operator
 
 	if calculate_theoretical and calculate_extremums:
-		extremums_theory_x = np.array(list(set(find_extremum(theoretical_alpha_array)) | set(find_extremum(theoretical_alpha_array, np.less))))
+		extremums_theory_x = np.array(find_extremums(theoretical_alpha_array))
 		extremums_theory_y = [theoretical_alpha_array[i] for i in extremums_theory_x]
 		extremums_theory_x = extremums_theory_x * dt  # noqa - dont refactor this pls, np cannot process `*=` operator
 
