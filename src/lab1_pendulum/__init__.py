@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from src.general.calculations import *
+from .constants import *
 from .gui import start_gui
 from .parse_config import parse_config
 from .model import model
@@ -11,9 +12,19 @@ __all__ = ["start"]
 
 def start() -> None:
 	"""
-	Wrapper for `src.lab1_pendulum.animate.animate(…)`.
+	Main function of `src.lab1_pendulum`.
 
-	:return: None.
+	What it does:
+
+	- clear screen
+
+	- show gui
+
+	- parse data from config file
+
+	- start calculating model
+
+	- render animation
 	"""
 
 	clear_screen()

@@ -6,13 +6,21 @@ from src.general.constants import *
 from src.general.calculations import *
 
 
-def __animation_step(frame: int, alpha_array, config) -> tuple:
+def __animation_step(frame: int, alpha_array: Sequence, config: dict[str, ...]) -> tuple[mpl.artist.Artist, ...]:
+	"""
+	Obtains data from pre-calculated array and changes coordinates of points and lines.
+
+	:param frame: number of animation frame.
+	:param alpha_array: array (list or other object-`Sequence`).
+	:param config: dictionary, containing information about a laboratory (see more in `datastore/lab1_pendulum/README_input.md`).
+	:return: tuple from `matplotlib.artist.Artist` objects to redraw.
+	"""
 	global t0, pendulum_line, pendulum_point, time_text, n  # noqa - variables are defined in `animate()`
 
 	for i in config.keys():
 		globals()[i] = config[i]
 
-	# calculating current in-model time
+	# calculating current time inside the simulation
 	data_item_index = render_dt * frame
 	time = data_item_index * dt
 
@@ -25,11 +33,11 @@ def __animation_step(frame: int, alpha_array, config) -> tuple:
 		print(f'fps = {frames_count_fps / (t1 - t0):2}')  # printing fps value
 		t0 = real_time()
 
-	# if animation was ended, but was not closed
+	# if animation was ended, but was not closed, continue to draw exciting Artists without changing
 	if data_item_index >= n:
 		return pendulum_line, pendulum_point, time_text
 
-	# by default, angle is in [0; 2×pi], but for beautiful rendering we need angle in [-pi/2; 3/4×pi],
+	# by default, angle is in [0; 2×pi], but for correct rendering we need angle in [-pi/2; 3/4×pi],
 	# so we subtract pi/2 from each alpha value
 	alpha: float = alpha_array[data_item_index] - pi / 2
 
@@ -37,7 +45,7 @@ def __animation_step(frame: int, alpha_array, config) -> tuple:
 	x, y = pol2cart(l, alpha)
 
 	# pendulum axis's coordinates is not always (0, 0),
-	# so we need to add (pendulum_axis_x, pendulum_axis_y) to obtained (x, y)
+	# so we need to add (pendulum_axis_x, pendulum_axis_y) to get (x, y)
 	x += pendulum_axis_x
 	y += pendulum_axis_y
 
@@ -51,6 +59,11 @@ def __animation_step(frame: int, alpha_array, config) -> tuple:
 
 
 def animate(config: dict[str, ...]) -> None:
+	"""
+	Gets pre-calculated data from `datapath_model` and plots it.
+
+	:param config: dictionary, containing information about a laboratory (see more in `datastore/lab1_pendulum/README_input.md`).
+	"""
 	global n, pendulum_line, pendulum_point, time_text  # noqa - variables will be defined below
 
 	for i in config.keys():
@@ -77,9 +90,9 @@ def animate(config: dict[str, ...]) -> None:
 	mpl.rcParams['mathtext.fontset'] = 'cm'
 	mpl.rcParams['figure.figsize'] = (figsize, figsize)
 
-	t0 = real_time()  # noqa, do not remove, required for fps counting!
+	t0 = real_time()  # do not remove, required for fps counting!
 
-	if plot_animation:
+	if plot_animation:  # show animation
 		fig, _ = plt.subplots()
 		plt.title("Numerical model of a pendulum")
 		plt.grid(True, linestyle='--')
@@ -101,8 +114,8 @@ def animate(config: dict[str, ...]) -> None:
 		                          repeat=False,
 		                          cache_frame_data=True)
 
-	if plot_alpha:
-		fig, _ = plt.subplots()
+	if plot_alpha:  # show angle plot
+		plt.figure()
 		plt.grid(True, linestyle='--')
 		plt.xlabel(r"$t, s$", fontsize=13)
 		plt.ylabel(r"$\alpha, rad$", fontsize=13)
@@ -110,19 +123,19 @@ def animate(config: dict[str, ...]) -> None:
 
 		color = plt.plot(time_array, alpha_array, label="simulation")[0].get_color()
 		if calculate_extremums:
-			plt.plot(extremums_x, extremums_y, 'o', color=color)
-			for i in range(len(extremums_x)):
+			plt.plot(extremums_x, extremums_y, 'o', color=color)  # points
+			for i in range(len(extremums_x)):  # vertical dash lines
 				plt.axvline(extremums_x[i], ymin=-plot_lims, ymax=plot_lims, color=color, linewidth=1, ls='--')
 
 		if calculate_theoretical:
 			color = plt.plot(time_array, theoretical_alpha_array, label="theory")[0].get_color()
 			if calculate_extremums:
-				plt.plot(extremums_theory_x, extremums_theory_y, 'o', color=color)
-				for i in range(len(extremums_theory_x)):
+				plt.plot(extremums_theory_x, extremums_theory_y, 'o', color=color)  # points
+				for i in range(len(extremums_theory_x)):  # vertical dash lines
 					plt.axvline(extremums_theory_x[i], ymin=-plot_lims, ymax=plot_lims, color=color, linewidth=1, ls='--')
 
 	elif calculate_theoretical:
-		fig, _ = plt.subplots()
+		fig = plt.figure()
 		plt.grid(True, linestyle='--')
 		plt.xlabel(r"$t, s$", fontsize=13)
 		plt.ylabel(r"$\alpha, rad$", fontsize=13)

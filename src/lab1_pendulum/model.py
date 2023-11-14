@@ -10,7 +10,13 @@ from .constants import *
 
 
 def model(config: dict[str, ...]) -> None:
-	"""Warning: pls ignore "Unresolved reference" errors, dont try to fix them"""
+	"""
+	Main function, calculating the model.
+
+	:param config: Dictionary with data, obtained from user input. The dictionary's keys are variable names, and values are variables' values.
+	:return: None.
+	"""
+	# Warning: pls ignore "Unresolved reference" errors, dont try to fix them, they are defined at line 22
 
 	for i in config.keys():
 		globals()[i] = config[i]
@@ -38,7 +44,7 @@ def model(config: dict[str, ...]) -> None:
 		get_theoretical_alpha = __phi_beta_positive if beta > 0 else __phi_beta_negative_zero
 
 	for t in tqdm(time_array):  # main loop
-		alpha_next = get_alpha(t)  # noqa:F823 - `get_alpha(...)` is always defined
+		alpha_next = get_alpha(t)
 
 		if calculate_theoretical:
 			alpha_theoretical_next = get_theoretical_alpha(t)  # noqa - `get_theoretical_alpha(...)` is always defined

@@ -1,79 +1,77 @@
 import tkinter as tk
 
-__all__ = ["CustomLabel", "CustomRadiobutton", "CustomLineEdit", "CustomCheckBox"]
+__all__ = ["CustomLabel", "CustomRadioButton", "CustomLineEdit", "CustomCheckBox"]
 
 
-def CustomLabel(root, text, font, align, place, size):
-	label = tk.Label(root)
+class CustomLabel(tk.Label):
+	def __init__(self, text, font, align, place, size):
+		super().__init__()
 
-	match align:
-		case 'left':
-			anchor = 'w'
-		case 'center':
-			anchor = 'n'
-		case 'right':
-			anchor = 'e'
-		case _:
-			raise ValueError
+		match align:
+			case 'left':
+				anchor = 'w'
+			case 'center':
+				anchor = 'n'
+			case 'right':
+				anchor = 'e'
+			case _:
+				raise ValueError
 
-	label["anchor"] = anchor
-	label["font"] = font
-	label["fg"] = "black"
-	label["justify"] = align
-	label["text"] = text
-	label.place(x=place[0], y=place[1], width=size[0], height=size[1])
-
-	return label
-
-
-def CustomCheckBox(root, text, font, place, size, command, variable):
-	checkbox = tk.Checkbutton(root)
-
-	checkbox["anchor"] = "w"
-	checkbox["font"] = font
-	checkbox["fg"] = "black"
-	checkbox["justify"] = "left"
-	checkbox["text"] = text
-
-	checkbox["command"] = command
-	checkbox["variable"] = variable
-	checkbox["onvalue"] = True
-	checkbox["offvalue"] = False
-	checkbox.select()
-
-	checkbox.place(x=place[0], y=place[1], width=size[0], height=size[1])
-
-	return checkbox
+		self["anchor"] = anchor
+		self["font"] = font
+		self["fg"] = "black"
+		self["justify"] = align
+		self["text"] = text
+		self.place(x=place[0], y=place[1], width=size[0], height=size[1])
 
 
-def CustomRadiobutton(root, text, font, place, size, variable, value, command=lambda: None):
-	radiobutton = tk.Radiobutton(root)
-	radiobutton["anchor"] = "w"
-	radiobutton["font"] = font
-	radiobutton["fg"] = "black"
-	radiobutton["justify"] = "left"
-	radiobutton["text"] = text
+class CustomCheckBox(tk.Checkbutton):
+	def __init__(self, text, font, place, size, command, variable, select=True):
+		super().__init__()
+		self["anchor"] = "w"
+		self["font"] = font
+		self["fg"] = "black"
+		self["justify"] = "left"
+		self["text"] = text
 
-	radiobutton["variable"] = variable
-	radiobutton["value"] = value
-	radiobutton["command"] = command
+		self["command"] = command
+		self["variable"] = variable
+		self["onvalue"] = True
+		self["offvalue"] = False
 
-	radiobutton.place(x=place[0], y=place[1], width=size[0], height=size[1])
+		if select:
+			self.select()
 
-	return radiobutton
+		self.place(x=place[0], y=place[1], width=size[0], height=size[1])
 
 
-def CustomLineEdit(root, font, align, place, size, variable, default_value: str = ''):
-	lineedit = tk.Entry(root)
+class CustomRadioButton(tk.Radiobutton):
+	def __init__(self, text, font, place, size, variable, value, command: () = lambda: None):
+		super().__init__()
+		self["anchor"] = "w"
+		self["font"] = font
+		self["fg"] = "black"
+		self["justify"] = "left"
+		self["text"] = text
 
-	lineedit["borderwidth"] = "1px"
-	lineedit["font"] = font
-	lineedit["fg"] = "black"
-	lineedit["justify"] = align
-	lineedit["textvariable"] = variable
+		self["variable"] = variable
+		self["value"] = value
+		self["command"] = command
 
-	lineedit.insert(0, default_value)
+		self.place(x=place[0], y=place[1], width=size[0], height=size[1])
 
-	lineedit.place(x=place[0], y=place[1], width=size[0], height=size[1])
 
-	return lineedit
+class CustomLineEdit(tk.Entry):
+	def __init__(self, font, align, place, size, variable, default_value: str = ""):
+		super().__init__()
+
+		self["borderwidth"] = "1px"
+		self["font"] = font
+		self["fg"] = "black"
+		self["justify"] = align
+		self["textvariable"] = variable
+
+		self.insert(0, default_value)
+
+		self.place(x=place[0], y=place[1], width=size[0], height=size[1])
+

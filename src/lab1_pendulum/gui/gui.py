@@ -17,17 +17,16 @@ __all__ = ["app", "start_gui"]
 
 class App(tk.Tk):
 	def __init__(self):
-		tk.Tk.__init__(self)
+		super().__init__()
 		self.title("Settings")
 
 		screenwidth = self.winfo_screenwidth()
 		screenheight = self.winfo_screenheight()
 		alignstr = f"{width}x{height}+{(screenwidth - width) // 2}+{(screenheight - height) // 2}"
 
+		# setting up geometry
 		self.geometry(alignstr)
 		self.resizable(False, False)
-
-		self.protocol("WM_DELETE_WINDOW", self.on_exit)
 
 		self.font_10 = tkFont.Font(family='Times', size=10)
 		self.font_18 = tkFont.Font(family='Times', size=18)
@@ -37,11 +36,12 @@ class App(tk.Tk):
 
 		self.create_widgets()
 
+		# handlers
+		self.protocol("WM_DELETE_WINDOW", self.on_exit)
 		self.bind('<Return>', self.start)
 
 	def create_widgets(self) -> None:
 		self.Label_title = CustomLabel(
-			self,
 			text="Настройки лаборатории",
 			font=self.font_33,
 			align="center",
@@ -51,7 +51,6 @@ class App(tk.Tk):
 
 		for name, places in labels_h2_places.items():  # create h2's
 			label_h2 = CustomLabel(
-				self,
 				text=name,
 				font=self.font_18,
 				align="left",
@@ -63,7 +62,6 @@ class App(tk.Tk):
 			width = (120 if name == "frames_count_fps" else labels_size[0])
 
 			label = CustomLabel(
-				self,
 				text=name + ' = ',
 				font=self.font_10,
 				align="right",
@@ -75,7 +73,6 @@ class App(tk.Tk):
 			labels[name] = label
 		for name, places in labels_units_places.items():  # create labels
 			label_unit = CustomLabel(
-				self,
 				text=name,
 				font=self.font_10,
 				align="left",
@@ -84,8 +81,7 @@ class App(tk.Tk):
 			)
 			labels_units[name] = label_unit
 		for name, (text, places) in radios_info.items():  # create radiobuttons
-			radio = CustomRadiobutton(
-				self,
+			radio = CustomRadioButton(
 				text=text,
 				font=self.font_10,
 				place=places,
@@ -105,7 +101,6 @@ class App(tk.Tk):
 				command = lambda: None
 
 			checkbox = CustomCheckBox(
-				self,
 				text=text,
 				font=self.font_10,
 				place=places,
@@ -120,7 +115,6 @@ class App(tk.Tk):
 			current = tk.StringVar()
 
 			lineedit = CustomLineEdit(
-				self,
 				font=self.font_10,
 				align="right",
 				place=places,
@@ -133,7 +127,6 @@ class App(tk.Tk):
 			lineedit_variables[name] = current
 
 		self.Label_windage_mode = CustomLabel(
-			self,
 			text="Зависимость сопротивления\nвоздуха от скорости",
 			font=self.font_10,
 			align="left",
@@ -157,7 +150,20 @@ class App(tk.Tk):
 		)
 		Button_start["command"] = self.start
 
-	def __config_k(self, new_state) -> str:
+	def __config_k(self, new_state: STATE_TYPE | bool) -> COLOR_TYPE:
+		"""
+		Sets the new state of lineedit and label `k`.
+
+		:param new_state: The new state of elements. If `bool`, 0 corresponds to `disabled`, 1 - to `normal`. Else, must be `normal` or `disabled`, other value will be rejected.
+		:return: String representation of new color of text. Can take only 2 values: `gray` or `black`.
+		"""
+		assert (new_state in STATE_TYPE.__args__) or isinstance(new_state, bool)
+
+		old_state = new_state
+
+		if isinstance(new_state, bool):
+			new_state = STATE_TYPE.__args__[1-new_state]
+
 		new_color = ('gray', 'black')[new_state == 'normal']
 
 		lineedits['k'].configure(state=new_state)
@@ -176,7 +182,13 @@ class App(tk.Tk):
 		return new_color
 
 	def __check_lineedits(self) -> bool:
-		res = True
+		"""
+		Checks correctness of data entered byy user.
+
+		:return: boolean value, `True` if all entries filled correctly, `False` otherwise.
+		"""
+		ans = True
+
 		for name, var in lineedit_variables.items():
 			value = var.get()
 
