@@ -40,13 +40,13 @@ def model(config: dict[str, ...]) -> None:
 			get_alpha = lambda x: 2 * alpha_cur - alpha_last - 2 * c1 * (alpha_cur-alpha_last) - c2 * sin(alpha_cur)  # noqa:E731 using lambda
 		case 'realistic':  # not implemented yet
 			get_alpha = ...
-		case _:  # never executed, but necessary to avoid a "May be refenced before assignment" warning at line 23 inside main loop
+		case _:  # never executed, but necessary to avoid a "May be refenced before assignment" warning at line 54 inside main loop
 			raise ValueError
 
 	if calculate_theoretical:
 		theoretical_alpha_array = []
 		__phi_beta_positive = lambda t: (alpha_start / 2 * ((1 + gamma / csqrt(beta)) * cexp((-gamma + csqrt(beta)) * t) + (1 - gamma / csqrt(beta)) * cexp((-gamma - csqrt(beta)) * t))).real  # noqa:E731 using lambda
-		__phi_beta_negative_zero = lambda t: (alpha_start * cexp(-gamma * t) * (ccos(csqrt(-beta) * t) + gamma / csqrt(-beta) * csin(csqrt(-beta) * t))).real  # noqa:E731 using lambda
+		__phi_beta_negative_zero = lambda t: (alpha_start * cexp(-gamma * t) * (ccos(csqrt(-beta) * t) + gamma) / csqrt(-beta) * csin(csqrt(-beta) * t)).real  # noqa:E731 using lambda
 
 		get_theoretical_alpha = __phi_beta_positive if beta > 0 else __phi_beta_negative_zero
 
