@@ -18,7 +18,7 @@ ID: `lab1_pendulum`
 ### Константы:
 - $l$ - длина маятника (м),
 - $\alpha_0$ - начальный угол отклонения маятника (рад),
-- $k_{windage}$ - коэффициент сопротивления воздуха,
+- $k$ - коэффициент сопротивления воздуха,
 - $m$ - масса тела.
 
 ### Независимые переменные:
@@ -33,7 +33,7 @@ $$
 \begin{align*} 
   \gamma &= \frac{k}{2m}, \\ 
   \beta &= \gamma^2 - \frac{g}{l} = \frac{k^2}{4m^2} - \frac{g}{l},\\
-  k &= k_{windage}'\cdot\mathrm{d}t,\\
+  k &= k\cdot\mathrm{d}t,\\
   c_1 &= \gamma\cdot \mathrm d t = \frac{\mathrm dt\cdot k}{2m},\\
   c_2 &= \frac{g\cdot \mathrm dt^2}{l}.
 \end{align*}

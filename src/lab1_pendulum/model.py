@@ -46,7 +46,7 @@ def model(config: dict[str, ...]) -> None:
 	if calculate_theoretical:
 		theoretical_alpha_array = []
 		__phi_beta_positive = lambda t: (alpha_start / 2 * ((1 + gamma / csqrt(beta)) * cexp((-gamma + csqrt(beta)) * t) + (1 - gamma / csqrt(beta)) * cexp((-gamma - csqrt(beta)) * t))).real  # noqa:E731 using lambda
-		__phi_beta_negative_zero = lambda t: (alpha_start * cexp(-gamma * t) * (ccos(csqrt(-beta) * t) + gamma) / csqrt(-beta) * csin(csqrt(-beta) * t)).real  # noqa:E731 using lambda
+		__phi_beta_negative_zero = lambda t: (alpha_start * cexp(-gamma * t) * (ccos(csqrt(-beta) * t) + gamma / csqrt(-beta) * csin(csqrt(-beta) * t))).real  # noqa:E731 using lambda
 
 		get_theoretical_alpha = __phi_beta_positive if beta > 0 else __phi_beta_negative_zero
 

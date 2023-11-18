@@ -93,18 +93,18 @@ def animate(config: dict[str, ...]) -> None:
 	t0 = real_time()  # do not remove, required for fps counting!
 
 	if plot_animation:  # show animation
-		fig, ax = plt.subplots()
-		ax.title("Numerical model of a pendulum")
-		ax.grid(True, linestyle='--')
-		ax.xlabel(r'$x, m$', fontsize=13)
-		ax.ylabel(r'$y, m$', fontsize=13)
-		ax.xlim(-plot_lims * l, plot_lims * l)
-		ax.ylim(-plot_lims * l, plot_lims * l)
+		fig, _ = plt.subplots()
+		plt.title("Numerical model of a pendulum")
+		plt.grid(True, linestyle='--')
+		plt.xlabel(r'$x, m$', fontsize=13)
+		plt.ylabel(r'$y, m$', fontsize=13)
+		plt.xlim(-plot_lims * l, plot_lims * l)
+		plt.ylim(-plot_lims * l, plot_lims * l)
 
-		pendulum_line, = ax.plot([], [], linewidth=2, color='blue')
-		pendulum_axis, = ax.plot([pendulum_axis_x], [pendulum_axis_y], marker='o', markersize=5, color='red')  # noqa, required for animation
-		pendulum_point, = ax.plot([], [], marker='o', markersize=5, color='red')
-		time_text = ax.text(0, text_y * l, "", fontsize=20)
+		pendulum_line, = plt.plot([], [], linewidth=2, color='blue')
+		pendulum_axis, = plt.plot([pendulum_axis_x], [pendulum_axis_y], marker='o', markersize=5, color='red')  # noqa, required for animation
+		pendulum_point, = plt.plot([], [], marker='o', markersize=5, color='red')
+		time_text = plt.text(0, text_y * l, "", fontsize=20)
 		animation = FuncAnimation(fig,  # noqa:F841
 		                          func=__animation_step,
 		                          fargs=(alpha_array, config,),
@@ -115,11 +115,11 @@ def animate(config: dict[str, ...]) -> None:
 		                          cache_frame_data=True)
 
 	if plot_alpha:  # show angle plot
-		_, ax = plt.figure()
-		ax.grid(True, linestyle='--')
-		ax.xlabel(r"$t, s$", fontsize=13)
-		ax.ylabel(r"$\alpha, rad$", fontsize=13)
-		ax.axhline(y=0, color='black', ls='--')
+		plt.figure()
+		plt.grid(True, linestyle='--')
+		plt.xlabel(r"$t, s$", fontsize=13)
+		plt.ylabel(r"$\alpha, rad$", fontsize=13)
+		plt.axhline(y=0, color='black', ls='--')
 
 		color = plt.plot(time_array, alpha_array, label="simulation")[0].get_color()
 		if calculate_extremums:
@@ -135,14 +135,14 @@ def animate(config: dict[str, ...]) -> None:
 					plt.axvline(extremums_theory_x[i], ymin=-plot_lims, ymax=plot_lims, color=color, linewidth=1, ls='--')
 
 	elif calculate_theoretical:
-		_, ax = plt.figure()
-		ax.grid(True, linestyle='--')
-		ax.xlabel(r"$t, s$", fontsize=13)
-		ax.ylabel(r"$\alpha, rad$", fontsize=13)
+		plt.figure()
+		plt.grid(True, linestyle='--')
+		plt.xlabel(r"$t, s$", fontsize=13)
+		plt.ylabel(r"$\alpha, rad$", fontsize=13)
 
-		color = ax.plot(time_array, theoretical_alpha_array, label="theory")
+		color = plt.plot(time_array, theoretical_alpha_array, label="theory")
 		if calculate_extremums:
-			ax.plot(extremums_theory_x, extremums_theory_y, 'o', color=color)
+			plt.plot(extremums_theory_x, extremums_theory_y, 'o', color=color)
 
 	plt.legend(loc="upper right")
 	plt.show()
