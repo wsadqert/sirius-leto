@@ -1,10 +1,9 @@
-from pprint import pprint
+from pprint import pprint, pformat
 import logging
 
 from src.general.calculations import *
 from .constants import *
 from .gui import start_gui
-from .parse_config import parse_config
 from .model import model
 from .animate import animate
 
@@ -31,9 +30,8 @@ def start() -> None:
 	clear_screen()
 
 	logging.info("Starting `Settings` window GUI...")
-	start_gui()
-	logging.info(f"Parsing config file {datapath_input}...")
-	config = parse_config()
+	config = start_gui()
+	logging.debug('Get model configuration:\n' + pformat(config))
 
 	# REMOVE AFTER TESTING
 	pprint(config, sort_dicts=False)

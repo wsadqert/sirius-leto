@@ -3,6 +3,7 @@ desktop.ini
 data*.???
 input.???
 datastore/**/comparing
+*.exe
 
 .idea/**/**
 .idea/**

@@ -3,21 +3,14 @@ import os
 
 from src.general.constants import *
 
-__all__ = ["datapath_model", "datapath_input", "datapath_log", # output settings
+__all__ = ["datapath_model", "datapath_log", # output settings
            "plot_lims", "text_y", "figsize", "pendulum_axis_x", "pendulum_axis_y",  # noqa:typo, rendering settings
            ]
 
 
 # output settings
 datapath_model = os.path.join(DATASTORE_ROOT, "lab1_pendulum", "data.dat")
-datapath_input = os.path.join(DATASTORE_ROOT, "lab1_pendulum", "input.ini")
-datapath_log   = os.path.join(DATASTORE_ROOT, "lab1_pendulum", "log.log")
-
-logging.basicConfig(
-	filename=datapath_log,
-    level=logging.INFO,
-	format='%(asctime)s - %(levelname)s: %(message)s'
-)
+datapath_log   = os.path.join(DATASTORE_ROOT, "lab1_pendulum", "last_run_log.log")
 
 
 # rendering settings

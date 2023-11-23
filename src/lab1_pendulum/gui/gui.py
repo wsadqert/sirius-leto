@@ -1,13 +1,11 @@
 import logging
+import sys
 import tkinter as tk
 import tkinter.font as tkFont
 from tkinter import messagebox
-import configparser
-import sys
 
 from src.general.constants import *
 from src.general.checks import *
-from src.lab1_pendulum.constants import *
 
 from .tooltip import create_tooltip
 from .custom_wingets import *
@@ -285,43 +283,69 @@ class App(tk.Tk):
 
 		self.Label_windage_mode["fg"] = new_color
 
+	def __process_config(self, config) -> dict[str, ...]:
+		for key, value in config.items():
+			if key in ("mode", "windage_method"):  # read strings
+				cast_function = lambda x: x
+			elif key in ("render_dt", "frames_count_fps"):  # parse integer
+				cast_function = int
+			elif key in ("calculate_theoretical", "calculate_extremums", "plot_animation", "plot_alpha"):  # parse boolean
+				cast_function = lambda x: x
+			else:  # parse float
+				cast_function = float
+
+			config[key] = cast_function(value)
+
+		if config['mode'] == 'basic':
+			config['k'] = 0
+
+		# see README.md for description
+		config['gamma'] = config['k'] / (2 * config['m'])
+		config['beta'] = config['gamma'] ** 2 - g / config['l']
+		config['c1'] = config['gamma'] * config['dt']
+		config['c2'] = g * config['dt'] ** 2 / config['l']
+
+		return config
+
 	def start(self, event=...) -> None:
 		if not self.__check_lineedits():
 			return
 
-		config = configparser.ConfigParser()
-		for section in ['model', 'physics', 'render']:
-			config.add_section(section)
+		config = {}
 
 		is_windage = checkbox_variables['windage'].get()
 
-		config['model']['mode'] = ('basic', 'windage')[is_windage]
+		config['mode'] = ('basic', 'windage')[is_windage]
 		if is_windage:
-			config['model']['windage_method'] = self.radio_variable.get()
+			config['windage_method'] = self.radio_variable.get()
 
-		config['model']['calculate_theoretical'] = str(int(checkbox_variables['theory'].get()))
-		config['model']['calculate_extremums'] = str(int(checkbox_variables['extremums'].get()))
-		config['model']['dt'] = lineedit_variables['dt'].get()
-		config['model']['t_max'] = lineedit_variables['t_max'].get()
+		# model
+		config['calculate_theoretical'] = checkbox_variables['theory'].get()
+		config['calculate_extremums']   = checkbox_variables['extremums'].get()
+		config['dt']    = lineedit_variables['dt'].get()
+		config['t_max'] = lineedit_variables['t_max'].get()
 
-		config['physics']['l'] = lineedit_variables['l'].get()
-		config['physics']['alpha_start'] = lineedit_variables['alpha_start'].get()
-		config['physics']['k'] = lineedit_variables['k'].get()
-		config['physics']['m'] = lineedit_variables['m'].get()
+		# physics
+		config['l']           = lineedit_variables['l'].get()
+		config['alpha_start'] = lineedit_variables['alpha_start'].get()
+		config['k']           = lineedit_variables['k'].get()
+		config['m']           = lineedit_variables['m'].get()
 
-		config['render']['render_dt'] = lineedit_variables['render_dt'].get()
-		config['render']['frames_count_fps'] = lineedit_variables['frames_count_fps'].get()
-		config['render']['plot_animation'] = str(int(checkbox_variables['plot_animation'].get()))
-		config['render']['plot_alpha'] = str(int(checkbox_variables['plot_alpha'].get()))
-
-		with open(datapath_input, 'w') as f:
-			config.write(f)
+		# rendering
+		config['render_dt']        = lineedit_variables['render_dt'].get()
+		config['frames_count_fps'] = lineedit_variables['frames_count_fps'].get()
+		config['plot_animation'] = checkbox_variables['plot_animation'].get()
+		config['plot_alpha']     = checkbox_variables['plot_alpha'].get()
 
 		self.destroy()
+
+		config = self.__process_config(config)
+		self.config = config
 
 
 app = App()
 
 
-def start_gui() -> None:
+def start_gui() -> dict[str, dict[str, ...]]:
 	app.mainloop()
+	return app.config
