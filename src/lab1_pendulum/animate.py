@@ -1,3 +1,5 @@
+import logging
+
 import matplotlib as mpl
 import matplotlib.artist
 import matplotlib.pyplot as plt
@@ -67,6 +69,8 @@ def animate(config: dict[str, ...]) -> None:
 	:param config: dictionary, containing information about a laboratory (see more in `datastore/lab1_pendulum/README_input.md`).
 	"""
 	global n, pendulum_line, pendulum_point, time_text  # noqa - variables will be defined below
+
+	logging.info("Starting setting up matplotlib")
 
 	for i in config.keys():
 		globals()[i] = config[i]
@@ -145,4 +149,6 @@ def animate(config: dict[str, ...]) -> None:
 			plt.plot(extremums_theory_x, extremums_theory_y, 'o', color=color)
 
 	plt.legend(loc="upper right")
+	logging.info("Matplotlib set up, starting animation")
+
 	plt.show()

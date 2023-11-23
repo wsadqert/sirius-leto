@@ -3,27 +3,37 @@ import signal
 import logging
 import sys
 import platform
+import argparse
 from rich.traceback import install
+from rich.logging import RichHandler
 
 from src.general.constants import *
 from src.lab1_pendulum.constants import *
 
 install(show_locals=True, width=300)  # will be removed in production
 
+# parsing arguments
+parser = argparse.ArgumentParser(description='lab1_pendulum')
+parser.add_argument("-v", "--verbose", action="store_true", help="print logs to console")
+args = parser.parse_args()
+
+
 # configuring logger
 logging.basicConfig(
 	filename=datapath_log,
 	filemode='w',
-    level=logging.DEBUG,
+	level=logging.DEBUG,
 	format='%(asctime)s - %(levelname)s: %(message)s'
 )
 logging.getLogger('matplotlib').setLevel(logging.WARNING)
+logging.getLogger('PIL').setLevel(logging.WARNING)
+if args.verbose:
+	logging.getLogger().addHandler(RichHandler())
 
 
 # ctrl-c handler
 def sigint_handler(signal, frame):
 	msg = "Ctrl-C pressed, exiting..."
-	print(msg)
 	logging.critical(msg)
 	sys.exit(0)
 signal.signal(signal.SIGINT, sigint_handler)  # noqa

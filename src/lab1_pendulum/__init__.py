@@ -33,11 +33,6 @@ def start() -> None:
 	config = start_gui()
 	logging.debug('Get model configuration:\n' + pformat(config))
 
-	# REMOVE AFTER TESTING
-	pprint(config, sort_dicts=False)
-	# --------------------
-
-	logging.info("Calculating model...")
 	model(config)
-	logging.info("Rendering animation...")
+	logging.info("Model fully calculated")
 	animate(config)  # drawing requested plots
