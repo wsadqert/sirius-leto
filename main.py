@@ -4,13 +4,12 @@ import logging
 import sys
 import platform
 import argparse
-from rich.traceback import install
+from rich.traceback import install as rich_traceback_install
 from rich.logging import RichHandler
 
 from src.general.constants import *
 from src.lab1_pendulum.constants import *
 
-install(show_locals=True, width=300)  # will be removed in production
 
 # parsing arguments
 parser = argparse.ArgumentParser(description='lab1_pendulum')
@@ -23,12 +22,14 @@ logging.basicConfig(
 	filename=datapath_log,
 	filemode='w',
 	level=logging.DEBUG,
-	format='%(asctime)s - %(levelname)s: %(message)s'
+	format='%(asctime)s.%(msecs)03d - %(levelname)s: %(message)s'
 )
 logging.getLogger('matplotlib').setLevel(logging.WARNING)
 logging.getLogger('PIL').setLevel(logging.WARNING)
 if args.verbose:
-	logging.getLogger().addHandler(RichHandler())
+	logging.getLogger().addHandler(RichHandler(log_time_format="[%d/%m/%Y %T.%f]", rich_tracebacks=True))
+else:
+	rich_traceback_install(width=300)  # will be removed in production
 
 
 # ctrl-c handler
@@ -57,7 +58,7 @@ sys.path.insert(1, PROJECT_ROOT)
 from src.lab1_pendulum import start
 if __name__ == '__main__':
 	try:
-		start()
+		start(args.verbose)
 	except Exception as e:
 		logging.exception(e)
 		raise

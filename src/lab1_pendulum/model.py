@@ -1,6 +1,7 @@
 import numpy as np
 from tqdm import tqdm
 from math import sin
+import logging
 from cmath import (sqrt as csqrt,  # noqa:typo
                    sin as csin,  # noqa:typo
                    cos as ccos,  # noqa:typo
@@ -19,6 +20,8 @@ def model(config: dict[str, ...]) -> None:
 	:return: None.
 	"""
 	# Warning: pls ignore "Unresolved reference" errors, dont try to fix them, they are defined at line 22
+
+	logging.info("Preparing model for calculation")
 
 	for i in config.keys():
 		globals()[i] = config[i]
@@ -50,6 +53,7 @@ def model(config: dict[str, ...]) -> None:
 
 		get_theoretical_alpha = __phi_beta_positive if beta > 0 else __phi_beta_negative_zero
 
+	logging.info("Starting model calculation")
 	for t in tqdm(time_array):  # main loop
 		alpha_next = get_alpha(t)
 
@@ -62,6 +66,7 @@ def model(config: dict[str, ...]) -> None:
 
 		alpha_array.append(alpha_next)
 
+	logging.info("Finding extremums")
 	if calculate_extremums:
 		extremums_x = find_extremums(alpha_array)
 		extremums_y = [alpha_array[i] for i in extremums_x]
@@ -72,6 +77,8 @@ def model(config: dict[str, ...]) -> None:
 		extremums_theory_y = [theoretical_alpha_array[i] for i in extremums_theory_x]
 		extremums_theory_x = extremums_theory_x * dt  # noqa - dont refactor this pls, np cannot process `*=` operator
 
+	# _ = 0/0
+	logging.info(f"Exporting dataset to file {datapath_model}")
 	with open(datapath_model, 'w') as f:  # noqa - datapath is always defined
 		print(n,                            file=f)  # exporting data to file
 		print(*time_array,                  file=f)

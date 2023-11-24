@@ -10,7 +10,7 @@ from .animate import animate
 __all__ = ["start"]
 
 
-def start() -> None:
+def start(is_verbose) -> None:
 	"""
 	Main function of `src.lab1_pendulum`.
 
@@ -35,4 +35,4 @@ def start() -> None:
 
 	model(config)
 	logging.info("Model fully calculated")
-	animate(config)  # drawing requested plots
+	animate(is_verbose, config)  # drawing requested plots

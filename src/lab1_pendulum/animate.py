@@ -10,7 +10,7 @@ from src.general.constants import *
 from src.general.calculations import *
 
 
-def __animation_step(frame: int, alpha_array: Sequence, config: dict[str, ...]) -> tuple[mpl.artist.Artist, ...]:
+def __animation_step(frame: int, alpha_array: Sequence, is_verbose: bool, config: dict[str, ...]) -> tuple[mpl.artist.Artist, ...]:
 	"""
 	Obtains data from pre-calculated array and changes coordinates of points and lines.
 
@@ -33,7 +33,8 @@ def __animation_step(frame: int, alpha_array: Sequence, config: dict[str, ...]) 
 		t0 = real_time()
 	elif frame % frames_count_fps == 0:
 		t1 = real_time()
-		clear_screen()
+		if is_verbose:
+			clear_screen()
 		print(f'fps = {frames_count_fps / (t1 - t0):2}')  # printing fps value
 		t0 = real_time()
 
@@ -62,7 +63,7 @@ def __animation_step(frame: int, alpha_array: Sequence, config: dict[str, ...]) 
 	return pendulum_line, pendulum_point, time_text
 
 
-def animate(config: dict[str, ...]) -> None:
+def animate(is_verbose: bool, config: dict[str, ...]) -> None:
 	"""
 	Gets pre-calculated data from `datapath_model` and plots it.
 
@@ -111,7 +112,7 @@ def animate(config: dict[str, ...]) -> None:
 		time_text = plt.text(0, text_y * l, "", fontsize=20)
 		animation = FuncAnimation(fig,  # noqa:F841
 		                          func=__animation_step,
-		                          fargs=(alpha_array, config,),
+		                          fargs=(alpha_array, is_verbose, config,),
 		                          interval=0,
 		                          frames=n,
 		                          blit=True,
