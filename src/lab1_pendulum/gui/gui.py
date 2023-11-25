@@ -153,6 +153,15 @@ class App(tk.Tk):
 		)
 		Button_start["command"] = self.start
 
+		CustomLabel(
+			text="Press Enter to continue",
+			font=self.font_10,
+			align='left',
+			place=(30, 430),
+			size=(200, labels_size[1]),
+			fg="gray"
+		)
+
 	def __config_k(self, new_state: STATE_TYPE | bool) -> COLOR_TYPE:
 		"""
 		Sets the new state of lineedit and label `k`.

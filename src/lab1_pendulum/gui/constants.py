@@ -91,5 +91,5 @@ radio_hints = {
 radios_size = (100, 25)
 radios = dict()
 
-button_place = (30, 360)
+button_place = (30, 355)
 button_size = (192, 80)

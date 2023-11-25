@@ -126,14 +126,14 @@ def animate(is_verbose: bool, config: dict[str, ...]) -> None:
 		plt.ylabel(r"$\alpha, rad$", fontsize=13)
 		plt.axhline(y=0, color='black', ls='--')
 
-		color = plt.plot(time_array, alpha_array, label="simulation")[0].get_color()
+		color = plt.plot(time_array[::render_dt], alpha_array[::render_dt], label="simulation")[0].get_color()
 		if calculate_extremums:
 			plt.plot(extremums_x, extremums_y, 'o', color=color)  # points
 			for i in range(len(extremums_x)):  # vertical dash lines
 				plt.axvline(extremums_x[i], ymin=-plot_lims, ymax=plot_lims, color=color, linewidth=1, ls='--')
 
 		if calculate_theoretical:
-			color = plt.plot(time_array, theoretical_alpha_array, label="theory")[0].get_color()
+			color = plt.plot(time_array[::render_dt], theoretical_alpha_array[::render_dt], label="theory")[0].get_color()
 			if calculate_extremums:
 				plt.plot(extremums_theory_x, extremums_theory_y, 'o', color=color)  # points
 				for i in range(len(extremums_theory_x)):  # vertical dash lines
@@ -145,7 +145,7 @@ def animate(is_verbose: bool, config: dict[str, ...]) -> None:
 		plt.xlabel(r"$t, s$", fontsize=13)
 		plt.ylabel(r"$\alpha, rad$", fontsize=13)
 
-		color = plt.plot(time_array, theoretical_alpha_array, label="theory")
+		color = plt.plot(time_array[::render_dt], theoretical_alpha_array[::render_dt], label="theory")
 		if calculate_extremums:
 			plt.plot(extremums_theory_x, extremums_theory_y, 'o', color=color)
 
