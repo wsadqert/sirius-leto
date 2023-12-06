@@ -36,7 +36,7 @@ rich_traceback_install(width=300, show_locals=True)  # will be removed in produc
 signal.signal(signal.SIGINT, sigint_handler)  # noqa
 
 # python version check
-if platform.python_version_tuple()[:2] != ('3', '10'):
+if sys.version_info[:2] < (3, 10):  # python version is lower 3.10
 	msg = f"Python version check failed! Found incompatible version {''.join(platform.python_version_tuple())}, leaving"
 	logging.critical(msg)
 	raise OSError(msg)

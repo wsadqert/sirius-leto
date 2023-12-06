@@ -83,7 +83,7 @@ def _animation_step_with_delay(frame: int, alpha_array: Sequence, config: dict[s
 	"""
 	if frame == 0:
 		time_previous_frame_with_context_switch = real_time()
-	ans = _animation_step(frame, alpha_array, config)  #, is_in_demo)
+	ans = _animation_step(frame, alpha_array, config)  # , is_in_demo)
 	t1 = real_time()
 
 	if t1-time_previous_frame_with_context_switch < 1/fps:
@@ -93,7 +93,7 @@ def _animation_step_with_delay(frame: int, alpha_array: Sequence, config: dict[s
 	return ans
 
 
-def animate(config: dict[str, ...], is_in_demo: bool = False) -> None:
+def animate(config: dict[str, ...]) -> None:  #     is_in_demo: bool = False
 	"""
 	Gets pre-calculated data from `datapath_model` and plots it.
 
