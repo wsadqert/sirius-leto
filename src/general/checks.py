@@ -1,4 +1,4 @@
-from src.general.constants import *
+from typing import Iterable, Sequence
 
 __all__ = ["contains_one_of", "check_type_convertible", "is_convertible", "is_not_nan_inf", "is_positive", "is_not_negative"]
 
@@ -48,7 +48,10 @@ def check_type_convertible(element: any, new_type: type) -> bool:
 		return True
 	except (ValueError, TypeError):
 		return False
+
+
 is_convertible = check_type_convertible
+
 
 def is_not_nan_inf(element: any) -> bool:
 	"""
@@ -69,6 +72,7 @@ def is_not_nan_inf(element: any) -> bool:
 	return (check_type_convertible(element, float) and
 	        float(element) not in (float('nan'), float('inf'), float('-inf')))
 
+
 def is_positive(element: any) -> bool:
 	"""
 	Similar to `is_not_nan_inf`.
@@ -86,6 +90,7 @@ def is_positive(element: any) -> bool:
 	:return: boolean value, indices the ability to cast the `element` to `float` and `float(element)` is positive.
 	"""
 	return is_not_nan_inf(element) and float(element) > 0
+
 
 def is_not_negative(element: any) -> bool:
 	"""

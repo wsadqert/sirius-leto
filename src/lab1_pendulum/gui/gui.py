@@ -1,21 +1,111 @@
 import logging
 import sys
+from typing import Literal
 import tkinter as tk
+from tkinter import ttk, messagebox
 import tkinter.font as tkFont
-from tkinter import messagebox
 
-from src.general.constants import *
-from src.general.checks import *
+from src.general.checks import is_convertible, is_positive
+from src.general.constants import g
 
 from .tooltip import create_tooltip
 from .custom_wingets import *
 from .constants import *
 
-
 __all__ = ["app", "start_gui"]
 
-STATE_TYPE = Literal["normal", "disable"]
-COLOR_TYPE = Literal["black", "gray"]
+# types definitions
+STATE = Literal["normal", "disabled"] | bool
+COLOR = Literal["black", "gray"]
+CONFIG = dict[str, int | float | str | bool]
+OBJECT2CHANGE = Literal['k', 'theory', 'extremums']
+
+# Overriding default exception handler
+# The exception messages is mostly useless, so we can hide it by setting this parameter to empty lambda
+tk.Tk.report_callback_exception = lambda a, b, c: ...
+
+
+def _change_state(name: OBJECT2CHANGE, new_state: STATE):
+	"""
+	Set the new state of lineedit and label `theory`.
+
+	:param new_state: The new state of elements. If `bool`, 0 corresponds to `disabled`, 1 - to `normal`. Else, must be `normal` or `disabled`, other value will be rejected.
+	:return: String representation of new color of text. Can take only 2 values: `gray` or `black`.
+	"""
+	allowed_string_values = STATE.__args__[0].__args__
+
+	# processing incorrect data
+	if name not in OBJECT2CHANGE.__args__:
+		raise ValueError(f"Invalid object name: {name}. Name can be \"k\" or \"theory\"")
+	if (new_state not in allowed_string_values) and not isinstance(new_state, bool):
+		raise ValueError(f"Invalid new state: {new_state}. State can be \"normal\", \"disabled\" or boolean value")
+
+	if name == 'k':
+		object = lineedits['k']
+	elif name == 'theory':
+		object = checkboxes["theory"]
+	elif name == 'extremums':
+		object = checkboxes["extremums"]
+	else:  # never will be executed
+		raise Exception
+
+	old_state = object["state"]
+
+	if isinstance(new_state, bool):
+		new_state = allowed_string_values[1 - new_state]
+
+	new_color = ('gray', 'black')[new_state == 'normal']
+
+	if new_state == old_state:
+		return new_color
+
+	object.configure(state=new_state)
+	if name == 'k':
+		labels['k'].configure(fg=new_color)
+		labels_units['кг/с'].configure(fg=new_color)
+	elif name == 'theory':
+		checkboxes["theory"].config(fg=new_color)
+		if new_state == 'disabled':
+			checkbox_variables["theory"].set(False)
+	elif name == 'extremums':
+		pass
+
+	logging.debug(f"Changed `{name}` state from {old_state} to {new_state}.")
+
+	return new_color
+
+
+def _process_config(config: dict[str, ...] = None) -> dict[str, ...]:
+	"""
+
+	:param config:
+	:return:
+	"""
+	if not config:
+		return {}
+
+	for key, value in config.items():
+		if key in ("mode", "windage_method"):  # read strings
+			cast_function = lambda x: x
+		elif key == "fps":  # parse integer
+			cast_function = int
+		elif key in ("calculate_theoretical", "calculate_extremums", "plot_animation", "plot_alpha"):  # parse boolean
+			cast_function = lambda x: x
+		else:  # parse float
+			cast_function = float
+
+		config[key] = cast_function(value)
+
+	if config['mode'] == 'basic':
+		config['k'] = 0
+
+	# see README.md for description
+	config['gamma'] = config['k'] / (2 * config['m'])
+	config['beta'] = config['gamma'] ** 2 - g / config['l']
+	config['c1'] = config['gamma'] * config['dt']
+	config['c2'] = g * config['dt'] ** 2 / config['l']
+
+	return config
 
 
 class App(tk.Tk):
@@ -36,6 +126,7 @@ class App(tk.Tk):
 		self.font_33 = tkFont.Font(family='Times', size=33)
 
 		self.radio_variable = tk.StringVar(value="linear")
+		self.fps_combo_variable = tk.StringVar(value="60")
 
 		self.create_widgets()
 
@@ -100,6 +191,8 @@ class App(tk.Tk):
 
 			if name == "windage":
 				command = self.__checkbox_windage_handler
+			elif name == "plot_alpha":
+				command = self.__checkbox_plot_alpha_handler
 			else:
 				command = lambda: None
 
@@ -162,57 +255,12 @@ class App(tk.Tk):
 			fg="gray"
 		)
 
-	def __config_k(self, new_state: STATE_TYPE | bool) -> COLOR_TYPE:
+		self.fps_combo = ttk.Combobox(values=['30', '60', '90', '144'], textvariable=self.fps_combo_variable)
+		self.fps_combo.place(x=380, y=290, width=lineedits_size[0], height=lineedits_size[1])
+
+	def _check(self) -> bool:
 		"""
-		Sets the new state of lineedit and label `k`.
-
-		:param new_state: The new state of elements. If `bool`, 0 corresponds to `disabled`, 1 - to `normal`. Else, must be `normal` or `disabled`, other value will be rejected.
-		:return: String representation of new color of text. Can take only 2 values: `gray` or `black`.
-		"""
-		assert (new_state in STATE_TYPE.__args__) or isinstance(new_state, bool)
-
-		old_state = new_state
-
-		if isinstance(new_state, bool):
-			new_state = STATE_TYPE.__args__[1-new_state]
-
-		new_color = ('gray', 'black')[new_state == 'normal']
-
-		lineedits['k'].configure(state=new_state)
-		labels['k'].configure(fg=new_color)
-		labels_units['кг/с'].configure(fg=new_color)
-
-		logging.info(f"Changed `k` state from {old_state} to {new_state}.")
-
-		return new_color
-
-	def __config_theory(self, new_state: STATE_TYPE) -> COLOR_TYPE:
-		"""
-		Sets the new state of lineedit and label `theory`.
-
-		:param new_state: The new state of elements. If `bool`, 0 corresponds to `disabled`, 1 - to `normal`. Else, must be `normal` or `disabled`, other value will be rejected.
-		:return: String representation of new color of text. Can take only 2 values: `gray` or `black`.
-		"""
-		assert (new_state in STATE_TYPE.__args__) or isinstance(new_state, bool)
-
-		old_state = new_state
-
-		if isinstance(new_state, bool):
-			new_state = STATE_TYPE.__args__[1-new_state]
-
-		new_color = ('gray', 'black')[new_state == 'normal']
-
-		checkboxes["theory"].config(state=new_state, fg=new_color)
-		if new_state == 'disabled':
-			checkbox_variables["theory"].set(False)
-
-		logging.info(f"Changed `k` state from {old_state} to {new_state}.")
-
-		return new_color
-
-	def __check_lineedits(self) -> bool:
-		"""
-		Checks correctness of data entered byy user.
+		Checks correctness of data entered by user.
 
 		:return: boolean value, `True` if all entries filled correctly, `False` otherwise.
 		"""
@@ -223,7 +271,7 @@ class App(tk.Tk):
 
 			if name == "alpha_start":  # `alpha_start` may be negative
 				checker_function = lambda x: is_convertible(x, float)
-			elif name in ("render_dt", "frames_count_fps"):  # there are counters, then they cannot be negative or float, only positive integers
+			elif name == "fps":  # it is counter, then it cannot be negative or float, only positive integer
 				checker_function = lambda x: is_convertible(x, int)
 			else:
 				checker_function = is_positive
@@ -232,13 +280,18 @@ class App(tk.Tk):
 				lineedits[name].config(highlightthickness=2, highlightbackground='red')  # add entry highlighting
 				messagebox.showerror("Некорректный ввод",
 				                     f"Поле {name} заполнено некорректно. ({name}=\"{value}\")\n\n"
-				                     "Для справки: все поля должны содержать неотрицательные конечные вещественные числа, `k` - только положительные действительные числа, `render_dt` и `frames_count_fps` - только положительные целые числа.")
+				                     "Для справки: все поля должны содержать неотрицательные конечные вещественные числа, `k` - только положительное вещественное числа, `fps` - только положительное целое число.")
 				ans = False
 				logging.warning(f"Check lineedits failed: {name}")
 			else:
 				lineedits[name].config(highlightthickness=0)  # remove border
-		else:
-			pass
+
+		if 1 / int(self.fps_combo_variable.get()) < float(lineedit_variables["dt"].get()):
+			# self.fps_combo.config(highlightthickness=2, highlightbackground='red')  # add entry highlighting
+			messagebox.showwarning("Некорректный ввод",
+			                       f"Поле `fps` заполнено некорректно. ({name}=\"{value}\")\n\n)"
+			                       f"При FPS={value} интервал времени между соседними кадрами должен составлять {1000 / value:.2f} мс, что меньше интервала между расчитываемыми шагами. Пожалуйста, уменьшите FPS до значения не более {float(lineedit_variables['dt'].get()):.0f}")
+
 		return ans
 
 	# EVENT HANDLERS
@@ -259,8 +312,8 @@ class App(tk.Tk):
 		else:
 			theory_new_state = "normal"
 
-		self.__config_k(k_new_state)
-		self.__config_theory(theory_new_state)
+		_change_state('k', k_new_state)
+		_change_state('theory', theory_new_state)
 
 	def on_exit(self):
 		logging.info("User attempted to leave")
@@ -274,53 +327,31 @@ class App(tk.Tk):
 		variable = checkbox_variables["windage"].get()
 
 		if not variable:
-			self.__config_theory("normal")
-		self.__radio_handler()
-
-		if not variable:
+			_change_state('theory', "normal")
 			new_state = 'disabled'
-			new_color = 'gray'
 		else:
 			new_state = 'normal'
-			new_color = 'black'
 
+		self.__radio_handler()
 		for entry in radios.values():
 			entry.configure(state=new_state)
 
 		if self.radio_variable.get() != 'realistic':
-			self.__config_k(new_state)
+			new_color = _change_state('k', new_state)
+			self.Label_windage_mode["fg"] = new_color
 
-		self.Label_windage_mode["fg"] = new_color
+	def __checkbox_plot_alpha_handler(self) -> None:
+		variable = checkbox_variables["plot_alpha"].get()
+		if not variable:
+			checkbox_variables["extremums"].set(False)
+		_change_state("extremums", variable)
 
-	def __process_config(self, config) -> dict[str, ...]:
-		for key, value in config.items():
-			if key in ("mode", "windage_method"):  # read strings
-				cast_function = lambda x: x
-			elif key in ("render_dt", "frames_count_fps"):  # parse integer
-				cast_function = int
-			elif key in ("calculate_theoretical", "calculate_extremums", "plot_animation", "plot_alpha"):  # parse boolean
-				cast_function = lambda x: x
-			else:  # parse float
-				cast_function = float
+	def parse_input(self) -> dict[str, ...]:
+		"""
 
-			config[key] = cast_function(value)
-
-		if config['mode'] == 'basic':
-			config['k'] = 0
-
-		# see README.md for description
-		config['gamma'] = config['k'] / (2 * config['m'])
-		config['beta'] = config['gamma'] ** 2 - g / config['l']
-		config['c1'] = config['gamma'] * config['dt']
-		config['c2'] = g * config['dt'] ** 2 / config['l']
-
-		return config
-
-	def start(self, event=...) -> None:
-		if not self.__check_lineedits():
-			return
-
-		config = {}
+		:return:
+		"""
+		config: dict[str, int | float | str | bool] = {}
 
 		is_windage = checkbox_variables['windage'].get()
 
@@ -330,25 +361,32 @@ class App(tk.Tk):
 
 		# model
 		config['calculate_theoretical'] = checkbox_variables['theory'].get()
-		config['calculate_extremums']   = checkbox_variables['extremums'].get()
-		config['dt']    = lineedit_variables['dt'].get()
+		config['calculate_extremums'] = checkbox_variables['extremums'].get()
+		config['dt'] = lineedit_variables['dt'].get()
 		config['t_max'] = lineedit_variables['t_max'].get()
 
 		# physics
-		config['l']           = lineedit_variables['l'].get()
+		config['l'] = lineedit_variables['l'].get()
 		config['alpha_start'] = lineedit_variables['alpha_start'].get()
-		config['k']           = lineedit_variables['k'].get()
-		config['m']           = lineedit_variables['m'].get()
+		config['k'] = lineedit_variables['k'].get()
+		config['m'] = lineedit_variables['m'].get()
 
 		# rendering
-		config['render_dt']        = lineedit_variables['render_dt'].get()
-		config['frames_count_fps'] = lineedit_variables['frames_count_fps'].get()
+		config['fps'] = self.fps_combo_variable.get()
 		config['plot_animation'] = checkbox_variables['plot_animation'].get()
-		config['plot_alpha']     = checkbox_variables['plot_alpha'].get()
+		config['plot_alpha'] = checkbox_variables['plot_alpha'].get()
+
+		return config
+
+	def start(self, _event=...) -> None:
+		if not self._check():
+			return
 
 		self.destroy()
 
-		config = self.__process_config(config)
+		config = self.parse_input()
+		_process_config(config)
+
 		self.config = config
 
 

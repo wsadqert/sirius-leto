@@ -1,25 +1,25 @@
+from typing import Final
 import numpy as np
-from tqdm import tqdm
 from math import sin
-import logging
 from cmath import (sqrt as csqrt,  # noqa:typo
                    sin as csin,  # noqa:typo
                    cos as ccos,  # noqa:typo
                    exp as cexp)  # noqa:typo
+from tqdm import tqdm
+import logging
 
-from src.general.constants import *
-from src.general.calculations import *
-from .constants import *
+from src.general.calculations import find_extremums
+from src.lab1_pendulum.constants import datapath_model
 
 
 def model(config: dict[str, ...]) -> None:
 	"""
-	Main function, calculating the model.
+	Main function, calculate the model.
 
 	:param config: Dictionary with data, obtained from user input. The dictionary's keys are variable names, and values are variables' values.
 	:return: None.
 	"""
-	# Warning: pls ignore "Unresolved reference" errors, dont try to fix them, they are defined at line 22
+	# Warning: pls ignore "Unresolved reference" errors, don't try to fix them, they are defined 5 lines below
 
 	logging.info("Preparing model for calculation")
 
@@ -40,7 +40,7 @@ def model(config: dict[str, ...]) -> None:
 		case 'linear':
 			get_alpha = lambda x: (2 * alpha_cur - alpha_last * (1 - c1) - c2 * sin(alpha_cur)) / (1 + c1)  # noqa:E731 using lambda
 		case 'quadratic':
-			get_alpha = lambda x: 2 * alpha_cur - alpha_last - 2 * c1 * (alpha_cur-alpha_last) - c2 * sin(alpha_cur)  # noqa:E731 using lambda
+			get_alpha = lambda x: 2 * alpha_cur - alpha_last - 2 * c1 * (alpha_cur - alpha_last) - c2 * sin(alpha_cur)  # noqa:E731 using lambda
 		case 'realistic':  # not implemented yet
 			get_alpha = ...
 		case _:  # never executed, but necessary to avoid a "May be refenced before assignment" warning at line 54 inside main loop
@@ -77,7 +77,6 @@ def model(config: dict[str, ...]) -> None:
 		extremums_theory_y = [theoretical_alpha_array[i] for i in extremums_theory_x]
 		extremums_theory_x = extremums_theory_x * dt  # noqa - dont refactor this pls, np cannot process `*=` operator
 
-	# _ = 0/0
 	logging.info(f"Exporting dataset to file {datapath_model}")
 	with open(datapath_model, 'w') as f:  # noqa - datapath is always defined
 		print(n,                            file=f)  # exporting data to file

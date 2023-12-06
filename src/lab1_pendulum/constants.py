@@ -1,12 +1,10 @@
-import logging
 import os
 
-from src.general.constants import *
+from src.general.constants import DATASTORE_ROOT
 
-__all__ = ["datapath_model", "datapath_log", # output settings
-           "plot_lims", "text_y", "figsize", "pendulum_axis_x", "pendulum_axis_y",  # noqa:typo, rendering settings
+__all__ = ["datapath_model", "datapath_log",  # output settings
+           "plot_lims", "text_y", "figsize", "pendulum_axis_x", "pendulum_axis_y", "demo_duration",
            ]
-
 
 # output settings
 datapath_model = os.path.join(DATASTORE_ROOT, "lab1_pendulum", "data.dat")

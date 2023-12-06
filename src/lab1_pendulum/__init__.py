@@ -1,8 +1,7 @@
-from pprint import pprint, pformat
+from pprint import pformat
 import logging
 
-from src.general.calculations import *
-from .constants import *
+from src.general._low_level import clear_screen
 from .gui import start_gui
 from .model import model
 from .animate import animate
@@ -10,7 +9,7 @@ from .animate import animate
 __all__ = ["start"]
 
 
-def start(is_verbose) -> None:
+def start() -> None:
 	"""
 	Main function of `src.lab1_pendulum`.
 
@@ -35,4 +34,4 @@ def start(is_verbose) -> None:
 
 	model(config)
 	logging.info("Model fully calculated")
-	animate(is_verbose, config)  # drawing requested plots
+	animate(config)  # drawing requested plots
