@@ -4,6 +4,7 @@ from typing import Sequence
 import matplotlib as mpl
 import matplotlib.artist
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.animation import FuncAnimation
 
 from src.lab1_pendulum.constants import datapath_model, figsize, pendulum_axis_x, pendulum_axis_y, plot_lims, text_y
@@ -11,40 +12,32 @@ from src.general.constants import sleep, real_time, pi
 from src.general.calculations import pol2cart
 
 
-def _animation_step(frame: int, alpha_array: Sequence, config: dict[str, ...]) -> tuple[mpl.artist.Artist, ...]:
+def _animation_step(frame: int, alpha_array: Sequence[float | np.float64], config: dict[str, ...]) -> tuple[mpl.artist.Artist, ...]:
 	"""
 	Get data from pre-calculated array and change coordinates of points and a line.
 
 	:param frame: Number of animation frame.
-	:param alpha_array: Array (list or other object-`Sequence`).
-	:param config: Dictionary, containing information about a laboratory.
+	:param alpha_array: Array (list/ or other sequence-like object) with pendulum deflection angles.
+	:param config: Dictionary, containing information about a laboratory (see more in `datastore/lab1_pendulum/README_input.md`).
 	:return: Tuple from `matplotlib.artist.Artist` objects to redraw.
 	"""
-	global time_previous_frame, time_animation_start, pendulum_line, pendulum_point, time_text, n  # noqa - variables are defined in `animate()`
+	global time_previous_frame, pendulum_line, pendulum_point, time_text, n  # noqa - variables are defined in `animate()`
 
 	for i in config.keys():
 		globals()[i] = config[i]
 
 	# calculating current time inside the simulation
-	time = frame/fps
-	data_item_index = round(time/dt)
+	time = frame / fps
+	data_item_index = round(time / dt)
 
-	"""
 	# fps counting
+	# print(f'\rfps = {frames_count_fps / (t1 - time_previous_frame):.2f}', end='')  # printing fps value
+
 	if frame == 0:
 		time_previous_frame = real_time()
-		time_animation_start = real_time()
-	elif frame % frames_count_fps == 0:
-		t1 = real_time()
-		print(f'\rfps = {frames_count_fps / (t1 - time_previous_frame):2}', end='')  # printing fps value
-		time_previous_frame = real_time()
-	"""
+
 	# if animation was ended, but was not closed, continue to draw exciting Artists without changing
 	if data_item_index >= n:
-		"""
-		if is_in_demo:
-			plt.close()
-		"""
 		return pendulum_line, pendulum_point, time_text
 
 	# by default, angle is in [0; 2×pi], but for correct rendering we need angle in [-pi/2; 3/4×pi],
@@ -63,42 +56,32 @@ def _animation_step(frame: int, alpha_array: Sequence, config: dict[str, ...]) -
 	pendulum_point.set_data([x], [y])
 	pendulum_line.set_data([pendulum_axis_x, x], [pendulum_axis_y, y])
 
+	# limiting fps
 	"""
-	rt = real_time() - time_animation_start
-	time_dilation_factor = (rt - time) / rt
-	"""
+	Why can't we use `interval` property of `FuncAnimation` class to limit FPS?
 
+	In the beginning of execution we don't know the exact time to render one frame. If we set interval of animation to 1/fps, 
+	real interval will be greater, and will be determined by computer performance. Therefore, the real fps will be lower.
+
+	So, if we will determine an interval dynamically, there will not be this problem.
+	"""
+	t1 = real_time()
+	if t1 - time_previous_frame < 1 / fps:
+		sleep(1 / fps - (t1 - time_previous_frame))  # 1/fps is time between two consecutive frames
+	time_previous_frame = real_time()
+
+	# updating stopwatch (format “0.00 s”)
 	if frame != 0:
-		time_text.set_text(rf"${time:.2f}\,s$")  # updating stopwatch (format “0.00 s”)
+		time_text.set_text(rf"${time:.2f}\,s$")
 
 	return pendulum_line, pendulum_point, time_text
 
 
-def _animation_step_with_delay(frame: int, alpha_array: Sequence, config: dict[str, ...]) -> tuple[mpl.artist.Artist, ...]:
-	global time_previous_frame_with_context_switch
-
-	"""
-	if is_in_demo:
-		return _animation_step(frame, alpha_array, config, is_in_demo)
-	"""
-	if frame == 0:
-		time_previous_frame_with_context_switch = real_time()
-	ans = _animation_step(frame, alpha_array, config)  # , is_in_demo)
-	t1 = real_time()
-
-	if t1-time_previous_frame_with_context_switch < 1/fps:
-		sleep(1 / fps - (t1 - time_previous_frame_with_context_switch))
-
-	time_previous_frame_with_context_switch = real_time()
-	return ans
-
-
-def animate(config: dict[str, ...]) -> None:  #     is_in_demo: bool = False
+def animate(config: dict[str, ...]) -> None:  # is_in_demo: bool = False
 	"""
 	Gets pre-calculated data from `datapath_model` and plots it.
 
-	:param is_in_demo:
-	:param config: dictionary, containing information about a laboratory (see more in `datastore/lab1_pendulum/README_input.md`).
+	:param config: Dictionary, containing information about a laboratory (see more in `datastore/lab1_pendulum/README_input.md`).
 	"""
 	global n, pendulum_line, pendulum_point, time_text  # noqa - variables will be defined below
 
@@ -110,7 +93,7 @@ def animate(config: dict[str, ...]) -> None:  #     is_in_demo: bool = False
 	with open(datapath_model) as f:  # reading data generated by `model.py`
 		n = int(f.readline().strip())
 
-		time_array  = [float(i) for i in f.readline().strip().split()]  # noqa double space
+		time_array = [float(i) for i in f.readline().strip().split()]  # noqa double space
 		alpha_array = [float(i) for i in f.readline().strip().split()]
 
 		if calculate_extremums:
@@ -139,8 +122,8 @@ def animate(config: dict[str, ...]) -> None:  #     is_in_demo: bool = False
 		pendulum_axis, = plt.plot([pendulum_axis_x], [pendulum_axis_y], marker='o', markersize=5, color='red')  # noqa, required for animation
 		pendulum_point, = plt.plot([], [], marker='o', markersize=5, color='red')
 		time_text = plt.text(0, text_y * l, "", fontsize=20)
-		animation = FuncAnimation(fig,  # noqa:F841
-		                          func=_animation_step_with_delay,
+		animation = FuncAnimation(fig,  # noqa - do not remove assigning to variable, it breakes animation!
+		                          func=_animation_step,
 		                          fargs=(alpha_array, config),  # , is_in_demo,),
 		                          interval=0,
 		                          frames=n,

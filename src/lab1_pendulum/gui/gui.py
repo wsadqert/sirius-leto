@@ -7,6 +7,7 @@ import tkinter.font as tkFont
 
 from src.general.checks import is_convertible, is_positive
 from src.general.constants import g
+from src.lab1_pendulum.constants import CONFIG
 
 from .tooltip import create_tooltip
 from .custom_wingets import *
@@ -14,11 +15,12 @@ from .constants import *
 
 __all__ = ["app", "start_gui"]
 
+
 # types definitions
-STATE = Literal["normal", "disabled"] | bool
-COLOR = Literal["black", "gray"]
-CONFIG = dict[str, int | float | str | bool]
-OBJECT2CHANGE = Literal['k', 'theory', 'extremums']
+STATE: type = Literal["normal", "disabled"] | bool  # noqa UnionType is also `type`
+COLOR: type = Literal["black", "gray"]
+OBJECT2CHANGE: type = Literal['k', 'theory', 'extremums']
+RAW_CONFIG: type = dict[str, str | bool]
 
 # Overriding default exception handler
 # The exception messages is mostly useless, so we can hide it by setting this parameter to empty lambda
@@ -41,25 +43,25 @@ def _change_state(name: OBJECT2CHANGE, new_state: STATE):
 		raise ValueError(f"Invalid new state: {new_state}. State can be \"normal\", \"disabled\" or boolean value")
 
 	if name == 'k':
-		object = lineedits['k']
+		object_ = lineedits['k']
 	elif name == 'theory':
-		object = checkboxes["theory"]
+		object_ = checkboxes["theory"]
 	elif name == 'extremums':
-		object = checkboxes["extremums"]
+		object_ = checkboxes["extremums"]
 	else:  # never will be executed
 		raise Exception
 
-	old_state = object["state"]
+	old_state = object_["state"]
 
 	if isinstance(new_state, bool):
 		new_state = allowed_string_values[1 - new_state]
 
-	new_color = ('gray', 'black')[new_state == 'normal']
+	new_color: COLOR = ('gray', 'black')[new_state == 'normal']
 
 	if new_state == old_state:
 		return new_color
 
-	object.configure(state=new_state)
+	object_.configure(state=new_state)
 	if name == 'k':
 		labels['k'].configure(fg=new_color)
 		labels_units['кг/с'].configure(fg=new_color)
@@ -75,11 +77,12 @@ def _change_state(name: OBJECT2CHANGE, new_state: STATE):
 	return new_color
 
 
-def _process_config(config: dict[str, ...] = None) -> dict[str, ...]:
+def _process_config(config: dict[str, ...] = None) -> CONFIG:
 	"""
+	Cast numbers to int/float, calculate constants, like `gamma` or `c1`.
 
-	:param config:
-	:return:
+	:param config: Dictionary with raw values from GUI.
+	:return: Dictionary, containing information about a laboratory (see more in `datastore/lab1_pendulum/README_input.md`).
 	"""
 	if not config:
 		return {}
@@ -153,14 +156,14 @@ class App(tk.Tk):
 			)
 			labels_h2[name] = label_h2
 		for name, places in labels_places.items():  # create labels
-			width = (120 if name == "frames_count_fps" else labels_size[0])
+			width_ = (120 if name == "frames_count_fps" else labels_size[0])
 
 			label = CustomLabel(
 				text=name + ' = ',
 				font=self.font_10,
 				align="right",
 				place=places,
-				size=(width,
+				size=(width_,
 				      labels_size[1])
 			)
 			create_tooltip(label, labels_hints[name])
@@ -262,7 +265,7 @@ class App(tk.Tk):
 		"""
 		Checks correctness of data entered by user.
 
-		:return: boolean value, `True` if all entries filled correctly, `False` otherwise.
+		:return: Boolean value, `True` if all entries filled correctly, `False` otherwise.
 		"""
 		ans = True
 
@@ -280,18 +283,23 @@ class App(tk.Tk):
 				lineedits[name].config(highlightthickness=2, highlightbackground='red')  # add entry highlighting
 				messagebox.showerror("Некорректный ввод",
 				                     f"Поле {name} заполнено некорректно. ({name}=\"{value}\")\n\n"
-				                     "Для справки: все поля должны содержать неотрицательные конечные вещественные числа, `k` - только положительное вещественное числа, `fps` - только положительное целое число.")
+				                     "Для справки: все поля должны содержать неотрицательные конечные вещественные числа, `k` - только положительное "
+				                     "вещественное числа, `fps` - только положительное целое число.")
 				ans = False
 				logging.warning(f"Check lineedits failed: {name}")
 			else:
 				lineedits[name].config(highlightthickness=0)  # remove border
 
-		if 1 / int(self.fps_combo_variable.get()) < float(lineedit_variables["dt"].get()):
-			# self.fps_combo.config(highlightthickness=2, highlightbackground='red')  # add entry highlighting
+		value = int(self.fps_combo_variable.get())
+		if 1 / int(value) < float(lineedit_variables["dt"].get()):
+			# self.fps_combo.config(highlightthickness=2, highlightbackground='red') # add entry highlighting
 			messagebox.showwarning("Некорректный ввод",
-			                       f"Поле `fps` заполнено некорректно. ({name}=\"{value}\")\n\n)"
-			                       f"При FPS={value} интервал времени между соседними кадрами должен составлять {1000 / value:.2f} мс, что меньше интервала между расчитываемыми шагами. Пожалуйста, уменьшите FPS до значения не более {float(lineedit_variables['dt'].get()):.0f}")
-
+			                       f"Поле `fps` заполнено некорректно. (fps=\"{value}\")\n\n"
+			                       f"При fps={value} интервал времени между соседними кадрами должен составлять {1_000_000 / value:.2f} мкс,"
+			                       f" что меньше интервала между расчитываемыми шагами ({1_000_000 * float(lineedit_variables['dt'].get()):.2f} мкс). "
+			                       f"Пожалуйста, уменьшите FPS до значения не более {1/float(lineedit_variables['dt'].get()):.0f}")
+			ans = False
+			logging.warning(f"Check lineedits failed: fps")
 		return ans
 
 	# EVENT HANDLERS
@@ -346,12 +354,16 @@ class App(tk.Tk):
 			checkbox_variables["extremums"].set(False)
 		_change_state("extremums", variable)
 
-	def parse_input(self) -> dict[str, ...]:
+	def parse_input(self) -> RAW_CONFIG:
 		"""
+		Get data from entries, checkboxes, radio buttons and combo boxes in GUI.
 
-		:return:
+		Numbers present as strings.
+		Function does not provide any additional information, only data from elements of GUI.
+
+		:return: Dictionary with raw values from GUI.
 		"""
-		config: dict[str, int | float | str | bool] = {}
+		config: CONFIG = {}
 
 		is_windage = checkbox_variables['windage'].get()
 
@@ -384,8 +396,8 @@ class App(tk.Tk):
 
 		self.destroy()
 
-		config = self.parse_input()
-		_process_config(config)
+		config: RAW_CONFIG = self.parse_input()
+		config: CONFIG = _process_config(config)
 
 		self.config = config
 
@@ -393,6 +405,6 @@ class App(tk.Tk):
 app = App()
 
 
-def start_gui() -> dict[str, dict[str, ...]]:
+def start_gui() -> CONFIG:
 	app.mainloop()
 	return app.config

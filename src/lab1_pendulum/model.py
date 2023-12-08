@@ -9,10 +9,10 @@ from tqdm import tqdm
 import logging
 
 from src.general.calculations import find_extremums
-from src.lab1_pendulum.constants import datapath_model
+from src.lab1_pendulum.constants import CONFIG, datapath_model
 
 
-def model(config: dict[str, ...]) -> None:
+def model(config: CONFIG) -> None:
 	"""
 	Main function, calculate the model.
 
@@ -71,7 +71,7 @@ def model(config: dict[str, ...]) -> None:
 		extremums_x = find_extremums(alpha_array)
 		extremums_y = [alpha_array[i] for i in extremums_x]
 		extremums_x = extremums_x * dt  # noqa - dont refactor this pls, np cannot process `*=` operator
-
+	
 	if calculate_theoretical and calculate_extremums:
 		extremums_theory_x = np.array(find_extremums(theoretical_alpha_array))
 		extremums_theory_y = [theoretical_alpha_array[i] for i in extremums_theory_x]
