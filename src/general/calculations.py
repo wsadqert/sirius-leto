@@ -3,11 +3,7 @@ from typing import Sequence
 import numpy as np
 from scipy.signal import argrelextrema
 
-__all__ = ["clear_screen", "pol2cart", "find_extremums"]  # noqa:typo
-
-
-def clear_screen():
-	print("\x1B[H\x1B[J")
+__all__ = ["pol2cart", "find_minimums", "find_maximums", "find_extremums"]  # noqa:typo
 
 
 def pol2cart(r: float, phi: float) -> tuple[float, float]:
@@ -19,6 +15,7 @@ def pol2cart(r: float, phi: float) -> tuple[float, float]:
 	x = r * cos(phi)
 	y = r * sin(phi)
 	return x, y
+
 
 def find_minimums(data: Sequence) -> tuple | np.ndarray:
 	"""
@@ -38,6 +35,7 @@ def find_maximums(data: Sequence) -> tuple | np.ndarray:
 	:return: Indices of the maximums in `data`.
 	"""
 	return argrelextrema(np.array(data), np.greater)[0]
+
 
 def find_extremums(data: Sequence) -> np.ndarray:  # noqa:typo
 	"""

@@ -6,13 +6,13 @@ __all__ = ["create_tooltip"]
 
 
 class ToolTip(object):
-	def __init__(self, widget):
+	def __init__(self, widget: tk.Widget):
 		self.widget = widget
 		self.tipwindow = None
 		self.id = None
 		self.x = self.y = 0
 
-	def showtip(self, text):
+	def showtip(self, text: str):
 		"""Display text in tooltip window"""
 		self.text = text
 		if self.tipwindow or not self.text:
@@ -36,13 +36,13 @@ class ToolTip(object):
 
 
 def create_tooltip(widget, text):
-	toolTip = ToolTip(widget)
+	tooltip = ToolTip(widget)
 
 	def enter(event):
-		toolTip.showtip(text)
+		tooltip.showtip(text)
 
 	def leave(event):
-		toolTip.hidetip()
+		tooltip.hidetip()
 
 	widget.bind('<Enter>', enter)
 	widget.bind('<Leave>', leave)

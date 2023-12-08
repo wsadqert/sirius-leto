@@ -7,8 +7,9 @@ import argparse
 from rich.traceback import install as rich_traceback_install
 from rich.logging import RichHandler
 
-from src.general.constants import *
-from src.lab1_pendulum.constants import *
+from src.general.constants import DATASTORE_ROOT, PROJECT_ROOT
+from src.general._low_level import sigint_handler
+from src.lab1_pendulum.constants import datapath_log
 
 
 # parsing arguments
@@ -27,20 +28,15 @@ logging.basicConfig(
 logging.getLogger('matplotlib').setLevel(logging.WARNING)
 logging.getLogger('PIL').setLevel(logging.WARNING)
 if args.verbose:
-	logging.getLogger().addHandler(RichHandler(log_time_format="[%d/%m/%Y %T.%f]", rich_tracebacks=True))
-else:
-	rich_traceback_install(width=300)  # will be removed in production
+	logging.getLogger().addHandler(RichHandler(log_time_format="[%d/%m/%Y %T.%f]"))
+rich_traceback_install(width=300, show_locals=True)  # will be removed in production
 
 
 # ctrl-c handler
-def sigint_handler(signal, frame):
-	msg = "Ctrl-C pressed, exiting..."
-	logging.critical(msg)
-	sys.exit(0)
 signal.signal(signal.SIGINT, sigint_handler)  # noqa
 
 # python version check
-if platform.python_version_tuple()[:2] != ('3', '10'):
+if sys.version_info[:2] < (3, 10):  # python version is lower 3.10
 	msg = f"Python version check failed! Found incompatible version {''.join(platform.python_version_tuple())}, leaving"
 	logging.critical(msg)
 	raise OSError(msg)
@@ -58,7 +54,7 @@ sys.path.insert(1, PROJECT_ROOT)
 from src.lab1_pendulum import start
 if __name__ == '__main__':
 	try:
-		start(args.verbose)
+		start()
 	except Exception as e:
 		logging.exception(e)
 		raise

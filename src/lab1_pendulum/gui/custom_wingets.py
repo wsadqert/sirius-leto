@@ -2,7 +2,7 @@ import tkinter as tk
 
 __all__ = ["CustomLabel", "CustomRadioButton", "CustomLineEdit", "CustomCheckBox"]
 
-# in constructors, I can use `super().__init__(**kwargs)`, but we must be able to override default setting,
+# in constructors, I can use `super().__init__(**kwargs)`, but we must be able to override default settings,
 # therefore I use `for ... in kwargs.items()` expression
 
 
