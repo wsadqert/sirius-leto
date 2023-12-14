@@ -20,8 +20,16 @@
 ```bash
 git clone https://github.com/wsadqert/sirius-leto.git
 cd sirius-leto
+python -m venv .
+./Scripts/activate.bat
 pip install -r requirements.txt
 py main.py
+```
+
+Для прекомпилированной программы:
+
+```bash
+./main.exe
 ```
 
 ### Linux
@@ -30,6 +38,8 @@ py main.py
 ```bash
 git clone https://github.com/wsadqert/sirius-leto.git
 cd sirius-leto
+python -m venv .
+source ./bin/activate
 pip3 install -r requirements.txt
 chmod -x main.py
 py main.py

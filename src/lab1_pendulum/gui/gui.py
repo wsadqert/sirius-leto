@@ -22,10 +22,6 @@ COLOR: type = Literal["black", "gray"]
 OBJECT2CHANGE: type = Literal['k', 'theory', 'extremums']
 RAW_CONFIG: type = dict[str, str | bool]
 
-# Overriding default exception handler
-# The exception messages is mostly useless, so we can hide it by setting this parameter to empty lambda
-tk.Tk.report_callback_exception = lambda a, b, c: ...
-
 
 def _change_state(name: OBJECT2CHANGE, new_state: STATE):
 	"""
