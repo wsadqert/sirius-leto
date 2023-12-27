@@ -51,7 +51,7 @@ lineedits_places = {
 }
 lineedits_defaults = {
 	"dt": '1e-5',
-	"t_max": '15',
+	"t_max": '2',
 	"l": '9.8',
 	"alpha_start": '1',
 	"k": '0.6',

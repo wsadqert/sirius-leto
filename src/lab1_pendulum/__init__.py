@@ -2,7 +2,7 @@ from pprint import pformat
 import logging
 
 from src.general._low_level import clear_screen
-from .gui import start_gui
+from .settings_gui import start_gui
 from .model import model
 from .animate import animate
 

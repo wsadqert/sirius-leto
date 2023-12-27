@@ -1,11 +1,12 @@
 desktop.ini
 .editorconfig
-data*.???
-input.???
+data*.*
+input.*
 datastore/**/comparing
 *.exe
+assets/**/*.xcf
+src_drafts/**/gui.bin
 
-.idea/**/**
 .idea/**
 cmake-build-*/
 *.iws
