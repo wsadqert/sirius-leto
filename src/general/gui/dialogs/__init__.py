@@ -1,0 +1,1 @@
+from .TextDialog import TextDialog

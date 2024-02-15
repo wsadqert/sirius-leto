@@ -1,5 +1,7 @@
 import os
 
+import numpy as np
+
 from src.general.constants import DATASTORE_ROOT
 
 __all__ = ["datapath_model", "datapath_log",  # output settings
@@ -19,4 +21,6 @@ figsize = 7  # noqa:typo, size of the figure in inches
 pendulum_axis_x = 0
 pendulum_axis_y = 0
 
-CONFIG: type = dict[str, int | float | str | bool]
+# types
+CONFIG: type = dict[str, int | float | str | bool]  # i don't use type aliasing for compatibility with python < 3.12
+DATASET: type = dict[str, int | list[float] | np.ndarray[float | np.float64]]

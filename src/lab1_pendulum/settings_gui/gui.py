@@ -363,9 +363,8 @@ class App(tk.Tk):
 
 		is_windage = checkbox_variables['windage'].get()
 
-		config['mode'] = ('basic', 'windage')[is_windage]
-		if is_windage:
-			config['windage_method'] = self.radio_variable.get()
+		config['mode'] = 'windage' if is_windage else 'basic'
+		config['windage_method'] = self.radio_variable.get() if is_windage else 'linear'
 
 		# model
 		config['calculate_theoretical'] = checkbox_variables['theory'].get()

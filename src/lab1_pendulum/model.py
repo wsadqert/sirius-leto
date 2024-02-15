@@ -9,10 +9,10 @@ from tqdm import tqdm
 import logging
 
 from src.general.calculations import find_extremums
-from src.lab1_pendulum.constants import CONFIG, datapath_model
+from src.lab1_pendulum.constants import CONFIG
 
 
-def model(config: CONFIG) -> None:
+def model(config: CONFIG) -> dict[str, int | list | np.ndarray]:
 	"""
 	Main function, calculate the model.
 
@@ -21,17 +21,26 @@ def model(config: CONFIG) -> None:
 	"""
 	# Warning: pls ignore "Unresolved reference" errors, don't try to fix them, they are defined 5 lines below
 
-	logging.info("Preparing model for calculation")
+	logging.debug("Extracting data from config")
 
-	for i in config.keys():
-		globals()[i] = config[i]
+	alpha_start = config['alpha_start']
+	beta = config['beta']
+	c1 = config['c1']
+	c2 = config['c2']
+	calculate_extremums = config['calculate_extremums']
+	calculate_theoretical = config['calculate_theoretical']
+	dt = config['dt']
+	gamma = config['gamma']
+	t_max = config['t_max']
+
+	logging.info("Preparing model for calculating")
 
 	# setting start values of time and angle
 	alpha_last = alpha_start
 	alpha_cur = alpha_start
 
-	# initialization of datasets
-	time_array = np.arange(0, t_max, dt)
+	# datasets initialization
+	time_array = np.arange(0, t_max, dt, dtype=np.float64)
 	alpha_array = []
 
 	n: Final[int] = len(time_array)
@@ -43,7 +52,7 @@ def model(config: CONFIG) -> None:
 			get_alpha = lambda x: 2 * alpha_cur - alpha_last - 2 * c1 * (alpha_cur - alpha_last) - c2 * sin(alpha_cur)  # noqa:E731 using lambda
 		case 'realistic':  # not implemented yet
 			get_alpha = ...
-		case _:  # never executed, but necessary to avoid a "May be refenced before assignment" warning at line 54 inside main loop
+		case _:  # never executed, but necessary to avoid a "May be refenced before assignment" warning at line 67 (`alpha_next = get_alpha(t)`) inside main loop
 			raise ValueError
 
 	if calculate_theoretical:
@@ -67,6 +76,7 @@ def model(config: CONFIG) -> None:
 		alpha_array.append(alpha_next)
 
 	logging.info("Finding extremums")
+
 	if calculate_extremums:
 		extremums_x = find_extremums(alpha_array)
 		extremums_y = [alpha_array[i] for i in extremums_x]
@@ -77,17 +87,18 @@ def model(config: CONFIG) -> None:
 		extremums_theory_y = [theoretical_alpha_array[i] for i in extremums_theory_x]
 		extremums_theory_x = extremums_theory_x * dt  # noqa - dont refactor this pls, np cannot process `*=` operator
 
-	logging.info(f"Exporting dataset to file {datapath_model}")
-	with open(datapath_model, 'w') as f:  # noqa - datapath is always defined
-		print(n,                            file=f)  # exporting data to file
-		print(*time_array,                  file=f)
-		print(*alpha_array,                 file=f)
-		if calculate_extremums:
-			print(*extremums_x,             file=f)  # noqa - extremums_x is always defined
-			print(*extremums_y,             file=f)  # noqa - extremums_y is always defined
+	dataset = {
+		'n': n,
+		'time_array': time_array,
+		'alpha_array': alpha_array
+	}
+	if calculate_extremums:
+		dataset['extremums_x'] = extremums_x
+		dataset['extremums_y'] = extremums_y
+	if calculate_theoretical and calculate_extremums:
+		dataset['extremums_theory_x'] = extremums_theory_x
+		dataset['extremums_theory_y'] = extremums_theory_y
+	if calculate_theoretical:
+		dataset['theoretical_alpha_array'] = theoretical_alpha_array
 
-		if calculate_theoretical:
-			print(*theoretical_alpha_array, file=f)
-			if calculate_extremums:
-				print(*extremums_theory_x,  file=f)  # noqa - extremums_theory_x is always defined
-				print(*extremums_theory_y,  file=f)  # noqa - extremums_theory_y is always defined
+	return dataset

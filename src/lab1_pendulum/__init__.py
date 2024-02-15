@@ -1,7 +1,7 @@
 from pprint import pformat
 import logging
 
-from src.general._low_level import clear_screen
+from src.general.low_level import clear_screen
 from .settings_gui import start_gui
 from .model import model
 from .animate import animate
@@ -32,6 +32,6 @@ def start() -> None:
 	config = start_gui()
 	logging.debug('Get model configuration:\n' + pformat(config))
 
-	model(config)
+	dataset = model(config)
 	logging.info("Model fully calculated")
-	animate(config)  # drawing requested plots
+	animate(dataset, config)  # drawing requested plots
