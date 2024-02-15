@@ -1,0 +1,465 @@
+{
+	"8": [
+		{
+			"title": "Определение цены деления измерительного прибора",
+			"target": "null0",
+			"hardware": "null1",
+			"progress": [
+				"null2",
+				"null3",
+				"null4"
+			],
+			"target_names": ["null5", "null6", "null7"],
+			"units": ["null8", "null9", "null10"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Измерение размеров малых тел",
+			"target": "null11",
+			"hardware": "null12",
+			"progress": [
+				"null13",
+				"null14",
+				"null15"
+			],
+			"target_names": ["null16", "null17", "null18"],
+			"units": ["null19", "null20", "null21"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Измерение массы тела на рычажных весах",
+			"target": "null22",
+			"hardware": "null23",
+			"progress": [
+				"null24",
+				"null25",
+				"null26"
+			],
+			"target_names": ["null27", "null28", "null29"],
+			"units": ["null30", "null31", "null32"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Измерение объёма тела",
+			"target": "null33",
+			"hardware": "null34",
+			"progress": [
+				"null35",
+				"null36",
+				"null37"
+			],
+			"target_names": ["null38", "null39", "null40"],
+			"units": ["null41", "null42", "null43"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Определение плотности твёрдого тела",
+			"target": "null44",
+			"hardware": "null45",
+			"progress": [
+				"null46",
+				"null47",
+				"null48"
+			],
+			"target_names": ["null49", "null50", "null51"],
+			"units": ["null52", "null53", "null54"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Градуирование пружины",
+			"target": "null55",
+			"hardware": "null56",
+			"progress": [
+				"null57",
+				"null58",
+				"null59"
+			],
+			"target_names": ["null60", "null61", "null62"],
+			"units": ["null63", "null64", "null65"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Измерение силы трения с помощью динамометра",
+			"target": "null66",
+			"hardware": "null67",
+			"progress": [
+				"null68",
+				"null69",
+				"null70"
+			],
+			"target_names": ["null71", "null72", "null73"],
+			"units": ["null74", "null75", "null76"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Определение выталкивающей силы, действующей на погружённое в жидкость тело",
+			"target": "null77",
+			"hardware": "null78",
+			"progress": [
+				"null79",
+				"null80",
+				"null81"
+			],
+			"target_names": ["null82", "null83", "null84"],
+			"units": ["null85", "null86", "null87"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Выяснение условий плавания тела в жидкости",
+			"target": "null88",
+			"hardware": "null89",
+			"progress": [
+				"null90",
+				"null91",
+				"null92"
+			],
+			"target_names": ["null93", "null94", "null95"],
+			"units": ["null96", "null97", "null98"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Выяснение условия равновесия рычага",
+			"target": "null99",
+			"hardware": "null100",
+			"progress": [
+				"null101",
+				"null102",
+				"null103"
+			],
+			"target_names": ["null104", "null105", "null106"],
+			"units": ["null107", "null108", "null109"],
+			"correct_answers": [0, 0, 0]
+		}
+	],
+	"9": [
+		{
+			"title": "Исследование равноускоренного движения без начальной скорости",
+			"target": "null110",
+			"hardware": "null111",
+			"progress": [
+				"null112",
+				"null113",
+				"null114"
+			],
+			"target_names": ["null115", "null116", "null117"],
+			"units": ["null118", "null119", "null120"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Измерение ускорения свободного падения",
+			"target": "null121",
+			"hardware": "null122",
+			"progress": [
+				"null123",
+				"null124",
+				"null125"
+			],
+			"target_names": ["null126", "null127", "null128"],
+			"units": ["null129", "null130", "null131"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Исследование колебания математического маятника",
+			"target": "Научиться измерять ............ выяснить зависимость ... от ... понять принцип работы...",
+			"hardware": "Штатив, нитка, грузик, линейка, секундомер",
+			"progress": [
+				"прочитать условие",
+				"опять прочитать условие",
+				"подогнать решение"
+			],
+			"target_names": ["Сопротивление", "Максимальная мощность", "Напряжение"],
+			"units": ["Ом", "кВт", "нВ"],
+			"correct_answers": [5, 6, 7.855]
+		},
+		{
+			"title": "Изучение явления электромагнитной индукции",
+			"target": "null132",
+			"hardware": "null133",
+			"progress": [
+				"null134",
+				"null135",
+				"null136"
+			],
+			"target_names": ["null137", "null138", "null139"],
+			"units": ["null140", "null141", "null142"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Наблюдение сплошного и линейчатых спектров испускания",
+			"target": "null143",
+			"hardware": "null144",
+			"progress": [
+				"null145",
+				"null146",
+				"null147"
+			],
+			"target_names": ["null148", "null149", "null150"],
+			"units": ["null151", "null152", "null153"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Измерение естественного радиационного фона дозиметром",
+			"target": "null154",
+			"hardware": "null155",
+			"progress": [
+				"null156",
+				"null157",
+				"null158"
+			],
+			"target_names": ["null159", "null160", "null161"],
+			"units": ["null162", "null163", "null164"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Изучение деления ядра атома урана по фотографии треков",
+			"target": "null165",
+			"hardware": "null166",
+			"progress": [
+				"null167",
+				"null168",
+				"null169"
+			],
+			"target_names": ["null170", "null171", "null172"],
+			"units": ["null173", "null174", "null175"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Оценка периода полураспада находящихся в воздухе продуктов распада газа радона",
+			"target": "null176",
+			"hardware": "null177",
+			"progress": [
+				"null178",
+				"null179",
+				"null180"
+			],
+			"target_names": ["null181", "null182", "null183"],
+			"units": ["null184", "null185", "null186"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Выяснение условий плавания тела в жидкости",
+			"target": "null187",
+			"hardware": "null188",
+			"progress": [
+				"null189",
+				"null190",
+				"null191"
+			],
+			"target_names": ["null192", "null193", "null194"],
+			"units": ["null195", "null196", "null197"],
+			"correct_answers": [0, 0, 0]
+		}
+	],
+	"10": [
+		{
+			"title": "Изучение движения тела, брошенного горизонтально",
+			"target": "null198",
+			"hardware": "null199",
+			"progress": [
+				"null200",
+				"null201",
+				"null202"
+			],
+			"target_names": ["null203", "null204", "null205"],
+			"units": ["null206", "null207", "null208"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Изучение движения тела по окружности",
+			"target": "null209",
+			"hardware": "null210",
+			"progress": [
+				"null211",
+				"null212",
+				"null213"
+			],
+			"target_names": ["null214", "null215", "null216"],
+			"units": ["null217", "null218", "null219"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Измерение жёсткости пружины",
+			"target": "null220",
+			"hardware": "null221",
+			"progress": [
+				"null222",
+				"null223",
+				"null224"
+			],
+			"target_names": ["null225", "null226", "null227"],
+			"units": ["null228", "null229", "null230"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Изменения коэффициента трения скольжения",
+			"target": "null231",
+			"hardware": "null232",
+			"progress": [
+				"null233",
+				"null234",
+				"null235"
+			],
+			"target_names": ["null236", "null237", "null238"],
+			"units": ["null239", "null240", "null241"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Изучение закона сохранения механической энергии",
+			"target": "null242",
+			"hardware": "null243",
+			"progress": [
+				"null244",
+				"null245",
+				"null246"
+			],
+			"target_names": ["null247", "null248", "null249"],
+			"units": ["null250", "null251", "null252"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Изучение равновесия тела под действием нескольких сил",
+			"target": "null253",
+			"hardware": "null254",
+			"progress": [
+				"null255",
+				"null256",
+				"null257"
+			],
+			"target_names": ["null258", "null259", "null260"],
+			"units": ["null261", "null262", "null263"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Экспериментальная проверка закона Гей-Люссака",
+			"target": "null264",
+			"hardware": "null265",
+			"progress": [
+				"null266",
+				"null267",
+				"null268"
+			],
+			"target_names": ["null269", "null270", "null271"],
+			"units": ["null272", "null273", "null274"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Последовательное и параллельное соединения проводников",
+			"target": "null275",
+			"hardware": "null276",
+			"progress": [
+				"null277",
+				"null278",
+				"null279"
+			],
+			"target_names": ["null280", "null281", "null282"],
+			"units": ["null283", "null284", "null285"],
+			"correct_answers": [0, 0, 0]
+		},
+		{
+			"title": "Измерение эдс и внутреннего сопротивления источника тока",
+			"target": "null286",
+			"hardware": "null287",
+			"progress": [
+				"null288",
+				"null289",
+				"null290"
+			],
+			"target_names": ["null291", "null292", "null293"],
+			"units": ["null294", "null295", "null296"],
+			"correct_answers": [0, 0, 0]
+		}
+	],
+	"11": [
+		{
+			"title": "Наблюдение действия магнитного поля на ток",
+			"target": "null297",
+			"hardware": "null298",
+			"progress": [
+				"null299",
+				"null300",
+				"null301"
+			],
+			"target_names": ["null302", "null303", "null304"],
+			"units": ["null305", "null306", "null307"],
+			"correct_answers": [0, 0, 0]
+			},
+		{
+			"title": "Изучение явления электромагнитной индукции",
+			"target": "null308",
+			"hardware": "null309",
+			"progress": [
+				"null310",
+				"null311",
+				"null312"
+			],
+			"target_names": ["null313", "null314", "null315"],
+			"units": ["null316", "null317", "null318"],
+			"correct_answers": [0, 0, 0]
+			},
+		{
+			"title": "Определение ускорения свободного падения при помощи маятника",
+			"target": "null319",
+			"hardware": "null320",
+			"progress": [
+				"null321",
+				"null322",
+				"null323"
+			],
+			"target_names": ["null324", "null325", "null326"],
+			"units": ["null327", "null328", "null329"],
+			"correct_answers": [0, 0, 0]
+			},
+		{
+			"title": "Измерение показателя преломления стекла",
+			"target": "null330",
+			"hardware": "null331",
+			"progress": [
+				"null332",
+				"null333",
+				"null334"
+			],
+			"target_names": ["null335", "null336", "null337"],
+			"units": ["null338", "null339", "null340"],
+			"correct_answers": [0, 0, 0]
+			},
+		{
+			"title": "Определение оптической силы и фокусного расстояния собирающей линзы",
+			"target": "null341",
+			"hardware": "null342",
+			"progress": [
+				"null343",
+				"null344",
+				"null345"
+			],
+			"target_names": ["null346", "null347", "null348"],
+			"units": ["null349", "null350", "null351"],
+			"correct_answers": [0, 0, 0]
+			},
+		{
+			"title": "Измерение длины световой волны",
+			"target": "null352",
+			"hardware": "null353",
+			"progress": [
+				"null354",
+				"null355",
+				"null356"
+			],
+			"target_names": ["null357", "null358", "null359"],
+			"units": ["null360", "null361", "null362"],
+			"correct_answers": [0, 0, 0]
+			},
+		{
+			"title": "Наблюдение сплошного и линейчатого спектров",
+			"target": "null363",
+			"hardware": "null364",
+			"progress": [
+				"null365",
+				"null366",
+				"null367"
+			],
+			"target_names": ["null368", "null369", "null370"],
+			"units": ["null371", "null372", "null373"],
+			"correct_answers": [0, 0, 0]
+			}
+	]
+}

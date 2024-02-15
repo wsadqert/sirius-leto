@@ -49,7 +49,6 @@ share/python-wheels/
 *.egg
 MANIFEST
 *.manifest
-*.spec
 pip-log.txt
 pip-delete-this-directory.txt
 htmlcov/
