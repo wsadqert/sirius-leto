@@ -1,5 +1,7 @@
 import os
 import sys
+from typing import Callable
+
 from rich.traceback import install
 
 from PyQt6.QtCore import Qt
@@ -31,6 +33,8 @@ class MainWindow(QMainWindow):
 		self.init_ui()
 
 	def init_ui(self):
+		setBackground(True)
+
 		# title
 		title_label = TextWithOutline("Виртуальные лабораторные работы\n по физике", Qt.GlobalColor.white, 50, Qt.GlobalColor.black, 10)
 		title_label.alignText(QAlignment.AlignCenter)
@@ -90,14 +94,15 @@ class MainWindow(QMainWindow):
 		self.setCentralWidget(self.central_widget)
 
 	def generate_open_grade(self, grade_number):
-		def open_grade(_event):
+		def open_grade(_event=...):
 			grade_n_widget = GradeWidget(grade_number, self.init_ui, self.set_task)
 			self.setCentralWidget(grade_n_widget)
 
 		return open_grade
 
 	def set_task(self, task_number: tuple[int, int]):
-		task_widget = TaskWidget(task_number)
+		print(task_number, task_number[1])
+		task_widget = TaskWidget(task_number, self.generate_open_grade)
 		self.setCentralWidget(task_widget)
 		setBackground(False)
 

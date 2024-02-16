@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import (
 )
 
 from src.general.gui.widgets.BottomToolbar import BottomToolbar
-from src.general.constants import PROJECT_ROOT, ASSETS_ROOT
+from src.general.constants import ASSETS_ROOT
 
 __all__ = ["GradeWidget"]
 
@@ -25,17 +25,17 @@ QAlignment = Qt.AlignmentFlag
 
 class GradeWidget(QWidget):
 	def __init__(self, grade_number: int, back_function: Callable, open_task_function: Callable):
-		if not isinstance(grade_number, int) or grade_number not in range(8, 12):
-			raise ValueError("grade number must be an integer between 8 and 11")
-
 		super().__init__()
 		self.grade_number = grade_number
 		self.back_function = back_function
 		self.open_task_function = open_task_function
 
+		self.init_ui()
+
+	def init_ui(self):
 		self.setObjectName("grade_window")  # for using custom CSS selector
 
-		self.setWindowTitle(f"{grade_number} класс")
+		self.setWindowTitle(f"{self.grade_number} класс")
 		self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
 		self.setStyleSheet("""
 			QWidget#grade_window {
@@ -45,9 +45,6 @@ class GradeWidget(QWidget):
 		    }
 		""")
 
-		self.init_ui()
-
-	def init_ui(self):
 		title_layout = QHBoxLayout()
 
 		back_button = QPushButton()
@@ -105,7 +102,10 @@ class GradeWidget(QWidget):
 		layout.addWidget(self)
 
 	def generate_open_task(self, number):
+		print('generating open task', number)
+
 		def open_task(_e):
+			print('open task', number, _e)
 			self.open_task_function((self.grade_number, number))
 
 		return open_task

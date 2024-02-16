@@ -8,7 +8,7 @@ __all__ = ["TextDialog"]
 
 
 class TextDialog(QDialog):
-	def __init__(self, text: str = "Lorem ipsum", title: str = "Отправлено!", buttons: QDialogButtonBox.StandardButton = QDialogButtonBox.StandardButton.Close):
+	def __init__(self, text: str, title: str, buttons: QDialogButtonBox.StandardButton = QDialogButtonBox.StandardButton.Close):
 		super().__init__()
 
 		self.setWindowTitle(title)
@@ -23,4 +23,4 @@ class TextDialog(QDialog):
 		self.setLayout(self.layout)
 
 	def show(self):
-		self.exec()
+		return self.exec()

@@ -1,10 +1,11 @@
 import os.path
-import sys
+from typing import Callable
 
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (
-	QApplication, QWidget,     # the most general classes
-	QDialogButtonBox,              # dialogs
+	QWidget,                                # the most general classes
+	QDialogButtonBox,                       # dialogs
 	QVBoxLayout, QHBoxLayout, QFormLayout,  # layouts
 	QTextBrowser, QLineEdit,                # text boxes
 	QPushButton,                            # other interactive widgets
@@ -39,10 +40,11 @@ class IncorrectInputDialog(TextDialog):
 
 
 class TaskWidget(QWidget):
-	def __init__(self, task_number: tuple[int, int]):
+	def __init__(self, task_number: tuple[int, int], back_function: Callable):
 		super().__init__()
 
 		self.grade_number, self.task_number = task_number
+		self.back_function = back_function
 		self.description = labs[str(self.grade_number)][self.task_number - 1]
 
 		self.title = self.description["title"]
@@ -77,6 +79,15 @@ class TaskWidget(QWidget):
 	def init_ui(self):
 		layout = QVBoxLayout()
 
+		title_layout = QHBoxLayout()
+
+		back_button = QPushButton()
+		back_button.setIcon(QIcon(os.path.join(ASSETS_ROOT, "icons", "arrow_left_in_circle", "arrow_left_in_circle_black_451px.png")))
+		back_button.setIconSize(QSize(50, 50))
+		back_button.setMaximumWidth(50)
+		back_button.clicked.connect(lambda _e: self.back_function(self.grade_number)())
+		back_button.setStyleSheet("background-color: transparent; ")
+
 		title_label = QLabel(self.title)
 		title_label.setStyleSheet("font-size: 30px")
 		title_label.setAlignment(QAlignment.AlignCenter)
@@ -104,13 +115,18 @@ class TaskWidget(QWidget):
 		submit_button = QPushButton('Отправить', columns)
 		form_layout.addRow(submit_button)
 
+		title_layout.addWidget(back_button)
+		title_layout.addWidget(title_label)
+		title_widget = QWidget()
+		title_widget.setLayout(title_layout)
+
 		columns_layout.addWidget(left_text)
 		columns_layout.addWidget(form)
 		columns.setLayout(columns_layout)
 
 		submit_button.clicked.connect(self.submit_form)  # noqa (ide error)
 
-		layout.addWidget(title_label)
+		layout.addWidget(title_widget)
 		layout.addWidget(columns)
 
 		self.setLayout(layout)
@@ -155,16 +171,3 @@ class TaskWidget(QWidget):
 
 		for name, val in self.inputs.items():
 			print(f"{name}: {val.text()}")
-
-
-def start():
-	app = QApplication(sys.argv)
-
-	window = TaskWidget((8, 1))
-	window.show()
-
-	sys.exit(app.exec())
-
-
-if __name__ == "__main__":
-	start()
