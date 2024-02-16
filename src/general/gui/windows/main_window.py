@@ -16,7 +16,7 @@ from src.general.gui.windows.task_window import TaskWidget
 from src.general.gui.widgets import BottomToolbar, TextWithOutline
 from .grade_window import GradeWidget
 
-__all__ = ["MainWindow"]
+__all__ = ["MainWindow", "start"]
 
 
 install(show_locals=True, width=300)

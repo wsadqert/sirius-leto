@@ -17,10 +17,10 @@ def sigint_handler(_signal, _frame):
 	sys.exit(0)
 
 
-def rich_excepthook(_event, type_: type[BaseException], value: BaseException, traceback: Optional[TracebackType]) -> None:
+def rich_excepthook(_event, _type: type[BaseException], value: BaseException, traceback: Optional[TracebackType]) -> None:
 	Console(stderr=True).print(
 		Traceback.from_exception(
-			type_,
+			_type,
 			value,
 			traceback,
 			width=300,

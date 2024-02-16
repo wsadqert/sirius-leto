@@ -53,7 +53,7 @@ if sys.version_info[:2] < (3, 10):  # python version is lower 3.10
 sys.path.insert(1, PROJECT_ROOT)
 
 # starting program
-from src.lab1_pendulum import start
+from src.general.gui.windows.main_window import start
 
 if __name__ == '__main__':
 	try:

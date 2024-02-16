@@ -1,0 +1,49 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="en-US" data-colors-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex"><meta name="built-on" content="2024-02-16T19:43:57.9862133"><title>Папка `assets` | Приложение для проведения цифровых лабораторных работ по физике</title><script type="application/json" id="virtual-toc-data">[{"id":"labs-description-json","level":0,"title":"labs_description.json","anchor":"#labs-description-json"},{"id":"background","level":0,"title":"background/","anchor":"#background"},{"id":"icons","level":0,"title":"icons/","anchor":"#icons"}]</script><script type="application/json" id="topic-shortcuts"></script><link href="https://resources.jetbrains.com/writerside/apidoc/6.6.6-b205/app.css" rel="stylesheet"><link rel="apple-touch-icon" sizes="180x180" href="https://jetbrains.com/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://jetbrains.com/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://jetbrains.com/favicon-16x16.png"><link rel="manifest" href="site.webmanifest"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-144x144.png"><meta name="msapplication-square70x70logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-70x70.png"><meta name="msapplication-square150x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-150x150.png"><meta name="msapplication-wide310x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x150.png"><meta name="msapplication-square310x310logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x310.png"><meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="Папка `assets` | Приложение для проведения цифровых лабораторных работ по физике"><meta property="og:description" content=""><meta property="og:image" content=""><meta property="og:site_name" content="Приложение для проведения цифровых лабораторных работ по физике Help"><meta property="og:type" content="website"><meta property="og:locale" content="en_US"><meta property="og:url" content="assets-readme.html"><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="Папка `assets` | Приложение для проведения цифровых лабораторных работ по физике"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": "WebPage",
+    "@id": "assets-readme.html#webpage",
+    "url": "assets-readme.html",
+    "name": "Папка `assets` | Приложение для проведения цифровых лабораторных работ по физике",
+    "description": "",
+    "image": "",
+    "inLanguage":"en-US"
+}</script><!-- End Schema.org --><!-- Schema.org WebSite --><script type="application/ld+json">{
+    "@type": "WebSite",
+    "@id": "/#website",
+    "url": "/",
+    "name": "Приложение для проведения цифровых лабораторных работ по физике Help"
+}</script><!-- End Schema.org --></head><body data-id="assets_README" data-main-title="Папка `assets`" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}" data-template="article" data-breadcrumbs=""><div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Приложение для проведения цифровых лабораторных работ по физике  Help</h3><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="assets_README" id="assets_README.md">Папка `assets`</h1><p id="d57ea931_245">Эта папка содержит ресурсы, необходимые для работы программы, такие как бинарные файлы (картинки, динамические библиотеки (<code class="code" id="d57ea931_248">DLL</code>)) или текстовые файлы.</p><div class="code-block" data-lang="none">
+assets/
+├─ background/
+│	├─ grade_*.png
+│	└─ *_window.jpg
+├─ icons/
+│   └─ &lt;icon name&gt;/
+│		├─ &lt;icon_name_1&gt;.*
+│		.
+│		.
+│		└─ &lt;icon_name_n&gt;.*
+└─ labs_description.json
+</div><section class="chapter"><h2 id="labs-description-json" data-toc="labs-description-json">labs_description.json</h2><p id="d57ea931_250">Текстовый файл в формате JSON, содержащий информацию о каждой лаборатории. Формат файла следующий:</p><div class="code-block" data-lang="json">
+
+{
+	&quot;&lt;grade_num&gt;&quot;: [
+		{
+			&quot;title&quot;: &quot;...&quot;,
+			&quot;target&quot;: &quot;...&quot;,
+			&quot;hardware&quot;: &quot;...&quot;,
+			&quot;progress&quot;: [
+				&quot;...&quot;,
+				&quot;...&quot;,
+				&quot;...&quot;
+			],
+			&quot;target_names&quot;: [&quot;...&quot;, &quot;...&quot;, &quot;...&quot;],
+			&quot;units&quot;: [&quot;...&quot;, &quot;...&quot;, &quot;...&quot;],
+			&quot;correct_answers&quot;: [0, 0, 0]
+		}, 
+		...
+	],
+	...
+}
+</div><p id="d57ea931_252">&quot;Корневая&quot; структура &mdash; это словарь, где ключи &mdash; номера классов в виде строк (например, <code class="code" id="d57ea931_253">&quot;8&quot;</code>, <code class="code" id="d57ea931_254">&quot;9&quot;</code>, ...), а значения &mdash; списки.</p><p id="d57ea931_255">Каждый список &mdash; это список лабораторий в конкретном классе. Каждая лаборатория описывается 1 словарём. Назначения ключей следующие:</p><div class="table-wrapper"><table class="wide" id="d57ea931_256"><thead><tr class="ijRowHead" id="d57ea931_257"><th id="d57ea931_258"><p>Название ключа</p></th><th id="d57ea931_259"><p>Назначение</p></th><th id="d57ea931_260"><p>Пример</p></th></tr></thead><tbody><tr id="d57ea931_261"><td id="d57ea931_262"><p><code class="code" id="d57ea931_263">&quot;title&quot;</code></p></td><td id="d57ea931_264"><p>Название лаборатории для отображения в общем меню</p></td><td id="d57ea931_265"><p>Исследование математического маятника</p></td></tr><tr id="d57ea931_266"><td id="d57ea931_267"><p><code class="code" id="d57ea931_268">&quot;target&quot;</code></p></td><td id="d57ea931_269"><p>Цель работы. Подставляется в текст условия</p></td><td id="d57ea931_270"><p>Исследовать зависимость <code class="code" id="d57ea931_271">x</code> от <code class="code" id="d57ea931_272">y</code></p></td></tr><tr id="d57ea931_273"><td id="d57ea931_274"><p><code class="code" id="d57ea931_275">&quot;hardware&quot;</code></p></td><td id="d57ea931_276"><p>Список используемого оборудования</p></td><td id="d57ea931_277"><p><code class="code" id="d57ea931_278">[&quot;Амперметр&quot;, &quot;резистор&quot;, &quot;батарейка&quot;]</code></p></td></tr><tr id="d57ea931_279"><td id="d57ea931_280"><p><code class="code" id="d57ea931_281">&quot;target_names&quot;</code></p></td><td id="d57ea931_282"><p>Список физических величин, которые требуется найти</p></td><td id="d57ea931_283"><p><code class="code" id="d57ea931_284">[&quot;Сопротивление&quot;, &quot;Выделяемая мощность&quot;]</code></p></td></tr><tr id="d57ea931_285"><td id="d57ea931_286"><p><code class="code" id="d57ea931_287">&quot;units&quot;</code></p></td><td id="d57ea931_288"><p>Единицы измерения величин <code class="code" id="d57ea931_289">&quot;target_names&quot;</code> в том же порядке</p></td><td id="d57ea931_290"><p><code class="code" id="d57ea931_291">[&quot;Ом&quot;, &quot;мВт&quot;]</code></p></td></tr><tr id="d57ea931_292"><td id="d57ea931_293"><p><code class="code" id="d57ea931_294">&quot;correct_answers&quot;</code></p></td><td id="d57ea931_295"><p>Правильные ответы на задачу</p></td><td id="d57ea931_296"><p><code class="code" id="d57ea931_297">[1, 2]</code></p></td></tr></tbody></table></div><p id="d57ea931_298">Всего содержится 4 класса: с 8 по 11 включительно. В каждом из классов находятся описания <span class="emphasis" id="d57ea931_299">нескольких</span> лабораторий.</p></section><section class="chapter"><h2 id="background" data-toc="background">background/</h2><p id="d57ea931_300">Папка, содержащая все обои, используемые в графическом интерфейсе. Все названия уникальны, предпочтителен формат файлов PNG, хотя допустим и JPEG.</p><p id="d57ea931_301">Файлы-картинки находятся непосредственно в папке <code class="code" id="d57ea931_302">background/</code>.</p></section><section class="chapter"><h2 id="icons" data-toc="icons">icons/</h2><p id="d57ea931_303">Тоже папка, но содержит всевозможные иконки (например, стрелочки, символы паузы, перемотки и т.д.).</p><p id="d57ea931_304">Каждая иконка располагается в одной из подпапок. В каждой подпапке может располагаться несколько вариантов одной иконки (например, отличающиеся по цвету и разрешению).</p></section><div class="last-modified">Last modified: 16 февраля 2024</div><div data-feedback-placeholder="true"></div><div class="navigation-links _bottom"><a href="lab1-pendulum-datastore.html" class="navigation-links__prev">Лаборатория №1. Физический маятник.</a></div></article><div id="disqus_thread"></div></div></section></main></div><script src="https://resources.jetbrains.com/writerside/apidoc/6.6.6-b205/app.js"></script></body></html>

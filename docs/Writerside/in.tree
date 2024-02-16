@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="in"
+                  name="Приложение для проведения цифровых лабораторных работ по физике" start-page="README.md">
+
+	<toc-element topic="README.md"/>
+	<toc-element toc-title="Исходный код">
+		<toc-element toc-title="Общий (general)">
+			<toc-element topic="calculations.md"/>
+			<toc-element topic="constants.md"/>
+			<toc-element topic="low_level.md"/>
+			<toc-element topic="checks.md"/>
+			<toc-element toc-title="Графический интерфейс" topic="gui.md">
+				<toc-element topic="dialogs.md">
+					<toc-element toc-title="TextDialog" topic="TextDialog.md"/>
+				</toc-element>
+				<toc-element topic="widgets.md">
+					<toc-element toc-title="BottomToolbar" topic="BottomToolbar.md"/>
+					<toc-element toc-title="TextWithOutline" topic="TextWithOutline.md"/>
+				</toc-element>
+				<toc-element toc-title="Окна" topic="windows.md">
+					<toc-element toc-title="MainWindow" topic="MainWindow.md"/>
+				</toc-element>
+			</toc-element>
+		</toc-element>
+		<toc-element toc-title="lab1_pendulum">
+			<toc-element topic="src_lab1_pendulum_README.md"/>
+		</toc-element>
+	</toc-element>
+	<toc-element toc-title="Хранилище временных данных">
+        <toc-element toc-title="lab1_pendulum">
+            <toc-element topic="lab1_pendulum_datastore.md"/>
+        </toc-element>
+    </toc-element>
+	<toc-element toc-title="Внешние ресурсы (assets)" topic="assets_README.md"/>
+
+</instance-profile>
