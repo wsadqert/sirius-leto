@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
-from src.lab1_pendulum.constants import CONFIG, DATASET, datapath_model, figsize, pendulum_axis_x, pendulum_axis_y, plot_lims, text_y
+from src.lab1_pendulum.constants import CONFIG, DATASET, figsize, pendulum_axis_x, pendulum_axis_y, plot_lims, text_y
 from src.lab1_pendulum.plotting_gui.play_pause_window import PlayPauseWindow
 from src.general.constants import sleep, real_time, pi
 from src.general.calculations import pol2cart

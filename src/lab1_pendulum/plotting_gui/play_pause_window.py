@@ -16,10 +16,10 @@ class PlayPauseWindow:
 
 		root.resizable(False, False)
 
-		self.play_image = tk.PhotoImage(file=os.path.join(PROJECT_ROOT, r"assets/play/play2_275px.png")).subsample(3, 3)
-		self.pause_image = tk.PhotoImage(file=os.path.join(PROJECT_ROOT, r"assets/pause/pause2_275px.png")).subsample(3, 3)
-		self.back_image = tk.PhotoImage(file=os.path.join(PROJECT_ROOT, r"assets/back1/back1_275px.png")).subsample(3, 3)
-		self.forward_image = tk.PhotoImage(file=os.path.join(PROJECT_ROOT, r"assets/forward1/forward1_275px.png")).subsample(3, 3)
+		self.play_image = tk.PhotoImage(file=os.path.join(PROJECT_ROOT, r"assets/icons/play/play2_275px.png")).subsample(3, 3)
+		self.pause_image = tk.PhotoImage(file=os.path.join(PROJECT_ROOT, r"assets/icons/pause/pause2_275px.png")).subsample(3, 3)
+		self.back_image = tk.PhotoImage(file=os.path.join(PROJECT_ROOT, r"assets/icons/back1/back1_275px.png")).subsample(3, 3)
+		self.forward_image = tk.PhotoImage(file=os.path.join(PROJECT_ROOT, r"assets/icons/forward1/forward1_275px.png")).subsample(3, 3)
 
 		self.frame = tk.Frame(root)
 		self.frame.pack(side=tk.TOP)
