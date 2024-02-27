@@ -7,16 +7,16 @@ pyinstaller --onefile "main.py" --add-data assets:assets --paths src/ --paths ve
 pyinstaller --onefile "main_gui.py" --add-data assets:assets --paths src/ --paths venv/Lib/site-packages
 
 # cleaning previous version of `assets`
-cd dist/
+Set-Location dist/
 
 Remove-Item assets -Recurse -Force -ErrorAction Ignore
 Copy-Item ../assets . -Recurse
 Remove-Item dist.zip -Recurse -Force -ErrorAction Ignor
 Remove-Item datastore -Recurse -Force -ErrorAction Ignore
 
-Write "assets`r`n main.exe`r`n main_gui.exe" | Out-File listfile.txt
+Write-Output "assets`r`n main.exe`r`n main_gui.exe" | Out-File listfile.txt
 
 # compressing
 cmd /c "7z a -mx1 -mmt=12 -tzip dist.zip @listfile.txt"
 
-cd $current_directory
+Set-Location $current_directory
