@@ -10,7 +10,9 @@ def pol2cart(r: float, phi: float) -> tuple[float, float]:
 	"""
 	Function that converts polar coordinates to cartesian.
 
-	:return: Tuple of x and y coordinates.
+	:param r: The radial distance from the origin in the polar coordinate system.
+	:param phi: The angle in radians from the positive x-axis in the polar coordinate system.
+	:return: A tuple containing the x and y coordinates in the cartesian coordinate system.
 	"""
 	x = r * cos(phi)
 	y = r * sin(phi)

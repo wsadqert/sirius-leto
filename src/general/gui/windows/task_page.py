@@ -12,14 +12,12 @@ from PyQt6.QtWidgets import (
 	QLabel
 )
 import json
-from rich.traceback import install
 
 from src.general.constants import ASSETS_ROOT
 from src.general.gui.dialogs import TextDialog
 from src.general.checks import is_positive
 
-__all__ = ["TaskWidget"]
-install(show_locals=True)
+__all__ = ["TaskPage"]
 
 labs = json.load(open(os.path.join(ASSETS_ROOT, "labs_description.json"), encoding='utf-8'))
 QAlignment = Qt.AlignmentFlag
@@ -39,7 +37,7 @@ class IncorrectInputDialog(TextDialog):
 		)
 
 
-class TaskWidget(QWidget):
+class TaskPage(QWidget):
 	def __init__(self, task_number: tuple[int, int], back_function: Callable):
 		super().__init__()
 

@@ -52,6 +52,9 @@ if sys.version_info[:2] < (3, 10):  # python version is lower 3.10
 # adding project root to PYTHONPATH
 sys.path.insert(1, PROJECT_ROOT)
 
+# force setting light mode
+sys.argv += ['-platform', 'windows:darkmode=1']
+
 # starting program
 from src.lab1_pendulum import start
 

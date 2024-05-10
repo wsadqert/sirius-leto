@@ -2,6 +2,13 @@
 	"8": [
 		{
 			"title": "Определение цены деления измерительного прибора",
+			"type": "",
+			"howto": [
+				"howto0",
+				"howto1",
+				"howto2"
+			],
+			"correct_howto": 1,
 			"target": "null0",
 			"hardware": "null1",
 			"progress": [

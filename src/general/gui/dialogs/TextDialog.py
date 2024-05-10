@@ -8,7 +8,22 @@ __all__ = ["TextDialog"]
 
 
 class TextDialog(QDialog):
+	"""
+	A custom dialog class that displays a text and buttons.
+
+	Methods:
+	- `__init__(self, text, title, buttons)`: Initializes the dialog with the given text, title, and buttons type.
+	- `show(self)`: Displays the dialog and waits for the user to interact with it. Returns True if the user accepts the dialog, False otherwise.
+	"""
+
 	def __init__(self, text: str, title: str, buttons: QDialogButtonBox.StandardButton = QDialogButtonBox.StandardButton.Close):
+		"""
+		Initializes the dialog with the given text, title, and buttons type.
+
+		:param text:
+		:param title: Title of window.
+		:param buttons:
+		"""
 		super().__init__()
 
 		self.setWindowTitle(title)

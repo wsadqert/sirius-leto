@@ -1,5 +1,5 @@
+import logging
 import os
-from rich.traceback import install
 from typing import Callable
 import json
 
@@ -15,15 +15,14 @@ from PyQt6.QtWidgets import (
 from src.general.gui.widgets.BottomToolbar import BottomToolbar
 from src.general.constants import ASSETS_ROOT
 
-__all__ = ["GradeWidget"]
+__all__ = ["GradePage"]
 
-install(show_locals=True, width=300)
 labs = json.load(open(os.path.join(ASSETS_ROOT, "labs_description.json"), encoding="utf-8"))
 
 QAlignment = Qt.AlignmentFlag
 
 
-class GradeWidget(QWidget):
+class GradePage(QWidget):
 	def __init__(self, grade_number: int, back_function: Callable, open_task_function: Callable):
 		super().__init__()
 		self.grade_number = grade_number
@@ -41,7 +40,6 @@ class GradeWidget(QWidget):
 			QWidget#grade_window {
 			    background-image: url("assets/background/grade_window.jpg");
 			    background-repeat: no-repeat;
-			    background-size: 120px;
 		    }
 		""")
 
@@ -106,6 +104,15 @@ class GradeWidget(QWidget):
 
 		def open_task(_e):
 			print('open task', number, _e)
+
+			if (self.grade_number, number) == (9, 3):
+				from src.lab1_pendulum import start
+				try:
+					start()
+				except Exception as e:
+					logging.exception(e)
+					raise
+
 			self.open_task_function((self.grade_number, number))
 
 		return open_task

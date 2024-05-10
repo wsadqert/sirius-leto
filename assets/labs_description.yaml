@@ -1,0 +1,21 @@
+8:
+    - task:
+        title: "Определение цены деления измерительного прибора"
+        type: problem
+        howto:
+            - "howto0"
+            - "howto1"
+            - "howto2"
+        correct_howto: 1
+        target: "target0"
+        hardware: "hardware0"
+        progress:
+            - "progress0"
+            - "progress1"
+            - "progress2"
+        target_names:
+            - "target_name0"
+            - "target_name1"
+            - "target_name2"
+        units: ["unit0", "unit1", "unit2"]
+        correct_answers: [0, 1, 2]

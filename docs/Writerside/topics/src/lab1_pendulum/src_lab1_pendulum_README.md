@@ -85,5 +85,5 @@ ID: `lab1_pendulum`
 
 ## Полезные ссылки
 
-- [https://ru.wikipedia.org/wiki/Физический_маятник](https://ru.wikipedia.org/wiki/Физический_маятник)
+- [](https://ru.wikipedia.org/wiki/Физический_маятник)
 - ...
