@@ -123,6 +123,7 @@ def animate(dataset: DATASET, config: CONFIG) -> None:  # is_in_demo: bool = Fal
 	alpha_array = dataset['alpha_array']
 
 	if calculate_extremums:
+		print(sorted(dataset['extremums_x']))
 		extremums_x = dataset['extremums_x']
 		extremums_y = dataset['extremums_y']
 	if calculate_theoretical and calculate_extremums:
