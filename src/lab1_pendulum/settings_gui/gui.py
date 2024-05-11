@@ -102,7 +102,7 @@ def _process_config(config: dict[str, ...] = None) -> CONFIG:
 	config['gamma'] = config['k'] / (2 * config['m'])
 	config['beta'] = config['gamma'] ** 2 - g / config['l']
 	config['c1'] = config['gamma'] * config['dt']
-	config['c2'] = g * config['dt'] ** 2 / config['l']
+	config['c2'] = 2 * g * config['dt'] ** 2 / config['l']
 
 	return config
 

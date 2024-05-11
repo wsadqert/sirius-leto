@@ -3,7 +3,7 @@ from typing import Sequence
 import numpy as np
 from scipy.signal import argrelextrema
 
-__all__ = ["pol2cart", "find_minimums", "find_maximums", "find_extremums"]  # noqa:typo
+__all__ = ["pol2cart", "find_minimums", "find_maximums", "find_extremums", "sign"]  # noqa:typo
 
 
 def pol2cart(r: float, phi: float) -> tuple[float, float]:
@@ -47,3 +47,9 @@ def find_extremums(data: Sequence) -> np.ndarray:  # noqa:typo
 	:return: Indices of the extremums in `data`.
 	"""
 	return np.array([*set(find_minimums(data)) | set(find_maximums(data))])
+
+
+def sign(x: float):
+	if x < 0:    return -1
+	elif x == 0: return 0
+	else:        return 1

@@ -6,22 +6,28 @@ while (true) {
     if (!(Test-Path "venv/")) {
         Write-Host "Virtual environment is not detected. Provide path to it or type 'new' to create venv or press RETURN to use global interpreter: "
         $command = Read-Host
-    }
 
-    if ($command -eq "new") {
-        Write-Host "Creating..." -NoNewline -ForegroundColor Cyan
-        python -m venv venv/
-        Write-Host "`rCreated!   "
-        $venv = "venv"
+        if ($command -eq "new") {
+            Write-Host "Creating..." -NoNewline -ForegroundColor Cyan
+            python -m venv venv/
+            Write-Host "`rCreated!   "
+            $venv = "venv"
+            break
+        } else {
+            $venv = $command
+            if (Test-Path $venv) { break }
+        }
     } else {
-        $venv = $command
-        if (Test-Path $venv) { break }
+        $venv = "venv"
+        break
     }
 }
 
+Write-Host $venv
+
 # compiling
 if ($venv -ne "") {
-    $site_packages = "$venv/Lib/site-packages"
+    $site_packages = "C:\\Users\\Matvey\\PycharmProjects\\sirius_leto_repository\\venv/Lib/site-packages"
     pyinstaller --onefile "main.py" --add-data assets:assets --paths src/ --paths $site_packages
     pyinstaller --onefile "main_gui.py" --add-data assets:assets --paths src/ --paths $site_packages
 } else {  # using global interpreter

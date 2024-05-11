@@ -8,7 +8,7 @@ from cmath import (sqrt as csqrt,  # noqa:typo
 from tqdm import tqdm
 import logging
 
-from src.general.calculations import find_extremums
+from src.general.calculations import find_extremums, sign
 from src.lab1_pendulum.constants import CONFIG
 
 
@@ -49,7 +49,7 @@ def model(config: CONFIG) -> dict[str, int | list | np.ndarray]:
 		case 'linear':
 			get_alpha = lambda x: (2 * alpha_cur - alpha_last * (1 - c1) - c2 * sin(alpha_cur)) / (1 + c1)  # noqa:E731 using lambda
 		case 'quadratic':
-			get_alpha = lambda x: 2 * alpha_cur - alpha_last - 2 * c1 * (alpha_cur - alpha_last) - c2 * sin(alpha_cur)  # noqa:E731 using lambda
+			get_alpha = lambda x: 2 * alpha_cur - alpha_last - 2 * (alpha_cur - alpha_last)**2 * config['k'] / config['m'] * sign(alpha_cur - alpha_last) - c2 * sin(alpha_cur)  # noqa:E731 using lambda
 		case 'realistic':  # not implemented yet
 			get_alpha = ...
 		case _:  # never executed, but necessary to avoid a "May be refenced before assignment" warning at line 67 (`alpha_next = get_alpha(t)`) inside main loop
