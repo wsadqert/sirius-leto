@@ -1,25 +1,18 @@
 import logging
-import os
 from typing import Callable
 import json
 
 from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import (
-	QWidget,                    # the most general classes
-	QHBoxLayout, QVBoxLayout,   # layouts
-	QPushButton,                # other interactive widgets
-	QLabel
-)
+from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLabel
 
+from src.general.gui.key_handler import _handle_key_gen
 from src.general.gui.widgets.BottomToolbar import BottomToolbar
-from src.general.constants import ASSETS_ROOT
+from src.general.constants import *
 
 __all__ = ["GradePage"]
 
-labs = json.load(open(os.path.join(ASSETS_ROOT, "labs_description.json"), encoding="utf-8"))
-
-QAlignment = Qt.AlignmentFlag
+labs = json.load(open(f"{ASSETS_ROOT}\\labs_description.json", encoding="utf-8"))
 
 
 class GradePage(QWidget):
@@ -38,28 +31,29 @@ class GradePage(QWidget):
 		self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
 		self.setStyleSheet("""
 			QWidget#grade_window {
-			    background-image: url("assets/background/grade_window.jpg");
+			    background-image: url("assets/images/background/grade_window.jpg");
 			    background-repeat: no-repeat;
 		    }
 		""")
+		self.keyPressEvent = _handle_key_gen(Qt.Key.Key_Backspace, self.back_function)
 
 		title_layout = QHBoxLayout()
 
 		back_button = QPushButton()
-		back_button.setIcon(QIcon(os.path.join(ASSETS_ROOT, "icons", "arrow_left_in_circle", "arrow_left_in_circle_white_451px.png")))
+		back_button.setIcon(QIcon(f"{ICONS_ROOT}\\arrow_left_in_circle\\arrow_left_in_circle_white_451px.png"))
 		back_button.setIconSize(QSize(50, 50))
-		back_button.setMaximumWidth(50)
+		back_button.setFixedWidth(50)
 		back_button.clicked.connect(self.back_function)  # noqa (ide error)
 		back_button.setStyleSheet("background-color: transparent; ")
 
 		# title
 		title_label = QLabel(f"{self.grade_number} класс")
-		title_label.setAlignment(QAlignment.AlignLeft | QAlignment.AlignVCenter)
+		title_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
 		title_label.setStyleSheet("color: white; font-size: 30px; ")
 
 		# subtitle
 		subtitle_label = QLabel("Виртуальные лабораторные работы по физике")
-		subtitle_label.setAlignment(QAlignment.AlignRight | QAlignment.AlignVCenter)
+		subtitle_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
 		subtitle_label.setStyleSheet("color: rgba(255, 255, 255, 0.7); font-size: 20px; ")
 
 		labs_layout = QVBoxLayout()
@@ -68,11 +62,10 @@ class GradePage(QWidget):
 			lab_name = lab["title"]
 
 			lab_name_widget = QLabel(f"{i+1}. {lab_name}")
-			# lab_name_widget.number = i
 			lab_name_widget.setStyleSheet("font-size: 25px; color: #00ff00")
-			lab_name_widget.setAlignment(QAlignment.AlignLeft)
+			lab_name_widget.setAlignment(Qt.AlignmentFlag.AlignLeft)
 			lab_name_widget.setMaximumHeight(40)
-			lab_name_widget.mouseReleaseEvent = self.generate_open_task(i+1)
+			lab_name_widget.mouseReleaseEvent = lambda _e: self.open_task(i+1)
 			labs_layout.addWidget(lab_name_widget)
 
 		# toolbar
@@ -99,21 +92,15 @@ class GradePage(QWidget):
 		self.setLayout(layout)
 		layout.addWidget(self)
 
-	def generate_open_task(self, number):
-		print('generating open task', number)
+	def open_task(self, task_number: int):
+		print('open task', task_number)
 
-		def open_task(_e):
-			print('open task', number, _e)
+		if (self.grade_number, task_number) == (9, 3):
+			from src.lab1_pendulum import start
+			try:
+				start()
+			except Exception as e:
+				logging.exception(e)
+				raise
 
-			if (self.grade_number, number) == (9, 3):
-				from src.lab1_pendulum import start
-				try:
-					start()
-				except Exception as e:
-					logging.exception(e)
-					raise
-
-			self.open_task_function((self.grade_number, number))
-
-		return open_task
-
+		self.open_task_function((self.grade_number, task_number))

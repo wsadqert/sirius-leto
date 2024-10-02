@@ -1,0 +1,19 @@
+QListView {
+	font-size: 15px;
+	color: black;
+}
+QListView::item {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	border-radius: 10px;
+	background-color: #eee;
+	height: 50px;
+}
+QListView::item:hover, QListView::item:focus {
+	background-color: #ddd;
+	color: inherit;
+}
+QListView::item:hover:focus {
+	background-color: #ccc;
+	color: inherit;
+}

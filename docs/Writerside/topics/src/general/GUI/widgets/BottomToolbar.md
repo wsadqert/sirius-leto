@@ -55,7 +55,7 @@ def generate_open_tool(self, tool_name)
 
 Файл также содержит 3 вспомогательных класса:
 
-- `AboutDialog`
+- `AboutWindow`
 - `AboutEquipmentDialog`
 - `SuggestImprovementDialog`
 

@@ -4,7 +4,7 @@ $current_directory = Get-Location
 
 while (true) {
     if (!(Test-Path "venv/")) {
-        Write-Host "Virtual environment is not detected. Provide path to it or type 'new' to create venv or press RETURN to use global interpreter: "
+        Write-Host "Virtual environment is not detected. Provide path to it or type 'new' to create venv or press ENTER/RETURN to use global interpreter: "
         $command = Read-Host
 
         if ($command -eq "new") {
@@ -27,11 +27,11 @@ Write-Host $venv
 
 # compiling
 if ($venv -ne "") {
-    $site_packages = "C:\\Users\\Matvey\\PycharmProjects\\sirius_leto_repository\\venv/Lib/site-packages"
-    pyinstaller --onefile "main.py" --add-data assets:assets --paths src/ --paths $site_packages
+    $site_packages = "C:\\Users\\Matvey\\PycharmProjects\\sirius_leto_repository\\venv\\Lib\\site-packages"
+    # pyinstaller --onefile "main.py" --add-data assets:assets --paths src/ --paths $site_packages
     pyinstaller --onefile "main_gui.py" --add-data assets:assets --paths src/ --paths $site_packages
 } else {  # using global interpreter
-    pyinstaller --onefile "main.py" --add-data assets:assets --paths src/
+    # pyinstaller --onefile "main.py" --add-data assets:assets --paths src/
     pyinstaller --onefile "main_gui.py" --add-data assets:assets --paths src/
 }
 

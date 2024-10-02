@@ -3,7 +3,6 @@ from PyQt6.QtGui import QFont, QPainter, QPen, QTextCursor, QTextDocument
 from PyQt6.QtWidgets import *
 
 __all__ = ["TextWithOutline"]
-QAlignment = Qt.AlignmentFlag
 
 
 class MyTextDocument(QTextDocument):
@@ -49,7 +48,7 @@ class TextWithOutline(QTextEdit):
 		self.setText(text)
 		self.setDisabled(True)
 
-	def alignText(self, alignment: QAlignment):
+	def alignText(self, alignment: Qt.AlignmentFlag):
 		cursor = self.textCursor()
 
 		for i in self.text.split('\n'):

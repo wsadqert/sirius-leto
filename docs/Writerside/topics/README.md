@@ -11,6 +11,8 @@
 ![Matplotlib](https://img.shields.io/badge/Matplotlib-%23ffffff.svg?style=for-the-badge&logo=Matplotlib&logoColor=black)
 ![Markdown](https://img.shields.io/badge/markdown-%23000000.svg?style=for-the-badge&logo=markdown&logoColor=white)
 
+Текущий прогресс по задачам вы можете отслеживать на [Github Issues](https://github.com/) и [YouGile](https://ru.yougile.com/board/rmuccfl32i52).
+
 ## Варианты запуска
 
 К сожалению, мы не успели реализовать совместную работу общего графического интерфейса с `matplotlib`, поэтому временно есть только возможность отдельного запуска одного и другого.

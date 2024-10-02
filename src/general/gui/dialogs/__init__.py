@@ -1,1 +1,1 @@
-from .TextDialog import TextDialog
+from .TextDialog import *

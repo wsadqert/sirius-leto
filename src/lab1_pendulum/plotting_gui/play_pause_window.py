@@ -4,7 +4,7 @@ from typing import Callable
 import matplotlib.animation
 import tkinter as tk
 
-from src.general.constants import PROJECT_ROOT
+from src.general.constants import ICONS_ROOT, IMAGES_ROOT, PROJECT_ROOT
 from ._animation_control_button import AnimationControlButton
 
 __all__ = ['PlayPauseWindow']
@@ -16,10 +16,10 @@ class PlayPauseWindow:
 
 		root.resizable(False, False)
 
-		self.play_image = tk.PhotoImage(file=os.path.join(PROJECT_ROOT, r"assets/icons/play/play2_275px.png")).subsample(3, 3)
-		self.pause_image = tk.PhotoImage(file=os.path.join(PROJECT_ROOT, r"assets/icons/pause/pause2_275px.png")).subsample(3, 3)
-		self.back_image = tk.PhotoImage(file=os.path.join(PROJECT_ROOT, r"assets/icons/back1/back1_275px.png")).subsample(3, 3)
-		self.forward_image = tk.PhotoImage(file=os.path.join(PROJECT_ROOT, r"assets/icons/forward1/forward1_275px.png")).subsample(3, 3)
+		self.play_image = tk.PhotoImage(file=f"{ICONS_ROOT}\\play\\play2_275px.png").subsample(3, 3)
+		self.pause_image = tk.PhotoImage(file=f"{ICONS_ROOT}\\pause\\pause2_275px.png").subsample(3, 3)
+		self.back_image = tk.PhotoImage(file=f"{ICONS_ROOT}\\back1\\back1_275px.png").subsample(3, 3)
+		self.forward_image = tk.PhotoImage(file=f"{ICONS_ROOT}\\forward1\\forward1_275px.png").subsample(3, 3)
 
 		self.frame = tk.Frame(root)
 		self.frame.pack(side=tk.TOP)

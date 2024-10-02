@@ -1,6 +1,3 @@
-import os
-import sys
-
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import (
@@ -9,9 +6,10 @@ from PyQt6.QtWidgets import (
 	QLabel
 )
 
-from src.general.gui.windows.task_page import TaskPage
+from src.general.constants import *
+from src.general.gui.windows.TaskFormPage import TaskFormPage
 from src.general.gui.widgets import BottomToolbar, TextWithOutline
-from .grade_page import GradePage
+from .GradePage import GradePage
 
 __all__ = ["MainWindow", "start"]
 
@@ -75,7 +73,7 @@ class MainWindow(QMainWindow):
 			# picture
 			grade_pic = QLabel()
 			grade_pic.setAlignment(Qt.AlignmentFlag.AlignCenter)
-			path2pic = os.path.join("assets", "background", f"grade_{i}.png")
+			path2pic = f"{IMAGES_ROOT}\\background\\grade_{i}.png"
 			if os.path.exists(path2pic):
 				grade_pic.setPixmap(QPixmap(path2pic).scaledToWidth(220))
 			else:
@@ -118,11 +116,11 @@ class MainWindow(QMainWindow):
 		:param grade_number: The number of the grade to be opened.
 		:return: A function that opens a grade page when called.
 		"""
-		def open_grade(_event=...):
-			grade_n_widget = GradePage(grade_number, self.init_ui, self.set_task)
-			self.setCentralWidget(grade_n_widget)
+		return lambda _e: self.open_grade(grade_number)
 
-		return open_grade
+	def open_grade(self, grade_number):
+		grade_n_widget = GradePage(grade_number, self.init_ui, self.set_task)
+		self.setCentralWidget(grade_n_widget)
 
 	def set_task(self, task_number: tuple[int, int]):
 		"""
@@ -132,7 +130,11 @@ class MainWindow(QMainWindow):
 		:return: None
 		"""
 		print(task_number, task_number[1])
-		task_widget = TaskPage(task_number, self.generate_open_grade)
+		if task_number == (8, 5):
+			from src.lab3_density import TaskPage as TaskPage85
+			task_widget = TaskPage85(ASSETS_ROOT + "/lab3_liquid/lab3_liquid.html", self.generate_open_grade)
+		else:
+			task_widget = TaskFormPage(task_number, self.generate_open_grade)
 		self.setCentralWidget(task_widget)
 		setBackground(False)
 
@@ -167,7 +169,7 @@ def setBackground(flag: bool):
 	"""
 	style = "MainWindow { background-image: "
 	if flag:
-		style += 'url("assets/background/main_window.jpg")'
+		style += 'url("assets/images/background/main_window.jpg")'
 	else:
 		style += 'none'
 

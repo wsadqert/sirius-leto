@@ -18,9 +18,9 @@ class TextDialog(QDialog):
 
 	def __init__(self, text: str, title: str, buttons: QDialogButtonBox.StandardButton = QDialogButtonBox.StandardButton.Close):
 		"""
-		Initializes the dialog with the given text, title, and buttons type.
+		Initializes the dialog with the given text, title, and buttons.
 
-		:param text:
+		:param text: Text displayed in the dialog.
 		:param title: Title of window.
 		:param buttons:
 		"""

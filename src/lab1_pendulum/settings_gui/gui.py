@@ -6,11 +6,11 @@ from tkinter import ttk, messagebox
 import tkinter.font as tkFont
 
 from src.general.checks import is_convertible, is_positive
-from src.general.constants import g
+from src.general.constants import g, pi
 from src.lab1_pendulum.constants import CONFIG
 
 from .tooltip import create_tooltip
-from .custom_wingets import *
+from .custom_widgets import *
 from .constants import *
 
 __all__ = ["app", "start_gui"]
@@ -102,7 +102,7 @@ def _process_config(config: dict[str, ...] = None) -> CONFIG:
 	config['gamma'] = config['k'] / (2 * config['m'])
 	config['beta'] = config['gamma'] ** 2 - g / config['l']
 	config['c1'] = config['gamma'] * config['dt']
-	config['c2'] = 2 * g * config['dt'] ** 2 / config['l']
+	config['c2'] = g * config['dt'] ** 2 / config['l']
 
 	return config
 
@@ -142,28 +142,27 @@ class App(tk.Tk):
 			size=(527, 60)
 		)
 
-		for name, places in labels_h2_places.items():  # create h2's
+		for label_i in labels_h2_data:  # create h2's
 			label_h2 = CustomLabel(
-				text=name,
+				text=label_i.text,
 				font=self.font_18,
 				align="left",
-				place=places,
+				place=label_i.place,
 				size=labels_h2_size
 			)
-			labels_h2[name] = label_h2
-		for name, places in labels_places.items():  # create labels
-			width_ = (120 if name == "frames_count_fps" else labels_size[0])
+			labels_h2[label_i.name] = label_h2
+		for label_i in labels_data:  # create labels
+			# width_ = (120 if label_i.short_name == "frames_count_fps" else labels_size[0])
 
 			label = CustomLabel(
-				text=name + ' = ',
+				text=label_i.text + ' = ',
 				font=self.font_10,
 				align="right",
-				place=places,
-				size=(width_,
-				      labels_size[1])
+				place=label_i.place,
+				size=labels_size
 			)
-			create_tooltip(label, labels_hints[name])
-			labels[name] = label
+			create_tooltip(label, label_i.hint)
+			labels[label_i.name] = label
 		for name, places in labels_units_places.items():  # create labels
 			label_unit = CustomLabel(
 				text=name,
@@ -206,20 +205,20 @@ class App(tk.Tk):
 
 			checkboxes[name] = checkbox
 			checkbox_variables[name] = current
-		for name, places in lineedits_places.items():  # creating lineedits
+		for lineedit_i in lineedits_data:  # creating lineedits
 			current = tk.StringVar()
 
 			lineedit = CustomLineEdit(
 				font=self.font_10,
 				align="right",
-				place=places,
+				place=lineedit_i.place,
 				size=lineedits_size,
 				variable=current,
-				default_value=lineedits_defaults[name]
+				default_value=lineedit_i.default
 			)
 
-			lineedits[name] = lineedit
-			lineedit_variables[name] = current
+			lineedits[lineedit_i.name] = lineedit
+			lineedit_variables[lineedit_i.name] = current
 
 		self.Label_windage_mode = CustomLabel(
 			text="Зависимость сопротивления\nвоздуха от скорости",
@@ -325,7 +324,6 @@ class App(tk.Tk):
 		if messagebox.askyesno("Выход", "Вы уверены, что хотите выйти?"):
 			self.destroy()
 			logging.info("User confirmed, leaving...")
-			sys.exit(0)
 
 	def __checkbox_windage_handler(self) -> None:
 		variable = checkbox_variables["windage"].get()
@@ -374,7 +372,7 @@ class App(tk.Tk):
 
 		# physics
 		config['l'] = lineedit_variables['l'].get()
-		config['alpha_start'] = lineedit_variables['alpha_start'].get()
+		config['alpha_start'] = str(float(lineedit_variables['alpha_start'].get()) * pi / 180)
 		config['k'] = lineedit_variables['k'].get()
 		config['m'] = lineedit_variables['m'].get()
 

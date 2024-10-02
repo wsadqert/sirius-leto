@@ -11,5 +11,5 @@ desktop.ini
 .editorconfig
 data*.*
 input.*
-assets/**/*.xcf
+*.xcf
 pdfSourceIN.*

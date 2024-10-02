@@ -21,8 +21,8 @@ args = parser.parse_args()
 if not os.path.exists(DATASTORE_ROOT):
 	print('creating DATASTORE_ROOT')
 	os.mkdir(DATASTORE_ROOT)
-if not os.path.exists(os.path.join(DATASTORE_ROOT, "lab1_pendulum")):
-	os.mkdir(os.path.join(DATASTORE_ROOT, "lab1_pendulum"))
+if not os.path.exists(f"{DATASTORE_ROOT}\\lab1_pendulum"):
+	os.mkdir(f"{DATASTORE_ROOT}\\lab1_pendulum")
 
 # configuring logger
 logging.basicConfig(

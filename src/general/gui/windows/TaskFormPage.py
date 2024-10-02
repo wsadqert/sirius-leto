@@ -1,43 +1,42 @@
-import os.path
 from typing import Callable
 
 from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (
-	QWidget,                                # the most general classes
-	QDialogButtonBox,                       # dialogs
+	QMessageBox, QWidget,  # the most general classes
 	QVBoxLayout, QHBoxLayout, QFormLayout,  # layouts
-	QTextBrowser, QLineEdit,                # text boxes
-	QPushButton,                            # other interactive widgets
+	QTextBrowser, QLineEdit,  # text boxes
+	QPushButton,  # other interactive widgets
 	QLabel
 )
 import json
 
-from src.general.constants import ASSETS_ROOT
-from src.general.gui.dialogs import TextDialog
+from src.general.constants import ASSETS_ROOT, ICONS_ROOT
 from src.general.checks import is_positive
 
-__all__ = ["TaskPage"]
+__all__ = ["TaskFormPage"]
 
-labs = json.load(open(os.path.join(ASSETS_ROOT, "labs_description.json"), encoding='utf-8'))
-QAlignment = Qt.AlignmentFlag
+labs = json.load(open(f"{ASSETS_ROOT}\\labs_description.json", encoding='utf-8'))
 
 
-class IncorrectInputDialog(TextDialog):
+class IncorrectInputDialog(QMessageBox):
 	def __init__(self, fields: list[str]):
 		if len(fields) == 1:
 			message = f"Field <span style='color: red'>{fields[0]}</span> is filled incorrectly"
 		else:
 			message = f"Fields <span style='color: red'>{'</span>, <span style=\'color: red\'>'.join(fields)}</span> are filled incorrectly"
 
-		super().__init__(
-			text=message,
-			title="Некорректный ввод",
-			buttons=QDialogButtonBox.StandardButton.Ok
-		)
+		super().__init__()
+
+		self.setIcon(QMessageBox.Icon.Warning)
+		self.setWindowIcon(QIcon(f"{ICONS_ROOT}\\SecurityAndMaintenance_Alert.png"))
+		self.setText(message)
+		self.setWindowTitle("Некорректный ввод")
+		self.setStandardButtons(QMessageBox.StandardButton.Ok)
+		self.exec()
 
 
-class TaskPage(QWidget):
+class TaskFormPage(QWidget):
 	def __init__(self, task_number: tuple[int, int], back_function: Callable):
 		super().__init__()
 
@@ -80,15 +79,15 @@ class TaskPage(QWidget):
 		title_layout = QHBoxLayout()
 
 		back_button = QPushButton()
-		back_button.setIcon(QIcon(os.path.join(ASSETS_ROOT, "icons", "arrow_left_in_circle", "arrow_left_in_circle_black_451px.png")))
+		back_button.setIcon(QIcon(f"{ICONS_ROOT}\\arrow_left_in_circle\\arrow_left_in_circle_black_451px.png"))
 		back_button.setIconSize(QSize(50, 50))
 		back_button.setMaximumWidth(50)
-		back_button.clicked.connect(lambda _e: self.back_function(self.grade_number)())
+		back_button.clicked.connect(lambda _e: self.back_function(self.grade_number)(_e))
 		back_button.setStyleSheet("background-color: transparent; ")
 
 		title_label = QLabel(self.title)
 		title_label.setStyleSheet("font-size: 30px")
-		title_label.setAlignment(QAlignment.AlignCenter)
+		title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
 		columns = QWidget()
 		columns_layout = QHBoxLayout()
@@ -111,6 +110,11 @@ class TaskPage(QWidget):
 			self.inputs[name] = input1
 
 		submit_button = QPushButton('Отправить', columns)
+		submit_button.setStyleSheet("""
+			border-radius: 2px;
+			border: 1px solid black;
+			background-color: white;
+		""")
 		form_layout.addRow(submit_button)
 
 		title_layout.addWidget(back_button)
@@ -134,11 +138,12 @@ class TaskPage(QWidget):
 			self.submit_form()
 
 	def change_border(self, name, state):
+		print(name, state)
 		if state:
-			border_style = "none"
+			border_style = "border: none; border-bottom: 1px solid black"
 		else:
-			border_style = "2px solid red"
-		self.inputs[name].setStyleSheet(f"border: {border_style}")
+			border_style = "border: 2px solid red"
+		self.inputs[name].setStyleSheet(border_style)
 
 	def check_correctness(self):
 		incorrect_names = []

@@ -2,14 +2,16 @@ import sys
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QRadioButton, QPushButton, QHBoxLayout
 from PyQt6.QtCore import Qt
 
+__all__ = ["RadioTestPage"]
 
-class RadioButtonsApp(QWidget):
+
+class RadioTestPage(QWidget):
 	def __init__(self, num_radio_buttons: int):
 		super().__init__()
 
 		self.init_ui(num_radio_buttons)
 
-	def init_ui(self, num_radio_buttons: int, ):
+	def init_ui(self, num_radio_buttons: int):
 		self.setFixedSize(1200, 800)
 		self.setWindowTitle("Radio Buttons Example")
 		self.setStyleSheet("""
