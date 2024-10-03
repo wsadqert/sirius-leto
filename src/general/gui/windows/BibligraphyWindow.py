@@ -8,7 +8,7 @@ __all__ = ["BibliographyWindow"]
 
 
 def _get_bibliography():
-	with open(BIBLIOGRAPHY) as f:
+	with open(BIBLIOGRAPHY, encoding="utf-8") as f:
 		return [i.strip() for i in f.readlines()]
 
 
