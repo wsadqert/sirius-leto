@@ -13,7 +13,7 @@ __all__ = ["TextTaskListWindow"]
 
 install(show_locals=True, width=300)
 
-with open(f"{ASSETS_ROOT}\\taskbook\\taskbook.txt") as f:
+with open(f"{ASSETS_ROOT}\\taskbook\\taskbook.txt", encoding="utf-8") as f:
 	names = [x.strip() for x in f.readlines()]
 # names = [f"{i + 1}. {name}" for i, name in enumerate(names)]
 
@@ -48,7 +48,7 @@ class TaskPage(QWidget):
 		path = f"{ASSETS_ROOT}\\taskbook\\{self.task_item + 1}.html"
 
 		if os.path.exists(path):
-			with open(path) as f:
+			with open(path, encoding="utf-8") as f:
 				self.web_engine_view.setHtml(f.read())
 		else:
 			self.web_engine_view.setHtml(f"<h1>Not found: {path}</h1>")
