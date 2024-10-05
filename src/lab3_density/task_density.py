@@ -53,7 +53,7 @@ class TaskPage(QWidget):
 		self.volume = random.randrange(10, 50, 1)
 
 		self.answer = 1000 * self.mass / self.volume
-		self.delta = (1/10 + 0.05 / self.mass) * self.answer
+		self.delta = (1/10 + 0.25 / self.mass) * self.answer
 
 		self.correct_answers = [self.answer, self.delta]
 		print(self.correct_answers)
@@ -77,7 +77,7 @@ class TaskPage(QWidget):
 
 	def setMass(self, mass: float):
 		new_mathjax = self.soup.new_tag('mathjax', attrs={"class": "mass"})
-		new_mathjax.string = r"m = " + str(mass) + ' г'  # + r'$'
+		new_mathjax.string = r"m = " + str(mass) + '± 0.25 г'  # + r'$'
 		self.soup.find('mathjax', {"class": "mass"}).replace_with(new_mathjax)
 
 	def setVolume(self, volume: float):
