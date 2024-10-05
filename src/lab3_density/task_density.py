@@ -58,7 +58,7 @@ class TaskPage(QWidget):
 		self.correct_answers = [self.answer, self.delta]
 		print(self.correct_answers)
 
-		with open(self.task_path) as f:
+		with open(self.task_path, encoding="utf-8") as f:
 			self.task_text = f.read()
 		self.soup = BeautifulSoup(self.task_text, 'html.parser')
 
