@@ -77,7 +77,7 @@ class TaskPage(QWidget):
 
 	def setMass(self, mass: float):
 		new_mathjax = self.soup.new_tag('mathjax', attrs={"class": "mass"})
-		new_mathjax.string = r"m = " + str(mass) + '± 0.25 г'  # + r'$'
+		new_mathjax.string = r"m = " + str(mass) + ' ± 0.25 г'  # + r'$'
 		self.soup.find('mathjax', {"class": "mass"}).replace_with(new_mathjax)
 
 	def setVolume(self, volume: float):
@@ -179,8 +179,12 @@ class TaskPage(QWidget):
 		# assuming all input fields are filled correctly
 		res = [False] * len(self.inputs)
 		for i, (_, val) in enumerate(self.inputs.items()):
-			if round(float(val.text())) >= round(self.correct_answers[i] * 0.95) and round(float(val.text())) <= round(self.correct_answers[i] * 1.05):
-				res[i] = True
+			if _=='Плотность':
+				if round(float(val.text())) >= round(self.correct_answers[i] - self.correct_answers[i+1]*0.33) and round(float(val.text())) <= round(self.correct_answers[i] + self.correct_answers[i+1]*0.33):
+					res[i] = True
+			else:
+				if round(float(val.text())) >= round(self.correct_answers[i] * 0.95) and round(float(val.text())) <= round(self.correct_answers[i] * 1.05):
+					res[i] = True
 
 		return res
 
