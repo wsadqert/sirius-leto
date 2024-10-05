@@ -65,7 +65,7 @@ class GradePage(QWidget):
 			lab_name_widget.setStyleSheet("font-size: 25px; color: #00ff00")
 			lab_name_widget.setAlignment(Qt.AlignmentFlag.AlignLeft)
 			lab_name_widget.setMaximumHeight(40)
-			lab_name_widget.mouseReleaseEvent = lambda _e: self.open_task(i+1)
+			lab_name_widget.mouseReleaseEvent = self.generate_open_task(i+1)
 			labs_layout.addWidget(lab_name_widget)
 
 		# toolbar
@@ -104,3 +104,6 @@ class GradePage(QWidget):
 				raise
 
 		self.open_task_function((self.grade_number, task_number))
+
+	def generate_open_task(self, task_number: int):
+		return lambda task: self.open_task(task_number)
