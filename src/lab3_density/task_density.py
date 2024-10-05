@@ -29,9 +29,9 @@ QAlignment = Qt.AlignmentFlag
 class IncorrectInputDialog(TextDialog):
 	def __init__(self, fields: list[str]):
 		if len(fields) == 1:
-			message = f"Field <span style='color: red'>{fields[0]}</span> is filled incorrectly"
+			message = f"Поле <span style='color: red'>{fields[0]}</span> заполнено с ошибкой. Разделителем целой и дробной частей является точка."
 		else:
-			message = f"Fields <span style='color: red'>{'</span>, <span style=\'color: red\'>'.join(fields)}</span> are filled incorrectly"
+			message = f"Поля <span style='color: red'>{'</span>, <span style=\'color: red\'>'.join(fields)}</span> заполнены с ошибкой. Разделителем целой и дробной частей является точка."
 
 		super().__init__(
 			text=message,
