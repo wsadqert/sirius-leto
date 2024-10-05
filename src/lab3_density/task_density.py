@@ -114,7 +114,7 @@ class TaskPage(QWidget):
 		settings.setAttribute(QWebEngineSettings.WebAttribute.LocalContentCanAccessFileUrls, True)
 		settings.setUnknownUrlSchemePolicy(QWebEngineSettings.UnknownUrlSchemePolicy.AllowAllUnknownUrlSchemes)
 
-		web_engine_view.setHtml(self.soup.__str__(), QtCore.QUrl.fromLocalFile(r"C:\Users\Matvey\PycharmProjects\sirius_leto_repository\assets\lab3_liquid\lab3_liquid.html"))
+		web_engine_view.setHtml(self.soup.__str__(), QtCore.QUrl.fromLocalFile(rf"{ASSETS_ROOT}\lab3_liquid\lab3_liquid.html"))
 
 		form = QWidget(columns)
 		form_layout = QFormLayout()
@@ -206,7 +206,7 @@ class TaskPage(QWidget):
 
 if __name__ == '__main__':
 	app = QApplication(sys.argv + ['--no-sandbox'])
-	window = TaskPage("../../assets/lab3_liquid/lab3_liquid.html", lambda: ...)
+	window = TaskPage(f"{ASSETS_ROOT}/lab3_liquid/lab3_liquid.html", lambda: ...)
 	window.show()
 
 	sys.exit(app.exec())
