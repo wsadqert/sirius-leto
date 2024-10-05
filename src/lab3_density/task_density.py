@@ -179,7 +179,7 @@ class TaskPage(QWidget):
 		# assuming all input fields are filled correctly
 		res = [False] * len(self.inputs)
 		for i, (_, val) in enumerate(self.inputs.items()):
-			if round(float(val.text())) == round(self.correct_answers[i]):
+			if round(float(val.text())) >= round(self.correct_answers[i] * 0.95) and round(float(val.text())) <= round(self.correct_answers[i] * 1.05):
 				res[i] = True
 
 		return res
