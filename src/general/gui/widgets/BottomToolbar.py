@@ -26,7 +26,7 @@ class BottomToolbar(QWidget):
 
 		for tool_name in tools_names:
 			item = QPushButton(tool_name, self)
-			item.setStyleSheet("font-size: 20px; font-align: center")
+			item.setStyleSheet("font-size: 20px; ")
 			item.clicked.connect(self.generate_open_tool(tool_name))
 
 			self.layout.addWidget(item)
