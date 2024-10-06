@@ -39,10 +39,9 @@ class TaskPage(QWidget):
 			font-weight: bold;
 			padding: 5px;
 			color: black;
-			text-align: center;
-			cursor: pointer;
 			"""
 		)
+		self.back_button.setCursor(Qt.CursorShape.PointingHandCursor)
 		self.web_engine_view = QWebEngineView()
 
 		path = f"{ASSETS_ROOT}\\taskbook\\{self.task_item + 1}.html"
