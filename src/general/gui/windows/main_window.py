@@ -133,6 +133,9 @@ class MainWindow(QMainWindow):
 		if task_number == (8, 5):
 			from src.lab3_density import TaskPage as TaskPage85
 			task_widget = TaskPage85(ASSETS_ROOT + "/lab3_liquid/lab3_liquid.html", self.generate_open_grade)
+		elif task_number==(10,9):
+			from src.lab4_current import TaskPage as TaskPage86
+			task_widget = TaskPage86(ASSETS_ROOT + "/lab4_current/lab4_current.html", self.generate_open_grade)
 		else:
 			task_widget = TaskFormPage(task_number, self.generate_open_grade)
 		self.setCentralWidget(task_widget)

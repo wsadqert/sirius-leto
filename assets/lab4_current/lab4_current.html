@@ -1,0 +1,187 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+	</script>
+
+
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+		}
+		h1.title {
+			text-align: center;
+		}
+		h2 {
+			margin-bottom: 0;
+		}
+		p.source {
+			color: #222;
+			font-style: italic;
+		}
+		p.source:before {
+			content: "Задача: ";
+			font-style: normal;
+		}
+		p.source:after {
+			content: ".";
+			font-style: normal;
+		}
+		div.main_text p {
+			text-indent: 20px;
+		}
+		.progress li {
+			margin-bottom: 10px;
+			margin-top: 10px;
+		}
+		.image-column {
+			display: inline-block;
+			align-self: flex-end;
+
+		}
+		.row {
+			display: flex;
+		}
+		.note {
+			font-style: normal;
+		}
+		mathjax {
+			font-size: 1em;
+		}
+	</style>
+	<meta charset="utf-8">
+
+</head>
+
+<body>
+	<!--
+	<h1 class="title">Определение внутреннего сопротивления и ЭДС источника напряжения</h1>
+	-->
+	<p class="source">базовые методы измерений</p>
+
+	<div class="main_text equipment">
+		<h2>Оборудование</h2>
+		<p>Вольтметр, сопротивление которого много больше сопротивлений других элементов. Источник напряжения с неизвестными
+			ЭДС и внутренним сопротивлением. Неидеальный амперметр.
+			Реостат с максимальным сопротивлением, равным трем сопротивлениям амперметра.
+			Провода "Крокодил"
+		</p>
+	</div>
+
+	<div class="main_text task">
+		<h2>Условие</h2>
+		<p>Найдите ЭДС источника напряжения. Найдите сопротивления источника напряжения и амперметра.</p>
+        <p><i>
+            Указание: сопротивления ЭДС, амперметра и реостата сравнимы между собой.
+            Считайте, что сопротивление проводов учтено в сопротивлении ЭДС и не зависит от цепи.
+            Сопротивление вольтметра можно считать бесконечным.
+            Погрешности оценивать не нужно</i></p>
+		<p><i>.
+            Реостат - резистор, который может менять своё сопротивление путём изменения положения движка.
+            В данной модели реализовано два состояния реостата: когда движок слева (т.е. его сопротивление равно максимальному), и когда движок справа (его сопротивление обнуляется).
+        </i></p>
+	</div>
+
+	<div class="main_text progress">
+		<h2>Ход работы</h2>
+		<ol>
+			<li>Вам необходимо понять, какие схемы нужно собрать. Считайте, что на сборку системы уходит 5 минут. Хорошим считается решение, которое использует не более двух схем.</li>
+            <li>После того, как вы решили, какие схемы вы бы собрали, выберите их из приведенных ниже картинок.</li>
+            <li>Снимите показания со схем, нажав на них. При необходимости измените положение движка реостата.</li>
+            <li>Определите напряжение ЭДС, округлите до сотых. Рассчитайте сопротивления резисторов, округлив их до десятых.</li>
+		</ol>
+	</div>
+
+    <div class="button">
+        <p>здесь должна быть кнопка для изменения движка реостата</p>
+    </div>
+	<!-- Sch1_0-Current = Eds/(r+Ra+R) Sch1_1-Current = Eds / (r+Ra) Sch5_0-Current = 0
+	 	Sch3_0-Voltage = Eds Sch6_0-Voltage = 0 Sch6_1-Voltage = Eds/(r+Ra+R)*R -->
+	<div class="row">
+		<div class="image-column">
+			<li><img src="sch1_0.png"><mathjax class="Sch1_0-Current"></mathjax></li>
+		</div>
+		<div class="image-column">
+			<li><img src="sch1_1.png"><mathjax class="Sch1_1-Current"></mathjax></li>
+		</div>
+	</div>
+	<div class="row">
+		<div class="image-column">
+			<li><img src="sch2_0.png"><mathjax class="Sch2_0-Current"></mathjax></li>
+		</div>
+		<div class="image-column">
+			<li><img src="sch2_1.png"><mathjax class="Sch2_1-Current"></mathjax></li>
+		</div>
+	</div>
+	<div class="row">
+		<div class="image-column">
+			<li><img src="sch3_0.png"><mathjax class="Sch3_0-Voltage"></mathjax></li>
+		</div>
+		<div class="image-column">
+			<li><img src="sch3_1.png"><mathjax class="Sch3_1-Voltage"></mathjax></li>
+		</div>
+	</div>
+	<div class="row">
+		<div class="image-column">
+			<li><img src="sch4_0.png"><mathjax class="Sch4_0-Voltage"></mathjax></li>
+		</div>
+		<div class="image-column">
+			<li><img src="sch4_1.png"><mathjax class="Sch4_1-Voltage"></mathjax></li>
+		</div>
+	</div>
+	<div class="row">
+		<div class="image-column">
+			<li><img src="sch5_0.png"><mathjax class="Sch5_0-Current"></mathjax> <mathjax class="Sch5_0-Voltage"></mathjax></li>
+		</div>
+		<div class="image-column">
+			<li><img src="sch5_1.png"><mathjax class="Sch5_1-Current"></mathjax> <mathjax class="Sch5_1-Voltage"></mathjax></li>
+		</div>
+	</div>
+	<div class="row">
+		<div class="image-column">
+			<li><img src="sch6_0.png"><mathjax class="Sch6_0-Current"></mathjax><mathjax class="Sch6_0-Voltage"></mathjax></li>
+		</div>
+		<div class="image-column">
+			<li><img src="sch6_1.png"><mathjax class="Sch6_1-Current"></mathjax><mathjax class="Sch6_1-Voltage"></mathjax></li>
+		</div>
+	</div>
+	<div class="row">
+		<div class="image-column">
+			<li><img src="sch7_0.png"><mathjax class="Sch7_0-Current"></mathjax><mathjax class="Sch7_0-Voltage"></mathjax></li>
+		</div>
+		<div class="image-column">
+			<li><img src="sch7_1.png"><mathjax class="Sch7_1-Current"></mathjax><mathjax class="Sch7_1-Voltage"></mathjax></li>
+		</div>
+	</div>
+	<div class="row">
+		<div class="image-column">
+			<li><img src="sch8_0.png"><mathjax class="Sch8_0-Current"></mathjax><mathjax class="Sch8_0-Voltage"></mathjax></li>
+		</div>
+		<div class="image-column">
+			<li><img src="sch8_1.png"><mathjax class="Sch8_1-Current"></mathjax><mathjax class="Sch8_1-Voltage"></mathjax></li>
+		</div>
+	</div>
+	<div class="row">
+		<div class="image-column">
+			<li><img src="sch9_0.png"><mathjax class="Sch9_0-Current"></mathjax><mathjax class="Sch9_0-Voltage"></mathjax></li>
+		</div>
+		<div class="image-column">
+			<li><img src="sch9_1.png"><mathjax class="Sch9_1-Current"></mathjax><mathjax class="Sch9_1-Voltage"></mathjax></li>
+		</div>
+	</div>
+	<div class="row">
+		<div class="image-column">
+			<li><img src="sch10_0.png"><mathjax class="Sch10_0-Current"></mathjax><mathjax class="Sch10_0-Voltage"></mathjax></li>
+		</div>
+		<div class="image-column">
+			<li><img src="sch10_1.png"><mathjax class="Sch10_1-Current"></mathjax><mathjax class="Sch10_1-Voltage"></mathjax></li>
+		</div>
+	</div>
+	<p>.</p>
+	<p>.</p>
+	<p>.</p>
+</body>
+
+</html>
