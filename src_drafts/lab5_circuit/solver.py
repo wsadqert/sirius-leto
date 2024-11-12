@@ -13,7 +13,7 @@ class Circuit:
 		self.time_step = None
 
 	def _add_resistor(self, resistance, node1, node2):
-		self.resistors.append(Resistor(resistance, node1, node2))
+		self.resistors.append(Resistor(resistance+1e-7, node1, node2))
 		self.nodes.update([node1, node2])
 		self.update_node_index()
 
@@ -35,7 +35,7 @@ class Circuit:
 	def add(self, component):
 		match component.__class__.__name__:
 			case "Resistor":
-				self._add_resistor(component.resistance, component.node1, component.node2)
+				self._add_resistor(component.resistance+1e-7, component.node1, component.node2)
 			case "VoltageSource":
 				self._add_voltage_source(component.voltage, component.node1, component.node2)
 			case "Capacitor":
