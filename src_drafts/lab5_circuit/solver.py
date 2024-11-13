@@ -1,50 +1,43 @@
+from annotated_types import IsInfinite
 import numpy as np
 from tqdm import tqdm
+from components.abc import *
 from components import *
+
+class ComponentsList:
+	def __init__(self):
+		self._components_dict = {}
+		pass
+
+	def __getitem__(self, key):
+		return self._components_dict.get(key, [])
+	
+	def append(self, key, value):
+		self._components_dict[key] = self[key] + [value]
+
 
 class Circuit:
 	def __init__(self):
-		self.resistors = []
-		self.voltage_sources = []
-		self.diodes = []
-		self.capacitors = []
+		self.components = ComponentsList()
+
 		self.nodes = set()
+
+		self.is_calculated = False
+		self.voltages = {}
 
 		self.time_step = None
 
-	def _add_resistor(self, resistance, node1, node2):
-		self.resistors.append(Resistor(resistance+1e-7, node1, node2))
-		self.nodes.update([node1, node2])
-		self.update_node_index()
+	def add(self, component: Component):
+		if not isinstance(component, Component):
+			raise TypeError("unknown component")
 
-	def _add_voltage_source(self, voltage, node1, node2):
-		self.voltage_sources.append(VoltageSource(voltage, node1, node2))
-		self.nodes.update([node1, node2])
-		self.update_node_index()
+		if isinstance(component, Instrument):
+			component.circuit = self
 
-	def _add_capacitor(self, capacitance, node1, node2, initial_voltage=0):
-		self.capacitors.append(Capacitor(capacitance, node1, node2, initial_voltage))
-		self.nodes.update([node1, node2])
-		self.update_node_index()
-
-	def _add_diode(self, node1, node2):
-		self.diodes.append(Diode(node1, node2))
-		self.nodes.update([node1, node2])
+		self.components.append(component.__class__.__name__, component)
+		self.nodes.update([component.node1, component.node2])
 		self.update_node_index()
 	
-	def add(self, component):
-		match component.__class__.__name__:
-			case "Resistor":
-				self._add_resistor(component.resistance+1e-7, component.node1, component.node2)
-			case "VoltageSource":
-				self._add_voltage_source(component.voltage, component.node1, component.node2)
-			case "Capacitor":
-				self._add_capacitor(component.capacitance, component.node1, component.node2, component.initial_voltage)
-			case "Diode":
-				self._add_diode(component.node1, component.node2)
-			case _:
-				raise TypeError("unknown component")
-
 	def update_node_index(self):
 		self.node_index = {node: index for index, node in enumerate(self.nodes)}
 
@@ -68,29 +61,29 @@ class Circuit:
 				# Add equations for resistors and voltage sources...
 				# (Assuming you have existing logic for resistors and voltage sources)
 
-				for resistor in self.resistors:
+				for resistor in self.components["Resistor"]:
 					if resistor.node1 == node:
 						other_node_index = self.node_index[resistor.node2]
-						A[node_eq_index, node_eq_index] += 1 / resistor.resistance
-						A[node_eq_index, other_node_index] -= 1 / resistor.resistance
+						A[node_eq_index, node_eq_index] += 1 / resistor.value
+						A[node_eq_index, other_node_index] -= 1 / resistor.value
 					elif resistor.node2 == node:
 						other_node_index = self.node_index[resistor.node1]
-						A[node_eq_index, node_eq_index] += 1 / resistor.resistance
-						A[node_eq_index, other_node_index] -= 1 / resistor.resistance
+						A[node_eq_index, node_eq_index] += 1 / resistor.value
+						A[node_eq_index, other_node_index] -= 1 / resistor.value
 
-				for source in self.voltage_sources:
+				for source in self.components["VoltageSource"]:
 					if source.node1 == node:
 						other_node_index = self.node_index[source.node2]
 						A[node_eq_index, node_eq_index] += 1  # KVL for voltage source
 						A[node_eq_index, other_node_index] -= 1  # KVL for voltage source
-						B[node_eq_index] -= source.voltage
+						B[node_eq_index] -= source.value
 					elif source.node2 == node:
 						other_node_index = self.node_index[source.node1]
 						A[node_eq_index, node_eq_index] += 1  # KVL for voltage source
 						A[node_eq_index, other_node_index] -= 1  # KVL for voltage source
-						B[node_eq_index] += source.voltage
+						B[node_eq_index] += source.value
 
-				for diode in self.diodes:
+				for diode in self.components["Diode"]:
 					if diode.node1 == node:  # Diode is forward biased
 						other_node_index = self.node_index[diode.node2]
 						A[node_eq_index, node_eq_index] += 1  # Current can flow
@@ -100,18 +93,18 @@ class Circuit:
 						# No changes to A or B since current cannot flow
 
 				# Add equations for capacitors
-				for capacitor in self.capacitors:
+				for capacitor in self.components["Capacitor"]:
 					if capacitor.node1 == node:
 						other_node_index = self.node_index[capacitor.node2]
 						dV_dt = (voltages[capacitor.node1] - voltages[capacitor.node2]) / time_step
-						current = capacitor.capacitance * dV_dt
+						current = capacitor.value * dV_dt
 						A[node_eq_index, node_eq_index] += 1  # Current can flow
 						A[node_eq_index, other_node_index] -= 1  # Current can flow
 						B[node_eq_index] += current  # Add the current to the B matrix
 					elif capacitor.node2 == node:
 						other_node_index = self.node_index[capacitor.node1]
 						dV_dt = (voltages[capacitor.node2] - voltages[capacitor.node1]) / time_step
-						current = capacitor.capacitance * dV_dt
+						current = capacitor.value * dV_dt
 						A[node_eq_index, node_eq_index] += 1  # Current can flow
 						A[node_eq_index, other_node_index] -= 1  # Current can flow
 						B[node_eq_index] += current  # Add the current to the B matrix
@@ -123,21 +116,24 @@ class Circuit:
 			B[ground_index] = 0
 
 			# Enforce the voltage of the voltage sources
-			for source in self.voltage_sources:
+			for source in self.components["VoltageSource"]:
 				if source.node1 == 'ground':
 					node_eq_index = self.node_index[source.node2]
 					A[node_eq_index, :] = 0  # Clear the equation for this node
 					A[node_eq_index, node_eq_index] = 1  # Set the voltage at this node
-					B[node_eq_index] = source.voltage  # Set the voltage to the source voltage
+					B[node_eq_index] = source.value  # Set the voltage to the source voltage
 				elif source.node2 == 'ground':
 					node_eq_index = self.node_index[source.node1]
 					A[node_eq_index, :] = 0  # Clear the equation for this node
 					A[node_eq_index, node_eq_index] = 1  # Set the voltage at this node
-					B[node_eq_index] = -source.voltage  # Set the voltage to the source voltage (negative)
+					B[node_eq_index] = -source.value  # Set the voltage to the source voltage (negative)
 
 
 			# Solve the linear equations for the current time step
 			voltages = dict(zip(self.nodes, np.linalg.solve(A, B).copy()))
+
+			self.is_calculated = True
+			self.voltages = voltages
 
 			# Yield the current voltages
 			yield voltages  # Return a copy of the voltages
