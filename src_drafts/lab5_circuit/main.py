@@ -1,5 +1,6 @@
 from pprint import pprint
 from components import *
+from components.instruments import Ammeter
 from solver import Circuit
 from rich.traceback import install 
 
@@ -18,6 +19,9 @@ circuit.add(Capacitor(1e-6, 'node3', 'ground', initial_voltage=0))
 voltmeter = Voltmeter("node1", "node3")
 circuit.add(voltmeter)
 
+ammeter = Ammeter("node2", "node3")
+circuit.add(ammeter)
+
 t_max = 0.001
 time_step = 0.001
 
@@ -27,3 +31,4 @@ final_voltages = solver.solve(t_max)
 pprint(final_voltages)
 
 print(voltmeter.get_value())
+print(ammeter.get_value())

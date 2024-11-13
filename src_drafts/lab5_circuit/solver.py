@@ -111,6 +111,16 @@ class Circuit:
 						A[node_eq_index, node_eq_index] += 1  # Current can flow
 						A[node_eq_index, other_node_index] -= 1  # Current can flow
 						B[node_eq_index] += current  # Add the current to the B matrix
+				
+				for ammeter in self.components["Ammeter"]:
+					if ammeter.node1 == node:
+						other_node_index = self.node_index[ammeter.node2]
+						A[node_eq_index, node_eq_index] += 1 / ammeter.resistance
+						A[node_eq_index, other_node_index] -= 1 / ammeter.resistance
+					elif ammeter.node2 == node:
+						other_node_index = self.node_index[ammeter.node1]
+						A[node_eq_index, node_eq_index] += 1 / ammeter.resistance
+						A[node_eq_index, other_node_index] -= 1 / ammeter.resistance
 
 			# Set ground node voltage to 0
 			ground_index = self.node_index['ground']
