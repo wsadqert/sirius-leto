@@ -34,6 +34,9 @@ class Circuit:
 		if isinstance(component, Instrument):
 			component.circuit = self
 
+		elif isinstance(component, Resistor):
+			component.value += 1e-7  # Add a small value to avoid division by zero
+
 		self.components.append(component.__class__.__name__, component)
 		self.nodes.update([component.node1, component.node2])
 		self.update_node_index()
