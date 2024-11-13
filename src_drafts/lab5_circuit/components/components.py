@@ -1,6 +1,6 @@
 from .abc import Component
 
-__all__ = ["VoltageSource", "Resistor", "Diode", "Capacitor"]
+__all__ = ["VoltageSource", "Resistor", "Wire", "Diode", "Capacitor"]
 
 class VoltageSource(Component):
 	def __init__(self, voltage, node1, node2):
@@ -9,6 +9,10 @@ class VoltageSource(Component):
 class Resistor(Component):
 	def __init__(self, resistance, node1, node2):
 		super().__init__(resistance, node1, node2)
+
+class Wire(Resistor):
+	def __init__(self, node1, node2):
+		super().__init__(0, node1, node2)
 
 class Diode(Component):
 	def __init__(self, node1, node2):
