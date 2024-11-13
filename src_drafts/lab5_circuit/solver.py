@@ -7,7 +7,6 @@ from components import *
 class ComponentsList:
 	def __init__(self):
 		self._components_dict = {}
-		pass
 
 	def __getitem__(self, key):
 		return self._components_dict.get(key, [])
@@ -45,12 +44,11 @@ class Circuit:
 		self.node_index = {node: index for index, node in enumerate(self.nodes)}
 
 	def _increment(self, time_step):
-		# Initialize time variables
 		time = 0
 		voltages = {node: 0 for node in self.nodes}  # Initial voltages at nodes
-		voltages['ground'] = 0  # Ground reference
+		voltages['ground'] = 0
 
-		while True:  # Infinite loop until externally controlled
+		while True:
 			# Build equations based on KCL for each node (except ground)
 			A = np.zeros((len(self.nodes), len(self.nodes)))
 			B = np.zeros(len(self.nodes))
@@ -61,66 +59,56 @@ class Circuit:
 
 				node_eq_index = self.node_index[node]
 
-				# Add equations for resistors and voltage sources...
-				# (Assuming you have existing logic for resistors and voltage sources)
-
 				for resistor in self.components["Resistor"]:
 					if resistor.node1 == node:
 						other_node_index = self.node_index[resistor.node2]
-						A[node_eq_index, node_eq_index] += 1 / resistor.value
-						A[node_eq_index, other_node_index] -= 1 / resistor.value
 					elif resistor.node2 == node:
 						other_node_index = self.node_index[resistor.node1]
-						A[node_eq_index, node_eq_index] += 1 / resistor.value
-						A[node_eq_index, other_node_index] -= 1 / resistor.value
+
+					A[node_eq_index, node_eq_index] += 1 / resistor.value
+					A[node_eq_index, other_node_index] -= 1 / resistor.value
 
 				for source in self.components["VoltageSource"]:
 					if source.node1 == node:
 						other_node_index = self.node_index[source.node2]
-						A[node_eq_index, node_eq_index] += 1  # KVL for voltage source
-						A[node_eq_index, other_node_index] -= 1  # KVL for voltage source
 						B[node_eq_index] -= source.value
 					elif source.node2 == node:
 						other_node_index = self.node_index[source.node1]
-						A[node_eq_index, node_eq_index] += 1  # KVL for voltage source
-						A[node_eq_index, other_node_index] -= 1  # KVL for voltage source
 						B[node_eq_index] += source.value
 
+					A[node_eq_index, node_eq_index] += 1  # KVL for voltage source
+					A[node_eq_index, other_node_index] -= 1  # KVL for voltage source
+
 				for diode in self.components["Diode"]:
-					if diode.node1 == node:  # Diode is forward biased
+					if diode.node1 == node:  # Diode is forward biased, current can flow
 						other_node_index = self.node_index[diode.node2]
-						A[node_eq_index, node_eq_index] += 1  # Current can flow
-						A[node_eq_index, other_node_index] -= 1  # Current can flow
+						A[node_eq_index, node_eq_index] += 1
+						A[node_eq_index, other_node_index] -= 1
 					elif diode.node2 == node:  # Diode is reverse biased
 						other_node_index = self.node_index[diode.node1]
 						# No changes to A or B since current cannot flow
 
-				# Add equations for capacitors
 				for capacitor in self.components["Capacitor"]:
 					if capacitor.node1 == node:
 						other_node_index = self.node_index[capacitor.node2]
 						dV_dt = (voltages[capacitor.node1] - voltages[capacitor.node2]) / time_step
-						current = capacitor.value * dV_dt
-						A[node_eq_index, node_eq_index] += 1  # Current can flow
-						A[node_eq_index, other_node_index] -= 1  # Current can flow
-						B[node_eq_index] += current  # Add the current to the B matrix
 					elif capacitor.node2 == node:
 						other_node_index = self.node_index[capacitor.node1]
 						dV_dt = (voltages[capacitor.node2] - voltages[capacitor.node1]) / time_step
-						current = capacitor.value * dV_dt
-						A[node_eq_index, node_eq_index] += 1  # Current can flow
-						A[node_eq_index, other_node_index] -= 1  # Current can flow
-						B[node_eq_index] += current  # Add the current to the B matrix
+
+					current = capacitor.value * dV_dt
+					A[node_eq_index, node_eq_index] += 1
+					A[node_eq_index, other_node_index] -= 1
+					B[node_eq_index] += current
 				
 				for ammeter in self.components["Ammeter"]:
 					if ammeter.node1 == node:
 						other_node_index = self.node_index[ammeter.node2]
-						A[node_eq_index, node_eq_index] += 1 / ammeter.resistance
-						A[node_eq_index, other_node_index] -= 1 / ammeter.resistance
 					elif ammeter.node2 == node:
 						other_node_index = self.node_index[ammeter.node1]
-						A[node_eq_index, node_eq_index] += 1 / ammeter.resistance
-						A[node_eq_index, other_node_index] -= 1 / ammeter.resistance
+
+					A[node_eq_index, node_eq_index] += 1 / ammeter.resistance
+					A[node_eq_index, other_node_index] -= 1 / ammeter.resistance
 
 			# Set ground node voltage to 0
 			ground_index = self.node_index['ground']
@@ -132,14 +120,13 @@ class Circuit:
 			for source in self.components["VoltageSource"]:
 				if source.node1 == 'ground':
 					node_eq_index = self.node_index[source.node2]
-					A[node_eq_index, :] = 0  # Clear the equation for this node
-					A[node_eq_index, node_eq_index] = 1  # Set the voltage at this node
 					B[node_eq_index] = source.value  # Set the voltage to the source voltage
 				elif source.node2 == 'ground':
 					node_eq_index = self.node_index[source.node1]
-					A[node_eq_index, :] = 0  # Clear the equation for this node
-					A[node_eq_index, node_eq_index] = 1  # Set the voltage at this node
 					B[node_eq_index] = -source.value  # Set the voltage to the source voltage (negative)
+
+				A[node_eq_index, :] = 0  # Clear the equation for this node
+				A[node_eq_index, node_eq_index] = 1  # Set the voltage at this node
 
 
 			# Solve the linear equations for the current time step
@@ -148,10 +135,8 @@ class Circuit:
 			self.is_calculated = True
 			self.voltages = voltages
 
-			# Yield the current voltages
-			yield voltages  # Return a copy of the voltages
+			yield voltages
 
-			# Increment time
 			time += time_step
 
 	def get_solver(self, time_step) -> "CircuitSolver":
