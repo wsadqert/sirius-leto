@@ -1,8 +1,8 @@
-from annotated_types import IsInfinite
 import numpy as np
 from tqdm import tqdm
 from components.abc import *
 from components import *
+from exceptions import *
 
 class ComponentsList:
 	def __init__(self):
@@ -17,6 +17,7 @@ class ComponentsList:
 
 class Circuit:
 	def __init__(self):
+		self.instrumental_precise = 1e-5
 		self.components = ComponentsList()
 
 		self.nodes = set()
@@ -32,6 +33,8 @@ class Circuit:
 
 		if isinstance(component, Instrument):
 			component.circuit = self
+			component.set_presise(self.instrumental_precise)
+
 
 		elif isinstance(component, Resistor):
 			component.value += 1e-7  # Add a small value to avoid division by zero
@@ -42,6 +45,15 @@ class Circuit:
 	
 	def update_node_index(self):
 		self.node_index = {node: index for index, node in enumerate(self.nodes)}
+
+	def set_instrumental_precise(self, precise: float):
+		if precise < 0:
+			raise InstrumentError("Precision must be non-negative")
+		
+		self.instrumental_precise = precise
+		
+		for instr in self.components['Instrument']:
+			instr.set_presise(precise)
 
 	def _increment(self, time_step):
 		time = 0

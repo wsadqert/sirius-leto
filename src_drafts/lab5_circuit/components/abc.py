@@ -11,10 +11,16 @@ class Component(abc.ABC):
 
 class Instrument(Component):
 	def __init__(self, node1, node2):
+		self._precise = 0
 		super().__init__(None, node1, node2)
 
 		self.circuit: "Circuit" = None
-	
+
+	def set_presise(self, precise):
+		if precise < 0:
+			raise InstrumentError("Precision must be non-negative")
+		self._precise = precise
+
 	def set_circuit(self, circuit: "Circuit"):
 		self.circuit = circuit
 

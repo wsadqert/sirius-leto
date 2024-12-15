@@ -35,10 +35,13 @@ install(show_locals=True, width=300)
 
 # Example usage
 circuit = Circuit()
-circuit.add(VoltageSource(10, 'ground', 'node0'))
+
+circuit.set_instrumental_precise(1e-5)
+
+circuit.add(VoltageSource(9, 'ground', 'node0'))
 ammeter = Ammeter("node0", "node1")
 circuit.add(ammeter)
-circuit.add(Resistor(1, 'node1', 'ground'))
+circuit.add(Resistor(1.1, 'node1', 'ground'))
 voltmeter = Voltmeter("node1", "ground")
 circuit.add(voltmeter)
 

@@ -1,3 +1,4 @@
+from additional import round_precision
 from .abc import Instrument
 
 __all__ = ["Voltmeter"]
@@ -8,8 +9,7 @@ class Voltmeter(Instrument):
 	
 	def get_value(self):
 		self._check_connectivity()
-
-		return self.circuit.voltages[self.node1] - self.circuit.voltages[self.node2]
+		return round_precision(self.circuit.voltages[self.node1] - self.circuit.voltages[self.node2], self._precise)
 	
 	def set_circuit(self, circuit: "Circuit"):
 		self.circuit = circuit
@@ -25,7 +25,7 @@ class Ammeter(Instrument):
 
 		voltage_drop = self.circuit.voltages[self.node1] - self.circuit.voltages[self.node2]
 		current = voltage_drop / self.resistance
-		return current
+		return round_precision(current, self._precise)
 	
 	def set_circuit(self, circuit: "Circuit"):
 		self.circuit = circuit
