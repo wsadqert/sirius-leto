@@ -62,22 +62,24 @@ class Circuit:
 				for resistor in self.components["Resistor"]:
 					if resistor.node1 == node:
 						other_node_index = self.node_index[resistor.node2]
+						A[node_eq_index, node_eq_index] += 1 / resistor.value
+						A[node_eq_index, other_node_index] -= 1 / resistor.value
 					elif resistor.node2 == node:
 						other_node_index = self.node_index[resistor.node1]
-
-					A[node_eq_index, node_eq_index] += 1 / resistor.value
-					A[node_eq_index, other_node_index] -= 1 / resistor.value
+						A[node_eq_index, node_eq_index] += 1 / resistor.value
+						A[node_eq_index, other_node_index] -= 1 / resistor.value
 
 				for source in self.components["VoltageSource"]:
 					if source.node1 == node:
 						other_node_index = self.node_index[source.node2]
 						B[node_eq_index] -= source.value
+						A[node_eq_index, node_eq_index] += 1  # KVL for voltage source
+						A[node_eq_index, other_node_index] -= 1  # KVL for voltage source
 					elif source.node2 == node:
 						other_node_index = self.node_index[source.node1]
 						B[node_eq_index] += source.value
-
-					A[node_eq_index, node_eq_index] += 1  # KVL for voltage source
-					A[node_eq_index, other_node_index] -= 1  # KVL for voltage source
+						A[node_eq_index, node_eq_index] += 1  # KVL for voltage source
+						A[node_eq_index, other_node_index] -= 1  # KVL for voltage source
 
 				for diode in self.components["Diode"]:
 					if diode.node1 == node:  # Diode is forward biased, current can flow
@@ -92,23 +94,29 @@ class Circuit:
 					if capacitor.node1 == node:
 						other_node_index = self.node_index[capacitor.node2]
 						dV_dt = (voltages[capacitor.node1] - voltages[capacitor.node2]) / time_step
+						current = capacitor.value * dV_dt
+						A[node_eq_index, node_eq_index] += 1
+						A[node_eq_index, other_node_index] -= 1
+						B[node_eq_index] += current
 					elif capacitor.node2 == node:
 						other_node_index = self.node_index[capacitor.node1]
 						dV_dt = (voltages[capacitor.node2] - voltages[capacitor.node1]) / time_step
-
-					current = capacitor.value * dV_dt
-					A[node_eq_index, node_eq_index] += 1
-					A[node_eq_index, other_node_index] -= 1
-					B[node_eq_index] += current
+						current = capacitor.value * dV_dt
+						A[node_eq_index, node_eq_index] += 1
+						A[node_eq_index, other_node_index] -= 1
+						B[node_eq_index] += current
 				
 				for ammeter in self.components["Ammeter"]:
 					if ammeter.node1 == node:
-						other_node_index = self.node_index[ammeter.node2]
+						if ammeter.node2 in self.node_index:
+							other_node_index = self.node_index[ammeter.node2]
+							A[node_eq_index, node_eq_index] += 1 / ammeter.resistance
+							A[node_eq_index, other_node_index] -= 1 / ammeter.resistance
 					elif ammeter.node2 == node:
-						other_node_index = self.node_index[ammeter.node1]
-
-					A[node_eq_index, node_eq_index] += 1 / ammeter.resistance
-					A[node_eq_index, other_node_index] -= 1 / ammeter.resistance
+						if ammeter.node1 in self.node_index:
+							other_node_index = self.node_index[ammeter.node1]
+							A[node_eq_index, node_eq_index] += 1 / ammeter.resistance
+							A[node_eq_index, other_node_index] -= 1 / ammeter.resistance
 
 			# Set ground node voltage to 0
 			ground_index = self.node_index['ground']
@@ -121,12 +129,13 @@ class Circuit:
 				if source.node1 == 'ground':
 					node_eq_index = self.node_index[source.node2]
 					B[node_eq_index] = source.value  # Set the voltage to the source voltage
+					A[node_eq_index, :] = 0  # Clear the equation for this node
+					A[node_eq_index, node_eq_index] = 1  # Set the voltage at this node
 				elif source.node2 == 'ground':
 					node_eq_index = self.node_index[source.node1]
 					B[node_eq_index] = -source.value  # Set the voltage to the source voltage (negative)
-
-				A[node_eq_index, :] = 0  # Clear the equation for this node
-				A[node_eq_index, node_eq_index] = 1  # Set the voltage at this node
+					A[node_eq_index, :] = 0  # Clear the equation for this node
+					A[node_eq_index, node_eq_index] = 1  # Set the voltage at this node
 
 
 			# Solve the linear equations for the current time step
