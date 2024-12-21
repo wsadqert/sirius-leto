@@ -151,7 +151,10 @@ class Circuit:
 
 
 			# Solve the linear equations for the current time step
-			voltages = dict(zip(self.nodes, np.linalg.solve(A, B).copy()))
+			try:
+				voltages = dict(zip(self.nodes, np.linalg.solve(A, B).copy()))
+			except:
+				raise CannotSolve("Circuit cannot be solved successfully")
 
 			self.is_calculated = True
 			self.voltages = voltages
@@ -187,4 +190,4 @@ class CircuitSolver:
 		for _ in r:
 			voltages = incrementer.__next__()
 
-		return voltages
+			return voltages
