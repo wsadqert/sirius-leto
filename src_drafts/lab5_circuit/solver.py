@@ -190,4 +190,4 @@ class CircuitSolver:
 		for _ in r:
 			voltages = incrementer.__next__()
 
-			return voltages
+		return voltages
