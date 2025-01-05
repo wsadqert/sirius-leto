@@ -1,8 +1,9 @@
+from rich.traceback import install
 from pprint import pprint
+
 from components import *
-from components.instruments import Ammeter
 from solver import Circuit
-from rich.traceback import install 
+from units import u
 
 install(show_locals=True, width=300)
 
@@ -38,18 +39,24 @@ circuit = Circuit()
 
 circuit.set_instrumental_precise(1e-5)
 
-circuit.add(VoltageSource(9, 'ground', 'node0'))
-ammeter = Ammeter("node0", "node1")
+v1 = VoltageSource(5, 'ground', 'node1')
+ammeter = Ammeter("node1", "node2")
+c1 = Capacitor(15 * u.micro, 'node2', 'node3')
+# circuit.add(Capacitor(1e-6, "node2", "node3"))
+r1 = Resistor(100, 'node3', 'ground')
+voltmeter = Voltmeter("node2", "node3")
+
+circuit.add([v1, c1, r1])
 circuit.add(ammeter)
-circuit.add(Resistor(1.1, 'node1', 'ground'))
-voltmeter = Voltmeter("node1", "ground")
 circuit.add(voltmeter)
 
-t_max = 0.01
-time_step = 0.001
+t_max = 2 * u.milli
+time_step = 5 * u.micro
 
 solver = circuit.get_solver(time_step)
 final_voltages = solver.solve(t_max)
 
-print(voltmeter.get_value())
-print(ammeter.get_value())
+print()
+
+print("v =", voltmeter.get_value())
+print("a =", ammeter.get_value())

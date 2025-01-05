@@ -8,6 +8,13 @@ class Component(abc.ABC):
 		self.value = value
 		self.node1 = node1
 		self.node2 = node2
+		self.resistance = 0
+	
+	def __repr__(self):
+		return f"{self.__class__.__name__}({self.value}) between ({self.node1}, {self.node2})"
+
+	def __str__(self):
+		return f"{self.__class__.__name__}({self.value}) between ({self.node1}, {self.node2})"
 
 class Instrument(Component):
 	def __init__(self, node1, node2):
@@ -26,11 +33,17 @@ class Instrument(Component):
 
 	def _check_connectivity(self):
 		if self.circuit is None:
-			return InstrumentError("instrument is not connected to circuit")
+			raise InstrumentError("instrument is not connected to circuit")
 		
 		if not self.circuit.is_calculated:
-			return InstrumentError("instrument cannot be used until the circuit has been calculated for at least 1 iteration")
+			raise InstrumentError("instrument cannot be used until the circuit has been calculated for at least 1 iteration")
 	
 	@abc.abstractmethod
 	def get_value(self):
 		pass
+
+	def __repr__(self):
+		return f"{self.__class__.__name__} at {self.circuit} between ({self.node1}, {self.node2})"
+
+	def __str__(self):
+		return f"{self.__class__.__name__} at {self.circuit} between ({self.node1}, {self.node2})"

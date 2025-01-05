@@ -19,8 +19,15 @@ class Diode(Component):
 		super().__init__(None, node1, node2)
 
 class Capacitor(Component):
-	def __init__(self, capacitance, node1, node2, initial_voltage=0):
+	def __init__(self, capacitance, node1, node2, initial_charge=0):
 		super().__init__(capacitance, node1, node2)
 
-		self.initial_voltage = initial_voltage
+		self.voltage = 0
+		self.previous_voltage = 0
+		self.charge = initial_charge
+
+class Inductor(Component):
+	def __init__(self, inductance, node1, node2):
+		super().__init__(inductance, node1, node2)
+
 		self.current = 0

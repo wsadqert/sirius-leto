@@ -1,7 +1,7 @@
 from additional import round_precision
 from .abc import Instrument
 
-__all__ = ["Voltmeter"]
+__all__ = ["Voltmeter", "Ammeter"]
 
 class Voltmeter(Instrument):
 	def __init__(self, node1, node2):
@@ -13,12 +13,12 @@ class Voltmeter(Instrument):
 	
 	def set_circuit(self, circuit: "Circuit"):
 		self.circuit = circuit
+		self._precise = circuit.instrumental_precise
 		return super().set_circuit(circuit)
 
 class Ammeter(Instrument):
 	def __init__(self, node1, node2):
 		super().__init__(node1, node2)
-		self.resistance = 1e-7  # Low resistance of the ammeter
 
 	def get_value(self):
 		self._check_connectivity()
@@ -29,4 +29,5 @@ class Ammeter(Instrument):
 	
 	def set_circuit(self, circuit: "Circuit"):
 		self.circuit = circuit
+		self.resistance = circuit.resistance_error
 		return super().set_circuit(circuit)
