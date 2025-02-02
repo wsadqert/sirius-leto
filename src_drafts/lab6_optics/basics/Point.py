@@ -1,11 +1,16 @@
 from dataclasses import dataclass
 
+from .GeometryBasic import GeometryBasic
+
 __all__ = ["Point"]
 
 @dataclass
-class Point:
+class Point(GeometryBasic):
 	x: float = 0
 	y: float = 0
+
+	def __post_init__(self):
+		del self.x1, self.y1, self.x2, self.y2
 
 	def to_tuple(self) -> tuple[float, float]:
 		return self.x, self.y

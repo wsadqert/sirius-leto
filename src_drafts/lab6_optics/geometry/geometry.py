@@ -1,5 +1,4 @@
-from basics import Point, Ray, Segment, Vector
-import math
+from basics import *
 
 def calculate_ray_direction(ray: Ray) -> Vector:
 	# Calculate the direction vector of the ray
@@ -7,6 +6,9 @@ def calculate_ray_direction(ray: Ray) -> Vector:
 	dy = ray.y2 - ray.y1
 	length = ray.length
 
+	print(ray)
+	print(dx, dy, length)
+	
 	if length == 0:
 		return Vector()  # The ray has no direction
 	return Vector(dx / length, dy / length)
@@ -44,6 +46,8 @@ def _intersect_ray_segment(ray: Ray, ray_direction: Vector, segment: Segment) ->
 
 def ray_segment_intersection(segment: Segment, ray: Ray) -> Point | None:
 	ray_direction = calculate_ray_direction(ray)
+
+	print(ray_direction)
 	
 	if not ray_direction:
 		return None  # Invalid ray

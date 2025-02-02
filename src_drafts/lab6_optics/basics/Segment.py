@@ -1,31 +1,24 @@
-from typing import Sequence
-from multipledispatch import dispatch
 import math
-from . import Point
+
+from .Point import Point
+from .GeometryBasic import GeometryBasic
+
 
 __all__ = ["Segment"]
 
-class Segment:
-	@dispatch(Point, Point)
+class Segment(GeometryBasic):
 	def __init__(self, point_1: Point, point_2: Point):
 		self.x1 = point_1.x
 		self.y1 = point_1.y
 		self.x2 = point_2.x
 		self.y2 = point_2.y
 	
-	@dispatch(Sequence[Point])
-	def __init__(self, points: Sequence[Point]):
-		self.x1 = points[0].x
-		self.y1 = points[0].y
-		self.x2 = points[1].x
-		self.y2 = points[1].y
-	
 	@classmethod
 	def from_points(cls, point_1: Point, point_2: Point):
 		return cls(point_1, point_2)
 	
 	@classmethod
-	def from_polar(cls, point_1: Point, angle, length):
+	def from_polar(cls, point_1: Point, angle: float, length: float):
 		x2 = point_1.x + length * math.cos(math.radians(angle))
 		y2 = point_1.y + length * math.sin(math.radians(angle))
 		return cls(point_1, Point(x2, y2))

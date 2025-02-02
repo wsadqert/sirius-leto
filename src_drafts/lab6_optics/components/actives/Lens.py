@@ -1,6 +1,6 @@
 import math
 from .abc import Active
-from basics import Ray, Point, Segment
+from basics import *
 
 __all__ = ["Lens"]
 
@@ -26,7 +26,7 @@ class Lens(Active):
 
 
 	def apply(self, ray: Ray) -> Ray:
-		lens_segment = Segment(self.get_points())
+		lens_segment = Segment.from_points(*self.get_points())
 		
-		pass
+		ray.move(100, 100)
 		return ray

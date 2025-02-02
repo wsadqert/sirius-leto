@@ -14,3 +14,11 @@ class Active(Component):
 	@abstractmethod
 	def apply(self, ray: Ray) -> Ray:
 		pass
+	
+	@abstractmethod
+	def get_points(self) -> list[Point]:
+		pass
+
+	@abstractmethod
+	def is_intersects(self, ray: Ray) -> bool:
+		pass
