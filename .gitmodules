@@ -1,0 +1,3 @@
+[submodule "src_drafts/lab6_optics"]
+	path = src_drafts/lab6_optics
+	url = https://github.com/wsadqert/optics-raytracing
