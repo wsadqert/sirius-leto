@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rules SYSTEM "https://resources.jetbrains.com/writerside/1.0/redirection-rules.dtd">
+<rules>
+    <!-- format is as follows
+    <rule id="<unique id>">
+        <accepts>page.html</accepts>
+    </rule>
+    -->
+    <rule id="68985063">
+        <description>
+            <![CDATA[Created after removal of "<src_lab6_optics_README.md>" from Приложение для проведения цифровых лабораторных работ по физике]]></description>
+        <accepts>src_lab6_optics_README.html</accepts>
+    </rule>
+</rules>
