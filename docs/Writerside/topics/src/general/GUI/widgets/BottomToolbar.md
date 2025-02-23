@@ -7,7 +7,7 @@ class src.general.gui.widgets.BottomToolbar(tools_names, parent=None)
 ```
 Наследуется от [QtWidgets.QWidget](https://doc.qt.io/qtforpython-6/PySide6/QtWidgets/QWidget.html)
 
-## Аргументы
+## Аттрибуты
 
 - `tools_names`: list[str]
 
@@ -20,23 +20,15 @@ class src.general.gui.widgets.BottomToolbar(tools_names, parent=None)
 
 - ### `BottomToolbar.init_ui`
 ```python
-def BottomToolbar.init_ui(self)
+def BottomToolbar.init_ui(self) -> None
 ```
 
 Инициализирует макет (layout) для виджета и применяет его. 
 
-#### Аргументы
-
-Нет
-
-#### Возвращаемое значение
-
-Нет
-
 - ### `BottomToolbar.generate_open_tool`
 
 ```python
-def generate_open_tool(self, tool_name)
+def generate_open_tool(self, tool_name: str) -> None
 ```
 
 Создаёт функцию, открывающую инструмент с названием `tool_name` и возвращает её. Название инструмента должно присутствовать в `tools_names`.
@@ -47,9 +39,6 @@ def generate_open_tool(self, tool_name)
 
 	Название инструмента, который требуется открыть.
 
-#### Возвращаемое значение
-
-Нет
 
 ## P.S. Вспомогательные классы
 

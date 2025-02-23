@@ -28,6 +28,16 @@
 		<toc-element toc-title="lab1_pendulum">
 			<toc-element topic="src_lab1_pendulum_README.md"/>
 		</toc-element>
+		<toc-element toc-title="lab6_optics">
+			<toc-element topic="Описание.md"/>
+		</toc-element>
+		<toc-element toc-title="basics">
+			<toc-element topic="GeometryBasic.md"/>
+			<toc-element topic="Point.md"/>
+			<toc-element topic="Ray.md"/>
+			<toc-element topic="Segment.md"/>
+			<toc-element topic="Vector.md"/>
+		</toc-element>
 	</toc-element>
 	<toc-element toc-title="Хранилище временных данных">
         <toc-element toc-title="lab1_pendulum">
