@@ -6,9 +6,4 @@
         <accepts>page.html</accepts>
     </rule>
     -->
-    <rule id="68985063">
-        <description>
-            <![CDATA[Created after removal of "<src_lab6_optics_README.md>" from Приложение для проведения цифровых лабораторных работ по физике]]></description>
-        <accepts>src_lab6_optics_README.html</accepts>
-    </rule>
 </rules>

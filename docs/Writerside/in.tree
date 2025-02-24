@@ -21,7 +21,7 @@
 					<toc-element toc-title="TextWithOutline" topic="TextWithOutline.md"/>
 				</toc-element>
 				<toc-element toc-title="Окна" topic="windows.md">
-					<toc-element toc-title="MainWindow" topic="MainWindow.md"/>
+<!--					<toc-element toc-title="MainWindow" topic="MainWindow.md"/>-->
 				</toc-element>
 			</toc-element>
 		</toc-element>
@@ -29,14 +29,37 @@
 			<toc-element topic="src_lab1_pendulum_README.md"/>
 		</toc-element>
 		<toc-element toc-title="lab6_optics">
-			<toc-element topic="Описание.md"/>
-		</toc-element>
-		<toc-element toc-title="basics">
-			<toc-element topic="GeometryBasic.md"/>
-			<toc-element topic="Point.md"/>
-			<toc-element topic="Ray.md"/>
-			<toc-element topic="Segment.md"/>
-			<toc-element topic="Vector.md"/>
+			<toc-element topic="config.md"/>
+			<toc-element toc-title="basics">
+				<toc-element topic="Basic2D.md"/>
+				<toc-element topic="GeometryBasic.md"/>
+                <toc-element topic="Point.md"/>
+                <toc-element topic="Ray.md"/>
+                <toc-element topic="Segment.md"/>
+                <toc-element topic="Vector.md"/>
+            </toc-element>
+			<toc-element toc-title="components">
+				<toc-element topic="abcComponent.md"/>
+				<toc-element toc-title="actives">
+					<toc-element topic="abcActive.md"/>
+					<toc-element topic="Lens.md"/>
+					<toc-element topic="Mirror.md"/>
+					<toc-element topic="Wall.md"/>
+				</toc-element>
+				<toc-element toc-title="sources">
+					<toc-element topic="abcSource.md"/>
+					<toc-element topic="Beam.md"/>
+					<toc-element topic="Lamp.md"/>
+					<toc-element topic="Laser.md"/>
+				</toc-element>
+			</toc-element>
+			<toc-element toc-title="frontend">
+				<toc-element topic="Drawer.md"/>
+				<toc-element topic="DrawerConfig.md"/>
+				<toc-element topic="InteractiveCanvas.md"/>
+				<toc-element topic="TraceConfig.md"/>
+			</toc-element>
+			<toc-element topic="geometry.md"/>
 		</toc-element>
 	</toc-element>
 	<toc-element toc-title="Хранилище временных данных">
