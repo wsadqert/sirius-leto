@@ -90,6 +90,6 @@ if __name__ == "__main__":
 
 	num_radio_buttons = 5  # Change this value to set the number of radio buttons
 
-	radio_buttons_app = RadioButtonsApp(num_radio_buttons)
+	radio_buttons_app = RadioTestPage(num_radio_buttons)
 
 	sys.exit(app.exec())
