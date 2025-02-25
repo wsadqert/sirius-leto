@@ -5,6 +5,8 @@ dist/
 venv/
 .venv/
 .vscode
+docs/server/
+docs/sirius/
 
 *.py[cod]
 *.exe
@@ -15,3 +17,4 @@ data*.*
 input.*
 *.xcf
 pdfSourceIN.*
+*.zip
