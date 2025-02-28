@@ -6,6 +6,7 @@ from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLabel
 
+from src.general.parallelize_tkinter import parallelize_tkinter
 from src.general.gui.key_handler import _handle_key_gen
 from src.general.gui.widgets.BottomToolbar import BottomToolbar
 from src.general.constants import *
@@ -95,15 +96,30 @@ class GradePage(QWidget):
 	def open_task(self, task_number: int):
 		print('open task', task_number)
 
-		if (self.grade_number, task_number) == (9, 3):
-			from src.lab1_pendulum import start
-			try:
-				start()
-			except Exception as e:
-				logging.exception(e)
-				raise
+		grade_tuple = (self.grade_number, task_number)
 
-		self.open_task_function((self.grade_number, task_number))
+		match grade_tuple:
+			case (9, 3):
+				from src.lab1_pendulum import start
+				try:
+					start()
+				except Exception as e:
+					logging.exception(e)
+					raise
+		
+			case (9, 4):
+				from src.lab7_hydraulic_bb.blackbox import HydraulicBlackBoxApp
+				try:
+					parallelize_tkinter(HydraulicBlackBoxApp(), "thread")
+				except Exception as e:
+					logging.exception(e)
+					raise
+			
+			case (9, 5):
+				pass
+			
+			case _:
+				self.open_task_function((self.grade_number, task_number))
 
 	def generate_open_task(self, task_number: int):
 		return lambda task: self.open_task(task_number)

@@ -8,6 +8,7 @@ venv/
 docs/server/
 docs/sirius/
 
+*.log
 *.py[cod]
 *.exe
 *.spec

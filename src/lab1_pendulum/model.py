@@ -51,6 +51,7 @@ def model(config: CONFIG) -> dict[str, int | list | np.ndarray]:
 		case 'quadratic':
 			get_alpha = lambda x: 2 * alpha_cur - alpha_last - 2 * (alpha_cur - alpha_last)**2 * config['k'] / config['m'] * sign(alpha_cur - alpha_last) - c2 * sin(alpha_cur)  # noqa:E731 using lambda
 		case 'realistic':  # not implemented yet
+			raise NotImplementedError
 			get_alpha = ...
 		case _:  # never executed, but necessary to avoid a "May be refenced before assignment" warning at line 67 (`alpha_next = get_alpha(t)`) inside main loop
 			raise ValueError

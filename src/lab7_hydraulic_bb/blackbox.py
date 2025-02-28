@@ -4,6 +4,8 @@ import random
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+__all__ = ["HydraulicBlackBoxApp"]
+
 class HydraulicBlackBoxApp:
 	def __init__(self) -> None:
 		self.num_vessels: int = 5
