@@ -19,30 +19,39 @@ class Matrix(QWidget):
             'wire': QPixmap('Wire.png')
         }  # Словарь для хранения изображений
         self.init_ui()
-        button = QPushButton()
-        button.setFixedSize(60, 60)  # Размеры кнопки
-        button.setStyleSheet("""
-            QPushButton {
-                background-image: url(button.png);
-                border: none;
-            }
-        """)
 
     def init_ui(self):
         grid_layout = QGridLayout()
 
         for row in range(7):
             for col in range(11):
-                button = QPushButton(f"({row + 1}, {col + 1})")
-                button.setIcon(QIcon("button.png"))
-                button.setIconSize(QSize(32, 32))
+                button = QPushButton()  # Убрали текст
+                button.setFixedSize(80, 60)  # Фиксированный размер
+                # Стиль с фоновым изображением
+                button.setStyleSheet("""
+                    QPushButton {
+                        background-image: url(button.png);
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        border: none;
+                    }
+                """)
                 button.clicked.connect(lambda checked, r=row, c=col: self.button_clicked(r, c))
                 grid_layout.addWidget(button, row, col)
                 self.buttons[(row, col)] = button
 
         self.setLayout(grid_layout)
         self.setWindowTitle("Circuit Sim")
-        self.resize(400, 400)
+        self.resize(800, 500)  # Увеличил размер окна для 11x7 кнопок
+
+        msg_box = QMessageBox(self)
+        msg_box.setWindowTitle("Туториал")
+        msg_box.setText(
+            "Вы в симуляторе макетной платы. Черные точки - гнезда для соединения. Добавить элемент можно, щелкнув на две черные точки. Соединять можно только соседние гнезда"
+        )
+        msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+
+        msg_box.exec()
 
     def button_clicked(self, row, col):
         print(f"Button clicked at coordinates: ({row + 1}, {col + 1})")
@@ -122,49 +131,44 @@ class Matrix(QWidget):
             end_button = self.buttons.get(connection['end'])
 
             if start_button and end_button:
-                # Получаем координаты центров кнопок
-                start_center = start_button.geometry().center()
-                end_center = end_button.geometry().center()
+                # Получаем координаты центров кнопок относительно главного окна
+                start_center = start_button.mapTo(self, start_button.rect().center())
+                end_center = end_button.mapTo(self, end_button.rect().center())
 
-                # Вычисляем вектор соединения
                 dx = end_center.x() - start_center.x()
                 dy = end_center.y() - start_center.y()
-                length = (dx ** 2 + dy ** 2) ** 0.5
+                length = math.hypot(dx, dy)
 
                 if length == 0:
                     continue
 
                 image = self.images.get(connection['type'])
                 if image and not image.isNull():
-                    # 1. Масштабируем изображение до нужной длины
-                    scaled = image.scaled(int(length), image.height(),
-                                          Qt.AspectRatioMode.IgnoreAspectRatio,
-                                          Qt.TransformationMode.SmoothTransformation)
+                    # Вычисляем угол поворота
+                    angle_rad = math.atan2(dy, dx)
+                    angle_deg = math.degrees(angle_rad)
 
-                    # 2. Вычисляем угол поворота
-                    angle = math.degrees(math.atan2(dy, dx))
-
-                    # 3. Создаем трансформацию
+                    # Создаем трансформацию
                     transform = QTransform()
 
-                    # Переносим в начальную точку
+                    # Перемещаем в начальную точку
                     transform.translate(start_center.x(), start_center.y())
 
                     # Поворачиваем систему координат
-                    transform.rotate(angle)
+                    transform.rotate(angle_deg)
 
-                    # Центрируем изображение относительно линии
-                    transform.translate(0, -scaled.height() / 2)
+                    # Масштабируем изображение по длине соединения
+                    scale_factor = length / image.width()
+                    transform.scale(scale_factor, 1)
 
-                    # 4. Применяем трансформацию и рисуем
+                    # Центрируем изображение по вертикали
+                    transform.translate(0, -image.height() / 2)
+
+                    # Применяем трансформацию
                     painter.setTransform(transform)
-                    painter.drawPixmap(0, 0, scaled)
+                    painter.drawPixmap(0, 0, image)
                     painter.resetTransform()
 
-                    # Для отладки: рисуем точки центров
-                    painter.setPen(Qt.GlobalColor.red)
-                    painter.drawEllipse(start_center, 3, 3)
-                    painter.drawEllipse(end_center, 3, 3)
 
 app = QApplication(sys.argv)
 window = Matrix()
