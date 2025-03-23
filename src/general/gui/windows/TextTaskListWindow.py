@@ -13,7 +13,7 @@ __all__ = ["TextTaskListWindow"]
 
 install(show_locals=True, width=300)
 
-with open(f"{ASSETS_ROOT}\\taskbook\\taskbook.txt", encoding="utf-8") as f:
+with open(os.path.join(ASSETS_ROOT, "taskbook""taskbook.txt"), encoding="utf-8") as f:
 	names = [x.strip() for x in f.readlines()]
 # names = [f"{i + 1}. {name}" for i, name in enumerate(names)]
 
@@ -44,7 +44,7 @@ class TaskPage(QWidget):
 		self.back_button.setCursor(Qt.CursorShape.PointingHandCursor)
 		self.web_engine_view = QWebEngineView()
 
-		path = f"{ASSETS_ROOT}\\taskbook\\{self.task_item + 1}.html"
+		path = os.path.join(ASSETS_ROOT, 'taskbook', f"{self.task_item + 1}.html")
 
 		if os.path.exists(path):
 			with open(path, encoding="utf-8") as f:

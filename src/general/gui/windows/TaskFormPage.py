@@ -16,7 +16,7 @@ from src.general.checks import is_positive
 
 __all__ = ["TaskFormPage"]
 
-labs = json.load(open(f"{ASSETS_ROOT}\\labs_description.json", encoding='utf-8'))
+labs = json.load(open(os.path.join(ASSETS_ROOT, "labs_description.json"), encoding='utf-8'))
 
 
 class IncorrectInputDialog(QMessageBox):

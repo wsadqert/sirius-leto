@@ -13,7 +13,7 @@ from src.general.constants import *
 
 __all__ = ["GradePage"]
 
-labs = json.load(open(f"{ASSETS_ROOT}\\labs_description.json", encoding="utf-8"))
+labs = json.load(open(os.path.join(ASSETS_ROOT, "labs_description.json"), encoding='utf-8'))
 
 
 class GradePage(QWidget):
